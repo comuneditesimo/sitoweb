@@ -1,0 +1,51 @@
+﻿@page "/Hp/Media"
+
+@using Syncfusion.Blazor.Popups
+
+@if (Media != null)
+{
+    <div class="container py-5" id="sitemap">
+        <div class="row">
+            <div class="col-12 pb-5">
+                <div class="media-image-contaner">
+                    @foreach (var item in Media.OrderBy(p => p.SortOrder).ToList())
+                    {
+                        if (item.FILE_FileInfo_ID != null)
+                        {
+                            <div class="media-image-item" @onclick="@(() => ShowFullView(item))">
+                                <img src="@ImageHelper.GetFilePathThumbnail(item.FILE_FileInfo_ID.Value)" alt="@item.Title" title="@item.Title"/>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <SfDialog @bind-Visible="@ShowFullImage" AllowDragging="false" ShowCloseIcon="true" IsModal="true" CloseOnEscape="true" Width="1460px">
+        <DialogTemplates>
+            <Header>
+                @if(FullScreenImage != null)
+                {
+                    @FullScreenImage.Title
+                }
+            </Header>
+            <Content>
+                @if (FullScreenImage != null && FullScreenImage.FILE_FileInfo_ID != null)
+                {
+                    <div class="media-full-screen-image">
+                        <img src="@ImageHelper.GetFilePath(FullScreenImage.FILE_FileInfo_ID.Value)" />
+                        @if (!string.IsNullOrEmpty(FullScreenImage.Copyright))
+                        {
+                            <div class="media-copyright">
+                                @TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_MEDIA_COPYRIGHT"): @FullScreenImage.Copyright
+                            </div>
+                        }
+                    </div>
+                }
+            </Content>
+        </DialogTemplates>
+        <DialogEvents Closed="@HideFullView" />
+    </SfDialog>
+
+}

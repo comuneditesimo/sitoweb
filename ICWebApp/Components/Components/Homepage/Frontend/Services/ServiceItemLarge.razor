@@ -1,0 +1,37 @@
+﻿@using Syncfusion.Blazor.Inputs
+
+@if(Item != null)
+{
+    <div class="cmp-card-latest-messages mb-3 mb-30" data-bs-toggle="modal" data-bs-target="#">
+        <div class="card shadow-sm px-4 pt-4 pb-4 rounded">
+            @if (!string.IsNullOrEmpty(Item.Kategorie))
+            {
+                @if (TypeClickable)
+                {
+                    <div class="card-header border-0 p-0">
+                        <a class="text-decoration-none title-xsmall-bold mb-2 category text-uppercase" @onclick="OnTypeItemClicked">@Item.Kategorie</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="card-header border-0 p-0">
+                        <span class="text-decoration-none title-xsmall-bold mb-2 category text-uppercase" @onclick="OnTypeItemClicked">
+                            @Item.Kategorie
+                        </span>
+                    </div>
+                }
+            }
+            <div class="card-body p-0 my-2">
+                <h3 class="green-title-big t-primary mb-8">
+                    <a class="text-decoration-none" @onclick="OnItemClicked" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + Item.Url)" data-element="service-link">@Item.Title</a>
+                </h3>
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.ShortText))
+                {
+                    <p class="text-paragraph">
+                        @((MarkupString)Item.ShortText)
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,38 @@
+﻿@using ICWebApp.Domain.Models.Syncfusion
+@using Syncfusion.Blazor.Maps
+
+@if (Data != null)
+{
+    @if (!string.IsNullOrEmpty(Address))
+    {
+        <div class="row mb-2">
+            <div class="col-12">
+                <label>@Address</label>
+            </div>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Room))
+    {
+        <div class="row mb-2">
+            <div class="col-12">
+                <label>@Room</label>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-12">
+            <div class="frontend-map-container">
+                <iframe width="100%"
+                        height="100%"
+                        style="border:0"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.de/maps/embed/v1/place?key=AIzaSyAyEsEyeL2p6UBbc_V5zBeRcs_rD9aRRBY
+                             &q=+@(Data.Latitude.ToString().Replace(",", ".")),@(Data.Longitude.ToString().Replace(",", "."))
+                             &language=@(LangProvider.GetLanguage2DigitCode())">
+                </iframe>
+            </div>
+        </div>
+    </div>
+}

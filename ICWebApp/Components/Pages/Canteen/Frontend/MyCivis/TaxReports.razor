@@ -1,0 +1,12 @@
+@page "/Canteen/MyCivis/TaxReports"
+
+@layout MyCivisLayout
+
+<AuthorizeView Policy="Citizen">
+    <Authorized>
+        <ICWebApp.Components.Components.Canteen.Frontend.TaxReports></ICWebApp.Components.Components.Canteen.Frontend.TaxReports>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin RedirectURL="@NavManager.Uri"></RedirectToLogin>
+        </NotAuthorized>
+</AuthorizeView>

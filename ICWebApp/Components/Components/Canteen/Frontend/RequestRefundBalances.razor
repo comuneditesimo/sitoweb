@@ -1,0 +1,101 @@
+﻿@using Microsoft.EntityFrameworkCore.Infrastructure.Internal
+@using ICWebApp.Components.Components.Canteen
+@using Syncfusion.Blazor.Inputs
+
+<AuthorizeView Policy="Citizen">
+    <Authorized>
+        <div class="container">
+            <div class="row mt-lg-80 mt-3 mb-4">
+                <div class="col-lg-3 mb-4 border-col hide-max-576">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-lg-8 offset-lg-1">
+                    @if (Request != null)
+                    {
+                        <EditForm Model="Request" Context="formContext" OnValidSubmit="@SaveRequest" OnInvalidSubmit="@SetValidation">
+                            <DataAnnotationsValidator />
+                            <div class="it-page-sections-container">
+                                <div class="segment-container custom-background-default font-normal">
+                                    <div class="segment-loader-container">
+                                        <Anchor Title="@TextProvider?.Get("CANTEEN_REQUESTREFUND_TITLE")" ID="@TextProvider?.Get("CANTEEN_REQUESTREFUND_TITLE")" IsCard="true" Order="1">
+                                            <div class="form-group">
+                                                @{
+                                                    string? _text = TextProvider?.Get("CANTEEN_REQUESTREFUND_TEXT");
+                                                }
+                                                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(_text))
+                                                {
+                                                    <div class="request-refund-text">@((MarkupString)_text)</div>
+                                                }
+                                            </div>
+                                            <div class="small-element-separator"></div>
+                                            <div class="form-group">
+                                                <label for="@Request.Req_Owner" class="form-label">@TextProvider?.Get("CANTEEN_REQUESTREFUND_OWNER")</label>
+                                                <InputText name="@Guid.NewGuid()" @bind-Value="Request.Req_Owner" class="form-control"></InputText>
+                                                <CustomValidationMessage For="@(() => Request.Req_Owner)" TextCode="CANTEEN_REQUESTREFUND_OWNER" />
+                                            </div>
+                                            <div class="small-element-separator"></div>
+                                            <div class="form-group">
+                                                <label for="@Request.Req_Bank" class="form-label">@TextProvider?.Get("CANTEEN_REQUESTREFUND_BANK")</label>
+                                                <InputText name="@Guid.NewGuid()" @bind-Value="Request.Req_Bank" class="form-control"></InputText>
+                                                <CustomValidationMessage For="@(() => Request.Req_Bank)" TextCode="CANTEEN_REQUESTREFUND_BANK" />
+                                            </div>
+                                            <div class="small-element-separator"></div>
+                                            <div class="form-group">
+                                                <label for="@Request.Req_IBAN" class="form-label">@TextProvider?.Get("CANTEEN_REQUESTREFUND_IBAN")</label>
+                                                <InputText name="@Guid.NewGuid()" @bind-Value="Request.Req_IBAN" class="form-control"></InputText>
+                                                <CustomValidationMessage For="@(() => Request.Req_IBAN)" TextCode="CANTEEN_REQUESTREFUND_IBAN" />
+                                            </div>
+                                        </Anchor>
+                                        @if (Request.Req_Fee != null)
+                                        {
+                                            <Anchor Title="@TextProvider?.Get("CANTEEN_REQUESTREFUND_BALANCE_TITLE")" ID="@TextProvider?.Get("CANTEEN_REQUESTREFUND_BALANCE_TITLE")" IsCard="true" Order="2">
+                                                <div class="form-group">
+                                                    <label for="@Request.Req_Fee" class="form-label">@TextProvider?.Get("CANTEEN_REQUESTREFUND_BALANCE_TEXT")</label>
+                                                    <h3>@string.Format("{0:C}", Request.Req_Fee.Value)</h3>
+                                                    <CustomValidationMessage For="@(() => Request.Req_Fee)" TextCode="CANTEEN_REQUESTREFUND_BALANCE" />
+                                                </div>
+                                            </Anchor>
+                                        }
+                                        @{
+                                            string _Title = "";
+                                            string _subTitle = "";
+                                        }
+                                        @if (Privacy != null)
+                                        {
+                                            _Title = Privacy.Title;
+                                            _subTitle = Privacy.Description;
+                                        }
+                                        <Anchor Title="@_Title" SubTitle="@_subTitle" ID="@_Title" IsCard="true" Order="99">
+                                            @TextProvider?.Get("PRIVACY_RED_AND_UNDERSTOOD")
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="privacy-switch">
+                                                <SfSwitch @bind-Checked="@Request.Req_PrivacyPolices" CssClass="list-item-switch"></SfSwitch>                         
+                                            </div>
+                                            @if (ShowValidationErrors == true && Request.Req_PrivacyPolices != true)
+                                            {
+                                                <div class="element-separator"></div>
+                                                <div class="container-error">
+                                                    @TextProvider?.Get("PRIVACY_BOOL_ERROR")
+                                                </div>
+                                            }
+                                        </Anchor>
+                                        <div class="segment-button-toolbar">
+                                            <div class="btn btn-secondary" @onclick="@ReturnToPreviousPage">@TextProvider?.Get("BUTTON_CANCEL")</div>
+                                            <button class="btn btn-primary flex-right" type="submit">@(TextProvider?.Get("BUTTON_SENDREQUEST"))</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        @if (NavManager != null)
+        {
+            <RedirectToLogin RedirectURL="@NavManager.Uri" />
+        }
+    </NotAuthorized>
+</AuthorizeView>

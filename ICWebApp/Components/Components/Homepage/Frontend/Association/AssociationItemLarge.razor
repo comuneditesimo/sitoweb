@@ -1,0 +1,35 @@
+﻿@if (Association != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (Association.HOME_Association_Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(Association.HOME_Association_Type_ID.Value))">
+                                    @Association.Type
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @Association.Type
+                                </span>
+                            }
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" data-focus-mouse="false">
+                        <h3 class="card-title">@Association.Title</h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)Association.DescriptionShort)
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,15 @@
+﻿@using ICWebApp.Components.Components.Homepage.Backend.Person
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Lists
+
+@if (AuthorityList != null && SelectedAuthorities != null)
+{
+    var htmlProperties = new Dictionary<string, object>() { { "height", "38px" } };
+
+    <SfMultiSelect TValue="List<Guid>" TItem="V_HOME_Authority" PopupHeight="230px" Width="100%"
+                   @bind-Value="@SelectedList" DataSource="@AuthorityList" HtmlAttributes="@htmlProperties">
+        <MultiSelectFieldSettings Value="ID" Text="Title"></MultiSelectFieldSettings>
+    </SfMultiSelect>
+}

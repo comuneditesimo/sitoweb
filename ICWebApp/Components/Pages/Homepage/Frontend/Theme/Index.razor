@@ -1,0 +1,31 @@
+﻿@page "/Hp/Theme"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Theme
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+
+@if (Themes.Where(p => p.Highlight == true).Any())
+{
+    <div class="container py-5">
+        <h2 class="title-xxlarge mb-4">@TextProvider.Get("FRONTEND_HOMEPAGE_THEME_HIGHLIGHTED")</h2>
+        <div class="row g-4">
+            @foreach (var item in Themes.Where(p => p.Highlight == true).OrderBy(p => p.Title).ToList())
+            {
+                <ThemeItemHighlight Theme="item" OnClick="OnClick"></ThemeItemHighlight>
+            }           
+        </div>
+    </div>
+}
+
+@if(Themes.Any())
+{
+    <div class="container py-5" id="argomento">
+        <h2 class="title-xxlarge mb-4">@TextProvider.Get("FRONTEND_HOMEPAGE_THEME_SEARCH_BY_CATEGORIES")</h2>
+        <div class="row g-4">
+            @foreach(var item in Themes.OrderBy(p => p.Title).ToList())
+            {
+                <ThemeItemLarge Theme="item" OnClick="OnClick"></ThemeItemLarge>
+            }
+        </div>
+    </div>
+}

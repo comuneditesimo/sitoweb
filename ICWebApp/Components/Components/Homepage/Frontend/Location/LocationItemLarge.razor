@@ -1,0 +1,44 @@
+﻿@if (Location != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                @if (Location.FILE_FileImage_ID != null)
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper">
+                                <img src="@ImageHelper.GetFilePath(Location.FILE_FileImage_ID)" alt="@Location.Title" title="@Location.Title">
+                            </figure>
+                        </div>
+                    </div>
+                }
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (Location.HOME_Location_Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(Location.HOME_Location_Type_ID.Value))">
+                                    @Location.Type
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @Location.Type
+                                </span>
+                            }
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" @onclick:stopPropagation="true" href="#" data-focus-mouse="false">
+                        <h3 class="card-title">@Location.Title</h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)Location.DescriptionShort)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

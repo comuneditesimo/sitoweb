@@ -1,0 +1,24 @@
+﻿.btn {
+    padding-left: 6px !important;
+    padding-right: 0px !important;
+}
+
+.nav-item a {
+    width: auto !important;
+    min-width: auto;
+}
+
+.user-text {
+    color: var(--tertiary) !important;
+}
+
+    .user-text:hover {
+        color: var(--secondary) !important;
+        text-decoration: underline;
+    }
+
+.user-item {
+    display: flex;
+    justify-content: flex-start;
+    gap: 3px;
+}

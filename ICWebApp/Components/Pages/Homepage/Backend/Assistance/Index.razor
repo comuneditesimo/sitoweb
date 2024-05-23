@@ -1,0 +1,82 @@
+﻿@page "/Backend/Homepage/Assistance"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Data.OrderByDescending(p => p.CreationDate).ToList()" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+            <GridPageSettings PageSize="25"></GridPageSettings>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.CreationDate)" Format="dd.MM.yyyy HH:mm" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_CREATION_DATE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.CategoryID)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_CATEGORY")" Width="300px">
+                    <Template>
+                        @{
+                            HOME_Assistance item = context as HOME_Assistance;
+
+                            if (item != null)
+                            {
+                                var cat = Categories.FirstOrDefault(p => p.ID == item.CategoryID);
+
+                                if (cat != null)
+                                {
+                                    <div class="data-container">
+                                        @cat.Title
+                                    </div>
+                                }
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.ServiceID)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_SERVICE")" Width="300px">
+                    <Template>
+                        @{
+                            HOME_Assistance item = context as HOME_Assistance;
+
+                            if (item != null)
+                            {
+                                var serv = Services.FirstOrDefault(p => p.ID == item.ServiceID);
+
+                                if (serv != null)
+                                {
+                                    <div class="data-container">
+                                        @serv.Title
+                                    </div>
+                                }
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.Firstname)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_FIRSTNAME")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.Lastname)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_LASTNAME")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.EMail)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_EMAIL")" Width="300px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Assistance.Description)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ASSISTANCE_DESCRIPTION")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+
+                <Syncfusion.Blazor.Grids.GridColumn Width="120px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            HOME_Assistance item = context as HOME_Assistance;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_COMPLETE")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Complete(item))">
+                                            <i class="fa-regular fa-check"></i>
+                                        </div>
+                                    </SfTooltip>
+                                </div>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>

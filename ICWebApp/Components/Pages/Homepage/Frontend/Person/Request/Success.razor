@@ -1,0 +1,18 @@
+﻿@page "/Hp/Person/Request/Success/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Domain.Models.Homepage.Services
+
+@if (Data != null)
+{
+    <div class="container mb-5 mt-5">
+        <div class="row">
+            <div class="col-12">
+                <p class="titillium hero-text">
+                    @TextProvider.Get("HOME_REQUEST_PERSON_SUCCESS_DETAIL")<br>
+                    <strong id="email-recap">@Data.EMail</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+}

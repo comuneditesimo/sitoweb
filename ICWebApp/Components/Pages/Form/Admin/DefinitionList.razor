@@ -1,0 +1,100 @@
+﻿@page "/Form/Definition/Application/{PageRefreshParam}"
+@page "/Form/Definition/Mantainance/{PageRefreshParam}"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+@if(Data != null)
+{
+    <div class="segment-container custom-background-default">
+        <div class="grid-data-container segment-loader-container">
+            <CustomLoader Visible="@(IsDataBusy)"
+                                Text="@null" Class="initial-data-loader">
+            </CustomLoader>
+            <SfGrid DataSource="@Data" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+                <GridPageSettings PageSize="25"></GridPageSettings>
+                <SfToolbar>
+                    <ToolbarItems>
+                        <ToolbarItem Type="ItemType.Button">
+                            <Template>
+                                <div class="btn btn-secondary" @onclick="Add">@TextProvider.Get("ADD")</div>
+                            </Template>
+                        </ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
+                <Syncfusion.Blazor.Grids.GridColumns>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.FormCode)" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_CODE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.AmtName)" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_ROLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.Name)" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_NAME")"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.ApplicationDeadline)" Visible="@IsApplication" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_APPLICATION_DEADLINE")" Format="dd.MM.yyyy HH:mm" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.Enabled)" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_APPLICATION_ENABLED")" Width="120px">
+                        <Template>
+                            @{
+                                V_FORM_Definition item = context as V_FORM_Definition;
+
+                                <div class="grid-checkbox-cell">
+                                    <SfCheckBox Checked="item.Enabled" Disabled="true"></SfCheckBox>
+                                </div>
+                            }
+                        </Template>
+                    </Syncfusion.Blazor.Grids.GridColumn>
+                    @if (IsHomepage == true)
+                    {
+                        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.IsActive)" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_APPLICATION_IS_AKTIVE")" Width="120px">
+                            <Template>
+                                @{
+                                    V_FORM_Definition item = context as V_FORM_Definition;
+
+                                    <div class="grid-checkbox-cell">
+                                        <SfCheckBox Checked="item.IsActive" Disabled="true"></SfCheckBox>
+                                    </div>
+                                }
+                            </Template>
+                        </Syncfusion.Blazor.Grids.GridColumn>
+                        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_FORM_Definition.IsOfflineForm)" HeaderText="@TextProvider.Get("BACKEND_FORM_DEFINITION_APPLICATION_IS_OFFLINE")" Width="120px">
+                            <Template>
+                                @{
+                                    V_FORM_Definition item = context as V_FORM_Definition;
+
+                                    <div class="grid-checkbox-cell">
+                                        <SfCheckBox Checked="item.IsOfflineForm" Disabled="true"></SfCheckBox>
+                                    </div>
+                                 }
+                            </Template>
+                        </Syncfusion.Blazor.Grids.GridColumn>
+                    }
+                    <Syncfusion.Blazor.Grids.GridColumn Width="160px" HeaderText="@TextProvider.Get("ACTIONS")">
+                        <Template>
+                            @{
+                                V_FORM_Definition? item = context as V_FORM_Definition;
+
+                                if (item != null)
+                                {
+                                    <div class="action-button-container">
+                                        <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => Delete(item))">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </div>
+                                        </SfTooltip>
+                                        <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(item))">
+                                                <i class="fa-regular fa-pen"></i>
+                                            </div>
+                                        </SfTooltip>
+                                        <SfTooltip Content="@TextProvider.Get("TOOLTIP_COPY")" Position="@Position.LeftCenter">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => Copy(item))">
+                                                <i class="fa-regular fa-copy"></i>
+                                            </div>
+                                        </SfTooltip>
+                                    </div>
+                                }
+                            }
+                        </Template>
+                    </Syncfusion.Blazor.Grids.GridColumn>
+                </Syncfusion.Blazor.Grids.GridColumns>
+            </SfGrid>
+        </div>
+    </div>    
+}

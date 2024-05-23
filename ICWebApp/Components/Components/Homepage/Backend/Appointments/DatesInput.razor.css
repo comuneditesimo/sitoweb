@@ -1,0 +1,44 @@
+﻿.dates-container {
+    width: 100%;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+.dates-value-container {
+    overflow: auto;
+    height: 300px;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 1px solid #d9d9d9;
+}
+.dates-item, .dates-title-bar {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+.dates-value, .dates-title-value {
+    flex: 1;
+}
+.dates-action, .dates-title-action {
+    width: 40px;
+}
+.dates-title-value{
+    font-weight: bold;
+    padding-left: 8px;
+}
+.dates-title-bar {
+    border: 1px solid #d9d9d9;
+    border-bottom: 0px;
+    padding: 10px;
+}
+.dates-item {
+    border-bottom: 1px solid #d9d9d9;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}

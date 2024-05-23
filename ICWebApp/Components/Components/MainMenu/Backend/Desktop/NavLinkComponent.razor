@@ -1,0 +1,223 @@
+﻿@if (MenuItem != null)
+{
+    @if (SubMenuItems != null && SubMenuItems.Count() > 1)
+    {
+        string aktiveCSS = "";
+        var UrlList = SubMenuItems.Select(p => p.Url).ToList();
+
+        @if (SubMenuVisible)
+        {
+            aktiveCSS = "nav-item-backend-active";
+        }
+
+        if (MenuItem.Url != null && NavManager.Uri.EndsWith(MenuItem.Url))
+        {
+            aktiveCSS = "nav-item-backend-active";
+        }
+
+        if (UrlList.Any(p => p != null && NavManager.Uri.EndsWith(p)))
+        {
+            aktiveCSS = "nav-item-backend-active";
+        }
+
+        <div class="nav-item-backend @aktiveCSS" @onclick="ToggleVisbility">
+            <NavLink>
+                <div class="icon-Overlay">
+                    @if (MenuItem.NewNotification == true)
+                    {
+                        <div class="red-circle-icon" />
+                    }
+                    @if (MenuItem.Icon != null)
+                    {
+                        <TelerikFontIcon IconClass="@MenuItem.Icon"></TelerikFontIcon>
+                    }
+                    else
+                    {
+                        <span class="nav-fa-item">
+                            <TelerikFontIcon IconClass="@MenuItem.FAIcon"></TelerikFontIcon>
+                        </span>
+                    }
+                    @if (!SubMenuVisible)
+                    {
+                        <span class="nav-item-tooltip">
+                            @TextProvider.Get(MenuItem.TEXT_SystemTextsCode)
+                        </span>
+                    }
+                </div>
+            </NavLink>
+        </div>
+        @if (SubMenuVisible)
+        {
+            <div class="nav-item-backend-popupcontainer-closer" @onclick="CloseSubMenu"></div>
+            <div class="nav-item-backend-popupcontainer">
+                <div class="nav-item-backend-popupcontainer-flex">
+                    <div class="nav-item-backend-first-row">                        
+                        <div class="nav-item-backend-user-name">
+                            <h3 class="nav-item-backend-second-row custom-color-primary">
+                                Comunix
+                            </h3>
+                        </div>
+                    </div>
+                    @{
+                        var GroupList = SubMenuItems.OrderBy(p => p.SortOrder).Select(p => p.Group_TEXT_SysemTexts_Code).Distinct().ToList();
+                    }
+                    @if (GroupList != null && (GroupList.Count() > 1  || !string.IsNullOrEmpty(GroupList.FirstOrDefault())))
+                    {
+                        @foreach (var g in GroupList)
+                        {
+                            if (g != null)
+                            {
+                                var groupUrl = SubMenuItems.FirstOrDefault(p => p.Group_TEXT_SysemTexts_Code == g);
+
+                                <div class="nav-item-backend-column">
+                                    @if (groupUrl != null && !string.IsNullOrEmpty(groupUrl.GroupUrl))
+                                    {
+                                        <div class="nav-item-backend-title nav-item-backend-title-hoverable font-bold" @onclick="@(() => NavigateTo(groupUrl.GroupUrl))">
+                                            @TextProvider.Get(g)
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="nav-item-backend-title">
+                                            @TextProvider.Get(g)
+                                        </div>
+                                    }
+                                    <div class="small-element-separator"></div>
+                                    @foreach (var item in SubMenuItems.Where(p => p.Group_TEXT_SysemTexts_Code == g).OrderBy(p => p.SortOrder))
+                                    {
+                                        <div class="nav-item-backend-subelement" @onclick="@(() => NavigateTo(item.Url))">
+                                            @if (string.IsNullOrEmpty(item.DynamicName))
+                                            {
+                                                <div class="nav-item-backend-subelement-text font-small">
+                                                    <div class="name-container">
+                                                        @if (item.NewNotification == true)
+                                                        {
+                                                            <div class="red-circle-container">
+                                                                <div class="red-circle"></div>
+                                                            </div>
+                                                        }
+                                                        @TextProvider.Get(item.TEXT_SystemTextsCode)
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="nav-item-backend-subelement-text font-small">
+                                                    @item.DynamicName
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="nav-item-backend-column">
+                            <div class="nav-item-backend-title">
+                                @TextProvider.Get(MenuItem.TEXT_SystemTextsCode)
+                            </div>                            
+                            <div class="small-element-separator"></div>
+                            @foreach (var item in SubMenuItems.OrderBy(p => p.SortOrder))
+                            {
+                                <div class="nav-item-backend-subelement" @onclick="@(() => NavigateTo(item.Url))">
+                                    @if (string.IsNullOrEmpty(item.DynamicName))
+                                    {
+                                        <div class="nav-item-backend-subelement-text font-small">
+                                            <div class="name-container">
+                                                @if (item.NewNotification == true)
+                                                {
+                                                    <div class="red-circle-container">
+                                                        <div class="red-circle"></div>
+                                                    </div>
+                                                }
+                                                @TextProvider.Get(item.TEXT_SystemTextsCode)
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="nav-item-backend-subelement-text font-small">
+                                            @item.DynamicName
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        
+                    }
+                </div>
+                @if (MenuItem.Url != null)
+                {
+                    <div class="nav-item-backend-popupcontainer-footer custom-color-primary" @onclick="@(() => NavigateTo(MenuItem.Url))">
+                        <div class="popupcontainer-main-link font-bold">
+                            @TextProvider.Get("FRONTEND_MENU_MAIN_ITEM_LINK")
+                        </div>
+                        <div class="popupcontainer-main-icon">
+                            <TelerikFontIcon IconClass="@("fas fa-arrow-right")"></TelerikFontIcon>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+    else if (SubMenuItems != null && SubMenuItems.Count() == 1)
+    {
+        string aktiveCSS = "";
+
+        if (SubMenuItems.FirstOrDefault().Url != null && NavManager.Uri.EndsWith(SubMenuItems.FirstOrDefault().Url))
+        {
+            aktiveCSS = "nav-item-backend-active";
+        }
+
+        <div class="nav-item-backend @aktiveCSS" @onclick="@(() => NavigateTo(SubMenuItems.FirstOrDefault().Url))">
+            <NavLink>
+                <div class="icon-Overlay">
+                    @if (SubMenuItems.FirstOrDefault().NewNotification == true)
+                    {
+                        <div class="red-circle-icon" />
+                    }
+                    <span class="nav-fa-item">
+                        <i class="@SubMenuItems.FirstOrDefault().FAIcon"></i>
+                    </span>                    
+                    @if (!SubMenuVisible)
+                    {
+                        <span class="nav-item-tooltip">
+                            @TextProvider.Get(SubMenuItems.FirstOrDefault().TEXT_SystemTextsCode)
+                        </span>
+                    }
+                </div>
+            </NavLink>
+        </div>
+    }
+    else
+    {
+        string aktiveCSS = "";
+
+        if (MenuItem.Url != null && NavManager.Uri.EndsWith(MenuItem.Url))
+        {
+            aktiveCSS = "nav-item-backend-active";
+        }
+
+        <div class="nav-item-backend @aktiveCSS" @onclick="@(() => NavigateTo(MenuItem.Url))">
+            <NavLink>
+                <div class="icon-Overlay">
+                    @if (MenuItem.NewNotification == true)
+                    {
+                        <div class="red-circle-icon" />
+                    }
+                    <span class="nav-fa-item">
+                        <i class="@MenuItem.FAIcon"></i>
+                    </span>                    
+                    @if (!SubMenuVisible)
+                    {
+                        <span class="nav-item-tooltip">
+                            @TextProvider.Get(MenuItem.TEXT_SystemTextsCode)
+                        </span>
+                    }
+                </div>
+            </NavLink>
+        </div>
+    }
+}

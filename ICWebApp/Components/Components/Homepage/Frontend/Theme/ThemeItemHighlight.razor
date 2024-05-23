@@ -1,0 +1,19 @@
+﻿@if(Theme != null)
+{
+    <div class="col-sm-6 col-lg-4">
+        <div class="it-grid-item-wrapper it-grid-item-overlay">
+            <a @onclick="OnItemClicked">
+                <div class="img-responsive-wrapper">
+                    <div class="img-responsive">
+                        <div class="img-wrapper">
+                            <img src="@ImageHelper.GetThemePath(Theme)" alt="@Theme.Title" title="@Theme.Title">
+                        </div>                            
+                    </div>
+                </div>
+                <div class="it-griditem-text-wrapper">
+                    <h3>@Theme.Title</h3>
+                </div>
+            </a>
+        </div>
+    </div>
+}

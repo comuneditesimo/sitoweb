@@ -1,0 +1,41 @@
+﻿@if (MenuItem != null)
+{
+    string aktiveCSS = "";
+
+    if (MenuItem.Url != null && NavManager.Uri.EndsWith(MenuItem.Url))
+    {
+        aktiveCSS = "nav-item-frontend-active";
+    }
+
+
+    @if(string.IsNullOrEmpty(MenuItem.Text))
+    {
+        @if (!string.IsNullOrEmpty(MenuItem.Class))
+        {
+            <a class="nav-link @aktiveCSS" href="@(NavManager.BaseUri.TrimEnd('/') + MenuItem.Url)" data-element="@MenuItem.DataElement" @onclick="@(() => NavigateTo(MenuItem.Url))" @onclick:preventDefault="true">
+                <span class="@MenuItem.Class">@TextProvider.Get(MenuItem.TEXT_SystemTextsCode)</span>
+            </a>
+        }
+        else
+        {
+            <a class="nav-link @aktiveCSS" href="@(NavManager.BaseUri.TrimEnd('/') + MenuItem.Url)" data-element="@MenuItem.DataElement" @onclick="@(() => NavigateTo(MenuItem.Url))" @onclick:preventDefault="true">
+                @TextProvider.Get(MenuItem.TEXT_SystemTextsCode)
+            </a>
+        }
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(MenuItem.Class))
+        {
+            <a class="nav-link @aktiveCSS" href="@(NavManager.BaseUri.TrimEnd('/') + MenuItem.Url)" data-element="@MenuItem.DataElement" @onclick="@(() => NavigateTo(MenuItem.Url))" @onclick:preventDefault="true">
+                <span class="@MenuItem.Class">@MenuItem.Text</span>
+            </a>
+        }
+        else
+        {
+            <a class="nav-link @aktiveCSS" href="@(NavManager.BaseUri.TrimEnd('/') + MenuItem.Url)" data-element="@MenuItem.DataElement" @onclick="@(() => NavigateTo(MenuItem.Url))" @onclick:preventDefault="true">
+                @MenuItem.Text
+            </a>
+        }
+    }
+}

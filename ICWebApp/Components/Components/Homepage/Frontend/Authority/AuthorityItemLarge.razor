@@ -1,0 +1,19 @@
+﻿@if (Item != null)
+{
+    <div class="col-md-6 col-lg-4">
+        <div class="cmp-card-simple card-wrapper pb-0 rounded border border-light shadow-sm">
+            <div class="card shadow-sm rounded">
+                <div class="card-body">
+                    <a class="text-decoration-none" @onclick="OnClick">
+                        <h3 class="card-title t-primary">
+                            @Item.Title
+                        </h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)Item.DescriptionShort)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

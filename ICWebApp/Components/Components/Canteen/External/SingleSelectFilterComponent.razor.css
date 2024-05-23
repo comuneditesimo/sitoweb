@@ -1,0 +1,18 @@
+﻿.filter-main-container {
+    width: 100%;
+    padding: 5px 20px;
+    display: flex;
+    gap: 10px;
+}
+.filter-button {
+    appearance: none;
+    color: grey;
+    border: 1px solid grey;
+    background: white;
+    border-radius: 5px;
+    padding: 3px 5px;
+}
+.filter-button.disabled {
+    background: #F2F2F2;
+    cursor: default;
+}

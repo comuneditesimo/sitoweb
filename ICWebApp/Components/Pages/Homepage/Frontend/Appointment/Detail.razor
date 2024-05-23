@@ -1,0 +1,185 @@
+﻿@page "/Hp/Appointment/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+@using ICWebApp.Components.Components.Homepage.Frontend.Organisation
+@using ICWebApp.Components.Components.Homepage.Frontend.Address
+@using ICWebApp.Components.Components.Homepage.Frontend.Appointment
+
+@if (Item != null)
+{
+    @if (Item.FILE_FileImage_ID != null)
+    {
+        <div class="container-fluid my-3">
+            <div class="row">
+                <figure class="figure px-0 img-full">
+                    <img src="@ImageHelper.GetFilePath(Item.FILE_FileImage_ID.Value)" class="figure-img img-fluid" alt="@Item.Title" title="@Item.Title">
+                </figure>
+            </div>
+        </div>
+    }
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.Description))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DESCRIPTION")" ID="descrizione" Order="0">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)Item.Description)
+                        </div>
+                    </Anchor>
+                }
+                @if (Dates != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_APPOINTMENT_TIMES")" ID="orari" Order="1">
+                        <div class="point-list-wrapper my-4">
+                            @foreach (var d in Dates.OrderBy(p => p.DateFrom).ToList())
+                            {
+                                <AppointmentTimelineComponent FromDate="@d.DateFrom" ToDate="@d.DateTo" />
+                            }
+                        </div>
+                        @{
+                            var currentItem = Dates.Where(p => p.DateFrom >= DateTime.Now).OrderBy(p => p.DateFrom).FirstOrDefault();
+                        }
+                        @if (currentItem != null && currentItem.DateFrom != null && currentItem.DateTo != null && !string.IsNullOrEmpty(currentItem.Title))
+                        {
+                            <div class="mt-5">
+                                <a target="_blank" href="@CalendarHelper.GetFilePath(currentItem.Id, currentItem.DateFrom.Value, currentItem.DateTo.Value, currentItem.Subject, currentItem.DescriptionShort, currentItem.Address)" class="btn btn-outline-primary btn-icon">
+                                    <svg class="icon icon-primary" aria-hidden="true">
+                                        <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-plus-circle"></use>
+                                    </svg>
+                                    <span>@TextProvider.Get("FRONTEND_HOMEPAGE_APPOINTMENT_ADD_TO_CALENDAR")</span>
+                                </a>
+                            </div>
+                        }
+                    </Anchor>
+                }
+                @if (Item.HOME_Organisation_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_ORGANISATION")" ID="organisation" Order="2">
+                        <OrganisationItemSmall OrganisationID="@Item.HOME_Organisation_ID"></OrganisationItemSmall>
+                    </Anchor>
+                }
+                @if (Item != null && !string.IsNullOrEmpty(Item.ContactName) ||
+               !string.IsNullOrEmpty(Item.ContactEMail) ||
+               !string.IsNullOrEmpty(Item.ContactPhoneMobile) ||
+               !string.IsNullOrEmpty(Item.ContactWebsite) ||
+               !string.IsNullOrEmpty(Item.ContactPhone))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT")" ID="contatto" Order="23">
+                        @if (!string.IsNullOrEmpty(Item.ContactName))
+                        {
+                            <div class="cmp-icon-link contact-title">
+                                <span class="list-item-title-icon-wrapper">
+                                    <span class="list-item"><strong>@Item.ContactName</strong></span>
+                                </span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.ContactPhone))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_PHONE")</strong>
+                                <a class="list-item icon-left" href="tel:@Item.ContactPhone" aria-label="Telefono">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.ContactPhone</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.ContactPhoneMobile))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_PHONE_MOBILE")</strong>
+                                <a class="list-item icon-left" href="tel:@Item.ContactPhoneMobile" aria-label="Telefono">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.ContactPhoneMobile</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.ContactEMail))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL")</strong>
+                                <a class="list-item icon-left" href="mailto:@Item.ContactEMail" aria-label="E-Mail">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.ContactEMail</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.ContactWebsite))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_WEBSITE")</strong>
+                                <a class="list-item icon-left" href="@Item.ContactWebsite" aria-label="Homepage">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.ContactWebsite</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.ContactAddress))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_ADDRESS")</strong>
+                                <span class="list-item-title-icon-wrapper">
+                                    <span class="list-item">@Item.ContactAddress</span>
+                                </span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.ContactName))
+                        {
+                            <div class="mt-5">
+                                <a target="_blank" href="@ContactHelper.GetFilePath(Item.ContactName, PhoneNumber: Item.ContactPhone, EMail: Item.ContactEMail, PhoneNumberMobile: Item.ContactPhoneMobile)" class="btn btn-outline-primary btn-icon">
+                                    <svg class="icon icon-primary" aria-hidden="true">
+                                        <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-plus-circle"></use>
+                                    </svg>
+                                    <span>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_ADD_TO_CONTACTS")</span>
+                                </a>
+                            </div>
+                        }
+                    </Anchor>
+                }
+                @if (!string.IsNullOrEmpty(Item.Address))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_ADDRESS_CONTAINER")" ID="indirizzo" Order="3">
+                        <Map Address="@Item.Address"
+                             Latitude="@Item.Lat"
+                             Longitude="@Item.Lang"
+                             Room="@Item.Room" />
+                    </Anchor>
+                }
+                @if (Item.Managed_HOME_Person_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_MANAGED_BY")" ID="a-cura-di" Order="10">
+                        <div class="row">
+                            <div class="col-12 col-sm-4">
+                                <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_PERSONS")</small></h6>
+                                <ul class="d-flex flex-wrap gap-1 mt-2">
+                                    <li>
+                                        <PersonChip HOME_Person_ID="@Item.Managed_HOME_Person_ID.Value"></PersonChip>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.LastChangeDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                            <span class="h6 fw-normal">@Item.LastChangeDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

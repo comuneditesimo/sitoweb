@@ -1,0 +1,73 @@
+﻿.filter-container {
+    margin-top: 5px;
+}
+
+.filter-text {
+    width: 100%;
+    padding: 0px 20px;
+}
+
+.list-container {
+    height: 60vh;
+    padding: 10px 20px;
+}
+
+.name-text {
+    font-weight: bold;
+    margin-bottom: unset;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.checkin-button {
+    margin-left: 10px;
+    appearance: none;
+    border: 1px solid grey;
+    background: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+    .checkin-button:hover {
+        background: rgba(0,0,0,0.1);
+    }
+
+.checkout-button {
+    margin-left: 10px;
+    appearance: none;
+    border: 1px solid grey;
+    background: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+    .checkout-button:hover {
+        background: rgba(0,0,0,0.1);
+    }
+
+.searchTerm-filter-container {
+    display: flex;
+    flex-flow: nowrap;
+    padding: 5px 20px;
+}
+
+    .searchTerm-filter-container .filter-button {
+        margin-left: 10px;
+        appearance: none;
+        color: grey;
+        border: 1px solid grey;
+        background: white;
+        border-radius: 5px;
+        padding: 3px 5px;
+    }
+
+        .searchTerm-filter-container .filter-button.disabled {
+            background: #F2F2F2;
+            cursor: default;
+        }
+
+@media(min-width: 992px) {
+    .list-container {
+        display: 80vh;
+    }
+}

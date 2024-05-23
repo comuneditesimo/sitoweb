@@ -1,0 +1,97 @@
+﻿@page "/Hp/Location/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+@using ICWebApp.Components.Components.Homepage.Frontend.Address
+
+@if (Item != null)
+{
+    @if (Item.FILE_FileImage_ID != null)
+    {
+        <div class="container-fluid my-3">
+            <div class="row">
+                <figure class="figure px-0 img-full">
+                    <img src="@ImageHelper.GetFilePath(Item.FILE_FileImage_ID.Value)" class="figure-img img-fluid" alt="@Item.Title" title="@Item.Title">
+                </figure>
+            </div>
+        </div>
+    }
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.Description))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DESCRIPTION")" ID="descrizione" Order="0">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)Item.Description)                   
+                        </div>
+                    </Anchor>
+                }
+                @if (People != null && People.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_EMPLOYEES")" ID="dipendenti" Order="1">
+                        <div class="row">
+                            @foreach (var p in People)
+                            {
+                                <PersonItemSmall Item="@p"></PersonItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Documents != null && Documents.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DOCUMENTS")" ID="documents" Order="2">
+                        <div class="row">
+                            @foreach (var doc in Documents)
+                            {
+                                <DocumentsItemSmall Document="@doc"></DocumentsItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (!string.IsNullOrEmpty(Item.Address))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_ADDRESS_CONTAINER")" ID="indirizzo" Order="3">
+                        <Map Address="@Item.Address"
+                             Room="@Item.Room"
+                             Latitude="@Item.Lat"
+                             Longitude="@Item.Lang" />
+                    </Anchor>
+                }
+                @if (Item.Managed_Home_Person_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_MANAGED_BY")" ID="a-cura-di" Order="10">
+                        <div class="row">
+                            @if (Item.Managed_Home_Person_ID != null)
+                            {
+                                <div class="col-12 col-sm-4">
+                                    <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_PERSONS")</small></h6>
+                                    <ul class="d-flex flex-wrap gap-1 mt-2">
+                                        <li>
+                                            <PersonChip HOME_Person_ID="@Item.Managed_Home_Person_ID.Value"></PersonChip>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.LastChangeDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                            <span class="h6 fw-normal">@Item.LastChangeDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

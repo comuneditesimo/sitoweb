@@ -1,0 +1,29 @@
+@if (AccessToken == null || _accessTokenValid)
+{
+    <SfTab LoadOn="ContentLoad.Init">
+        <TabEvents Selecting="Select">
+        </TabEvents>
+        <TabAnimationSettings>
+            <TabAnimationPrevious Effect="AnimationEffect.None"></TabAnimationPrevious>
+            <TabAnimationNext Effect="@AnimationEffect.None"></TabAnimationNext>
+        </TabAnimationSettings>
+        <TabItems>
+            @foreach (var canteen in _canteens)
+            {
+                <TabItem>
+                    <ChildContent>
+                        <TabHeader Text="@canteen.Name"></TabHeader>
+                    </ChildContent>
+                    <ContentTemplate>
+                        <CanteenLiveList CanteenId="@canteen.ID" External="@(AccessToken != null)"></CanteenLiveList>
+                    </ContentTemplate>
+                </TabItem>
+            }
+        </TabItems>
+    </SfTab>
+}
+else
+{
+    <div>Der Link ist ungülitg</div>
+}
+

@@ -1,0 +1,181 @@
+﻿@using Syncfusion.Blazor.Inputs
+
+@if (Item != null)
+{
+    <div class="bg-primary no-read">
+        <div class="container">
+            <div class="row d-flex justify-content-center bg-primary">
+                <div class="col-12 col-lg-6 p-lg-0 px-3">
+                    <div class="cmp-rating pt-lg-80 pb-lg-80" id="rating">
+                        <div class="card shadow card-wrapper" data-element="feedback">
+                            @if (Step != 3)
+                            {
+                                <div class="cmp-rating__card-first">
+                                    <div class="card-header border-0">
+                                        <h2 class="title-medium-2-semi-bold mb-0" data-element="feedback-title">
+                                            @TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_STARS")
+                                        </h2>
+                                    </div>
+                                    <div class="card-body footer-rating">
+                                        <SfRating Value="@Item.StarsDouble" ValueChanged="OnStarsChanged" ShowTooltip="false" Precision="PrecisionType.Full">
+                                            <FullTemplate>
+                                                <label class="full rating-star rating-start-active" for="star1a" data-element="feedback-rate-@(context.Index + 1)">
+                                                    <svg class="icon icon-sm" role="img">
+                                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-star-full"></use>
+                                                    </svg>
+                                                    <span class="visually-hidden" id="@(context.Index + 1)-star">Valuta @(context.Index + 1) stelle su 5</span>
+                                                </label>
+                                            </FullTemplate>
+                                            <EmptyTemplate>
+                                                <label class="full rating-star" for="star1a" data-element="feedback-rate-@(context.Index + 1)">
+                                                    <svg class="icon icon-sm" role="img">
+                                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-star-full"></use>
+                                                    </svg>
+                                                    <span class="visually-hidden" id="@(context.Index + 1)-star">Valuta @(context.Index + 1) stelle su 5</span>
+                                                </label>
+                                            </EmptyTemplate>
+                                        </SfRating>
+                                    </div>
+                                </div>
+                                <div class="form-rating">
+                                    @if (Step == 1)
+                                    {
+                                        <div class="rating-shadow active" data-step="1">
+                                            <div class="cmp-steps-rating">
+                                                @if (Item.Stars > 3)
+                                                {
+                                                    <fieldset class="fieldset-rating-one" data-element="feedback-rating-positive">
+                                                        <legend class="iscrizioni-header w-100">
+                                                            <h3 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                                                                <span class="d-block d-lg-inline" data-element="feedback-rating-question">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_POSITIV") </span><span class="step">1/2</span>
+                                                            </h3>
+                                                        </legend>
+                                                        <div class="cmp-steps-rating__body">
+                                                            <div class="cmp-radio-list">
+                                                                <div class="card-teaser shadow-rating">
+                                                                    <div class="card-body">
+                                                                        <div class="form-check m-0">
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating1" type="radio" id="radio-1" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_1"))">
+                                                                                <label for="radio-1" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_1")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating1" type="radio" id="radio-2" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_2"))">
+                                                                                <label for="radio-2" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_2")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating1" type="radio" id="radio-3" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_3"))">
+                                                                                <label for="radio-3" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_3")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating1" type="radio" id="radio-4" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_4"))">
+                                                                                <label for="radio-4" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_4")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating1" type="radio" id="radio-5" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_5"))">
+                                                                                <label for="radio-5" data-element="feedback-rating-answer">
+                                                                                    @TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_5")
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                }
+                                                else
+                                                {
+                                                    <fieldset class="fieldset-rating-two" data-element="feedback-rating-negative">
+                                                        <legend class="iscrizioni-header w-100">
+                                                            <h3 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                                                                <span class="d-block d-lg-inline" data-element="feedback-rating-question">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_NEGATIV")</span><span class="step">1/2</span>
+                                                            </h3>
+                                                        </legend>
+                                                        <div class="cmp-steps-rating__body">
+                                                            <div class="cmp-radio-list">
+                                                                <div class="card-teaser shadow-rating">
+                                                                    <div class="card-body">
+                                                                        <div class="form-check m-0">
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating2" type="radio" id="radio-6" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_6"))">
+                                                                                <label for="radio-6" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_6")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating2" type="radio" id="radio-7" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_7"))">
+                                                                                <label for="radio-7" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_7")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating2" type="radio" id="radio-8" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_8"))">
+                                                                                <label for="radio-8" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_8")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating2" type="radio" id="radio-9" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_9"))">
+                                                                                <label for="radio-9" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_9")</label>
+                                                                            </div>
+                                                                            <div class="radio-body border-bottom border-light cmp-radio-list__item">
+                                                                                <input name="rating2" type="radio" id="radio-10" @onchange="@(() => QuestionSelected("HOME_QUESTIONNAIRE_QUESTION_ANSWER_10"))">
+                                                                                <label for="radio-10" data-element="feedback-rating-answer">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ANSWER_10")</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (Step == 2)
+                                    {
+                                        <div data-step="2">
+                                            <div class="cmp-steps-rating">
+                                                <fieldset>
+                                                    <legend class="iscrizioni-header w-100">
+                                                        <h3 class="step-title d-flex align-items-center justify-content-between drop-shadow mb-4">
+                                                            <span class="d-block d-lg-inline">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_ADDITIONAL_INFORMATION")</span><span class="step">2/2</span>
+                                                        </h3>
+                                                    </legend>
+                                                    <div class="cmp-steps-rating__body">
+                                                        <div class="form-group shadow-rating">
+                                                            <label for="formGroupExampleInputWithHelp">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_AI_DETAILS")</label>
+                                                            <input @bind-value="Item.AdditionalInformation" class="form-control" id="formGroupExampleInputWithHelp" aria-describedby="formGroupExampleInputWithHelpDescription" maxlength="200" type="text" data-element="feedback-input-text">
+                                                            <small id="formGroupExampleInputWithHelpDescription" class="form-text">@TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_AI_MAX_CHARS")</small>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Step != 0 && Step != 3)
+                                    {
+                                        <div class="d-flex flex-nowrap pt-4 w-100 justify-content-center">
+                                            <button class="btn btn-outline-primary fw-bold me-4 btn-back" type="button" @onclick="Previous">
+                                                @TextProvider.Get("BUTTON_BACK")
+                                            </button>
+                                            <button class="btn btn-primary fw-bold btn-next" type="submit" form="rating" @onclick="Next">
+                                                @TextProvider.Get("BUTTON_NEXT")
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="cmp-rating__card-second" data-step="3">
+                                    <div class="card-header border-0">
+                                        <h2 class="title-medium-2-bold mb-0" id="rating-feedback">
+                                            @TextProvider.Get("HOME_QUESTIONNAIRE_QUESTION_THANKS")
+                                        </h2>
+                                    </div>
+                                </div>
+                            }
+                            <input style="display: none !important" class="form-control" id="formGroupExampleInputWithHelp" aria-describedby="formGroupExampleInputWithHelpDescription" maxlength="200" type="text" data-element="feedback-input-text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

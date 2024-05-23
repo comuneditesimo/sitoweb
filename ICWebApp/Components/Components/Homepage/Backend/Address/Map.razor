@@ -1,0 +1,40 @@
+﻿@using ICWebApp.Domain.Models.Syncfusion
+
+@if (ShowAddressBar)
+{
+    <div class="form-group">
+        <label class="form-label">@TextProvider.Get("GEO_ADDRESS_LOCATION")</label>    
+    </div>
+    <div class="small-element-separator"></div>
+}
+<div class="form-group button-container">
+    @if (ShowAddressBar)
+    {
+        <InputText name="@Guid.NewGuid()" @bind-Value="@_address" class="form-control"></InputText>
+    }
+    <div class="btn btn-secondary form-group-btn-min-width" @onclick="SetGeoLocation">@TextProvider.Get("SEARCH_ON_MAP")</div>
+    <GetCurrentGeoDataComponent CssClass="form-group-btn-min-width" SetCurrentLocation="@SetCurrentLocation" />
+</div>
+@if (EnableRoom == true)
+{
+    <div class="small-element-separator"></div>
+    <div class="form-group">
+        <label class="form-label">@TextProvider.Get("GEO_ADDRESS_ROOM")</label>
+        <InputText name="@Guid.NewGuid()" @bind-Value="_room" class="form-control"></InputText>
+    </div>
+}
+<div class="extra-small-element-separator"></div>
+<div class="map-container">
+    <SfMaps Height="100%" @ref="SfMap">
+        <MapsLayers>
+            <MapsLayer UrlTemplate="https://a.tile.openstreetmap.org/level/tileX/tileY.png" TValue="string">
+                <MapsCenterPosition Latitude="@Data.Latitude" Longitude="@Data.Longitude" />
+                <MapsZoomSettings Enable="true" ZoomFactor="18" MinZoom="14" MaxZoom="19" />
+                <MapsEvents OnDoubleClick="MapClicked"></MapsEvents>
+                <MapsMarkerSettings>
+                    <MapsMarker Visible="true" DataSource="@(new List<MarkerData>(){ Data })" TValue="MarkerData" Height="25" Width="25" Fill="red"></MapsMarker>
+                </MapsMarkerSettings>
+            </MapsLayer>
+        </MapsLayers>
+    </SfMaps>   
+</div>

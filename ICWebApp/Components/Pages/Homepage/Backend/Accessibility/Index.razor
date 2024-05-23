@@ -1,0 +1,79 @@
+﻿@page "/Backend/Homepage/Accessibility"
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+
+@layout MainLayout
+
+@if(Data != null && Languages != null)
+{
+    <div class="custom-background-default">
+        <EditForm Model="Data">
+            <DataAnnotationsValidator />
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_GENERAL")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_ACCESSIBLITY_DESCRIPTION")</label>
+            </div>
+            <div class="small-element-separator"></div>
+            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_ACCESSIBLITY_LINK")</label>
+                @if (Data.HOME_Accessibility_Extended != null && Data.HOME_Accessibility_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_Accessibility_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Link</label>
+                }
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Accessibility_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Link" class="form-control"></InputText>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_ACCESSIBLITY_CONTENT")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_Accessibility_Extended != null && Data.HOME_Accessibility_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    @if (string.IsNullOrEmpty(Data.HOME_Accessibility_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                    {
+                        Data.HOME_Accessibility_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = Data.HOME_Accessibility_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.HOME_Accessibility_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                    Tools="@Tools"
+                                    EditMode="@EditorEditMode.Div"
+                                    Class="font-normal"
+                                    Height="600px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                    RemoveMsClasses="true"
+                                                    RemoveMsStyles="true"
+                                                    RemoveHtmlComments="true"
+                                                    RemoveAllAttributes="true"
+                                                    StripTags="@StripTags"
+                                                    RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>            
+            <div class="element-separator"></div>
+            <div class="form-button-container form-group-small">
+                @if (!string.IsNullOrEmpty(SaveMessage))
+                {
+                    <div class="extra-small-element-separator"></div>
+                    <div class="form-group form-group-small form-success">
+                        @SaveMessage
+                    </div>
+                }
+                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+}

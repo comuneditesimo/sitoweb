@@ -1,0 +1,22 @@
+﻿@if (ItemList != null && ItemList.Any())
+{
+    <div class="filter-main-container">
+        <SfDropDownList TValue="string" TItem="string" PopupHeight="230px" @bind-Value="@SelectedItem" DataSource="@ItemList" CssClass="School-Filter-External-Access"/>
+        @if (!string.IsNullOrEmpty(SelectedItem))
+        {
+            <button class="filter-button" type="button" @onclick="() => ClearFilter()">
+                <span>
+                    <i class="fa-solid fa-filter-slash"></i>
+                </span>
+            </button>
+        }
+        else
+        {
+            <button class="filter-button disabled" type="button">
+                <span>
+                    <i class="fa-solid fa-filter-slash"></i>
+                </span>
+            </button>
+        }
+    </div>
+}

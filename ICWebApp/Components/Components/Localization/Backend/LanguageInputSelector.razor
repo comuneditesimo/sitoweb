@@ -1,0 +1,11 @@
+﻿<div class="formbuilder-language-picker form-group-small">
+    <label class="form-label">@TextProvider.Get("BACKEND_FORM_DEFINITION_LANGUAGE_PICKER")</label>
+    <TelerikButtonGroup SelectionMode="@ButtonGroupSelectionMode.Single">
+        <ButtonGroupToggleButton @bind-Selected="@German">@TextProvider.Get("LANGUAGE_GERMAN")</ButtonGroupToggleButton>
+        <ButtonGroupToggleButton @bind-Selected="@Italian">@TextProvider.Get("LANGUAGE_ITALIAN")</ButtonGroupToggleButton>
+        @if(HasLadinisch)
+        {
+            <ButtonGroupToggleButton @bind-Selected="@Ladinisch">@TextProvider.Get("LANGUAGE_LADINISCH")</ButtonGroupToggleButton>
+        }
+    </TelerikButtonGroup>
+</div>

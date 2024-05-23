@@ -1,0 +1,61 @@
+﻿@if (Person != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                @if (Person.FILE_FileImage_ID != null)
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper">
+                                <img src="@ImageHelper.GetFilePath(Person.FILE_FileImage_ID)" alt="@Person.Fullname" title="@Person.Fullname">
+                            </figure>
+                        </div>
+                    </div>
+                }
+
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (Person.HOME_Person_Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(Person.HOME_Person_Type_ID.Value))">
+                                    @Person.Type
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @Person.Type
+                                </span>
+                            }
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" data-focus-mouse="false">
+                        <h3 class="card-title">@Person.Fullname</h3>
+                    </a>
+                    @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Person.DescriptionShort))
+                    {
+                        <p class="text-paragraph mb-0">
+                            @((MarkupString)Person.DescriptionShort)
+                        </p>
+                    }
+                    else if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Person.AreaOfWork))
+                    {
+                        <p class="text-paragraph mb-0">
+                            @((MarkupString)Person.AreaOfWork)
+                        </p>
+                    }
+                    else if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Person.Tasks))
+                    {
+                        <p class="text-paragraph mb-0">
+                            @((MarkupString)Person.Tasks)
+                        </p>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

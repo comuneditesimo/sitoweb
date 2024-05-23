@@ -1,0 +1,58 @@
+﻿@if (News != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                @if (News.FILE_FileInfo_ID != null)
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper">
+                                <img src="@ImageHelper.GetFilePath(News.FILE_FileInfo_ID)" alt="@News.Subject" title="@News.Subject">
+                            </figure>
+                        </div>
+                    </div>
+                }
+
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (News.HOME_Article_Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(News.HOME_Article_Type_ID.Value))" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + "/hp/Type/News/" + News.HOME_Article_Type_ID)">
+                                    @News.Type
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @News.Type
+                                </span>
+                            }
+                        }
+                        @if (News.ReleaseDate != null)
+                        {
+                            <span class="data u-grey-light">
+                                @News.ReleaseDate.Value.ToString("dd MMM yy").Replace(".", "")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="data u-grey-light">
+                                @News.CreationDate.ToString("dd MMM yy").Replace(".", "")
+                            </span>
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + "/hp/News/" + News.ID)" data-focus-mouse="false">
+                        <h3 class="card-title">@News.Subject</h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)News.ShortText)
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

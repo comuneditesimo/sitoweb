@@ -1,0 +1,34 @@
+﻿@if (Document != null)
+{
+    <div class="col-sm-6 col-lg-6 mb-3">
+        <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+            <div class="card-body pe-3">
+                @if (!string.IsNullOrEmpty(Document.Type))
+                {
+                    <div class="category-top text-decoration-none">
+                        <span class="category">
+                            @Document.Type
+                        </span>
+                    </div>
+                }
+                <a class="text-decoration-none" @onclick="OnClick" data-element="service-area">
+                    <h5 class="card-title t-primary">@Document.Title</h5>
+                </a>
+                <p class="text-paragraph mb-0 pt-3">
+                    @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Document.DescriptionShort))
+                    {
+                        @((MarkupString)Document.DescriptionShort.Replace("<p>", "").Replace("</p>", ""))
+                    }
+                </p>
+                <div class="d-flex flex-nowrap">
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                    </svg>
+                    <a class="text-decoration-none" @onclick="Download" aria-label="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" data-focus-mouse="false">
+                        @TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

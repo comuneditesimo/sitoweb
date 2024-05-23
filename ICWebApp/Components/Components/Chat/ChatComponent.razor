@@ -1,0 +1,92 @@
+﻿@using System.Globalization
+@using System.Text.RegularExpressions
+@using System.Web
+
+<div class="rchat-container">
+    <ChatBusyIndicator Busy="_busy"></ChatBusyIndicator>
+    <div class="rchat-message-panel">
+        @{
+            V_CHAT_Message? previousMsg = null;
+        }
+        <Virtualize Items="messages" Context="msg" OverscanCount="10">
+            @{
+                var css = "";
+                if (msg.AUTH_Users_ID == SessionWrapper.CurrentUser?.ID || msg.AUTH_Users_ID == SessionWrapper.CurrentMunicipalUser?.ID)
+                {
+                    css = "me";
+                }
+
+                if (!(previousMsg != null && previousMsg.AUTH_Users_ID == msg.AUTH_Users_ID && previousMsg.SendDate.AddMinutes(2) >= msg.SendDate))
+                {
+                    css += " msg-gap";
+                }
+            }
+            <div class="rchat-message @css">
+                @if (!(previousMsg != null && previousMsg.AUTH_Users_ID == msg.AUTH_Users_ID && previousMsg.SendDate.AddMinutes(2) >= msg.SendDate))
+                {
+                    <div class="rchat-sender-container">
+                        @if (!(msg.AUTH_Users_ID == SessionWrapper.CurrentUser?.ID || msg.AUTH_Users_ID == SessionWrapper.CurrentMunicipalUser?.ID))
+                        {
+                            <b>@msg.Firstname @msg.Lastname</b>
+                        }
+                        @if (msg.SendDate.Date != DateTime.Today)
+                        {
+                            @if (msg.SendDate.Year != DateTime.Today.Year)
+                            {
+                                <span class="rchat-date">@msg.SendDate.ToShortDateString()</span>
+                            }
+                            else
+                            {
+                                <span class="rchat-date">@msg.SendDate.ToString("dd" + DateTimeFormatInfo.CurrentInfo.DateSeparator + "MM")</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="rchat-date">@TextProvider.Get("TODAY")</span>
+                        }
+                        <span class="rchat-date">@msg.SendDate.ToShortTimeString()</span>
+                    </div>
+                }
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(msg.Message))
+                {
+                    <div class="rchat-message-msg-container">
+                        @{
+                            var plain = HttpUtility.HtmlEncode(msg.Message);
+                            string pattern = @"((http|https):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)";
+                            string formatMessage = Regex.Replace(plain, pattern, "<a target='blank' href=\"$1\">$1</a>");
+                        }
+                        @((MarkupString) formatMessage)
+                    </div>
+                }
+                @if (documents.Count(e => e.CHAT_Message_ID == msg.ID) > 0)
+                {
+                    <div class="rchat-message-docs-container">
+                        @foreach (var doc in documents.Where(e => e.CHAT_Message_ID == msg.ID))
+                        {
+                            <div class="rchat-message-document">
+                                <div class="rchat-message-document-download" @onclick="() => DownloadFile(doc.FILE_FileInfo_ID)">
+                                    <span>
+                                        <i class="fa-light  fa-lg fa-download"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <i class="fa-light @FileExtensionUtil.GetFileIconFromExtension(doc.FileExtension) rchat-upload-doc-icon"></i>
+                                    </span>
+                                </div>
+                                <div class="rchat-message-document-name">
+                                    @doc.FileName@doc.FileExtension
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            @{
+                previousMsg = msg;
+            }
+        </Virtualize>
+        <div class="rchat-spacer" id="chat-end"></div>
+    </div>
+    <ChatInputComponent ContextElementId="@ContextElementId" ContextName="@ContextName" OnSendMessage="SendMessage" AllowSend="@AllowSend"></ChatInputComponent>
+</div>

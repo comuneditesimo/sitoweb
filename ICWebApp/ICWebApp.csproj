@@ -1,0 +1,328 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Configurations>Debug;Release;ReleaseTest</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\Pages\Canteen\Shared\**" />
+    <Compile Remove="Components\Pages\Form\Shared\**" />
+    <Compile Remove="Components\Pages\Tasks\Frontend\**" />
+    <Compile Remove="wwwroot\js\Siag\**" />
+    <Content Remove="Components\Pages\Canteen\Shared\**" />
+    <Content Remove="Components\Pages\Form\Shared\**" />
+    <Content Remove="Components\Pages\Tasks\Frontend\**" />
+    <Content Remove="wwwroot\js\Siag\**" />
+    <EmbeddedResource Remove="Components\Pages\Canteen\Shared\**" />
+    <EmbeddedResource Remove="Components\Pages\Form\Shared\**" />
+    <EmbeddedResource Remove="Components\Pages\Tasks\Frontend\**" />
+    <EmbeddedResource Remove="wwwroot\js\Siag\**" />
+    <None Remove="Components\Pages\Canteen\Shared\**" />
+    <None Remove="Components\Pages\Form\Shared\**" />
+    <None Remove="Components\Pages\Tasks\Frontend\**" />
+    <None Remove="wwwroot\js\Siag\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\css\Layout\Frontend\MyCivisLayout.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Pages\Organziation\Backend\Detail.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Pages\Organziation\Backend\Detail.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ICWebApp.Application\ICWebApp.Application.csproj" />
+    <ProjectReference Include="..\ICWebApp.DataStore.MSSQL\ICWebApp.DataStore.MSSQL.csproj" />
+    <ProjectReference Include="..\ICWebApp.Domain\ICWebApp.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\intlTel\" />
+    <Folder Include="wwwroot\Images\AUTH\" />
+    <Folder Include="wwwroot\Images\BusyIndicator\" />
+	<Folder Include="wwwroot\Images\FESR_EFRE\" />
+    <Folder Include="wwwroot\Images\intlTel\" />
+    <Folder Include="wwwroot\Images\Status\" />
+    <Folder Include="wwwroot\js\intlTel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\css\bootstrap-italia\assets\upload-drag-drop-icon.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\css\bootstrap-italia.min.css.map" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-700.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-700.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-700italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-700italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-regular.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Lora\lora-v20-latin-ext_latin-regular.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-700.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-700.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-700italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-700italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-regular.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Roboto_Mono\roboto-mono-v13-latin-ext_latin-regular.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-300.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-300.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-300italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-300italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-600.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-600.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-600italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-600italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-700.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-700.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-700italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-700italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-italic.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-italic.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-regular.svg" />
+    <None Include="wwwroot\css\bootstrap-italia\fonts\Titillium_Web\titillium-web-v10-latin-ext_latin-regular.woff2" />
+    <None Include="wwwroot\css\bootstrap-italia\js\bootstrap-italia.bundle.min.js" />
+    <None Include="wwwroot\css\bootstrap-italia\js\bootstrap-italia.min.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\accept-overlay.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\accept-overlay.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\accordion.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\accordion.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\alert.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\alert.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\backToTop.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\backToTop.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\button.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\button.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\carousel-bi.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\carousel-bi.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\carousel.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\carousel.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\collapse.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\collapse.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\cookiebar.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\cookiebar.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\dimmer.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\dimmer.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\dropdown.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\dropdown.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\fonts-loader.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\fonts-loader.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\form-validate.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\form-validate.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\forward.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\forward.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\header-sticky.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\header-sticky.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\history-back.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\history-back.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\init.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\init.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-label.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-label.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-number.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-number.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-password.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-password.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-search-autocomplete.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input-search-autocomplete.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\input.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\list.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\list.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\masonry.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\masonry.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\modal.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\modal.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\navbar-collapsible.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\navbar-collapsible.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\navscroll.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\navscroll.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\notification.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\notification.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\offcanvas.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\offcanvas.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\popover.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\popover.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\progress-donut.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\progress-donut.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\scrollspy.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\scrollspy.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\select-autocomplete.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\select-autocomplete.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\sticky.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\sticky.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\tab.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\tab.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\toast.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\toast.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\tooltip.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\tooltip.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\track-focus.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\track-focus.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\transfer.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\transfer.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\upload-dragdrop.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\upload-dragdrop.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\cookies.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\cookies.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\device.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\device.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\dom.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\dom.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\observer.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\observer.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\on-document-scroll.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\on-document-scroll.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\pageScroll.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\pageScroll.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\tween.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\tween.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\youtube-video.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\util\youtube-video.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\videoplayer.js" />
+    <None Include="wwwroot\css\bootstrap-italia\plugins\videoplayer.js.map" />
+    <None Include="wwwroot\css\bootstrap-italia\svg\sprites.svg" />
+    <None Include="wwwroot\css\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-duotone-900.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-light-300.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-sharp-solid-900.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-thin-100.woff2" />
+    <None Include="wwwroot\css\webfonts\fa-v4compatibility.woff2" />
+    <None Include="wwwroot\css\Layout\Frontend\MyCivisLayout.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\css\Layout\Frontend\FrontendLayout.css" />
+    <None Include="wwwroot\js\CodeInputComponent\CodeInputComponent.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.3.0" />
+    <PackageReference Include="ClosedXML" Version="0.97.0" />
+    <PackageReference Include="Freshdesk" Version="0.6.1" />
+    <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
+    <PackageReference Include="HtmlRenderer.PdfSharp.NetStandard2" Version="1.5.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="RestSharp" Version="106.15.0" />
+    <PackageReference Include="Syncfusion.Blazor.Buttons" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Calendars" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Charts" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.ImageEditor" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Inputs" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Maps" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.PdfViewerServer.Windows" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Popups" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.RichTextEditor" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Schedule" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="25.2.4" />
+    <PackageReference Include="Syncfusion.Licensing" Version="25.2.4" />
+    <PackageReference Include="Telerik.Reporting" Version="18.0.24.305" />
+    <PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="17.1.23.718" />
+    <PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="17.1.23.718" />
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="5.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\fonts\Ubuntu-Bold.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu-Bold.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu-Light.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu-Light.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu-Medium.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu-Medium.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="wwwroot\fonts\Ubuntu.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Classes\Syncfusion\Resources\SfResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SfResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\fonts\Ubuntu-Bold.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu-Bold.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu-Light.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu-Light.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu-Medium.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu-Medium.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Ubuntu.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Classes\Syncfusion\Resources\SfResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SfResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Components\Form\Chat\FormChat.razor" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,50 @@
+/*Input block*/
+.rchat-input-container {
+    background-color: #E8EBFA;
+}
+.rchat-input-form {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+}
+
+.rchat-input-text {
+    border: none;
+    padding-left: 10px;
+    box-shadow: none !important;
+    outline: none !important;
+    appearance: none !important;
+    color: #191919;
+    font-weight: normal;
+    background-color: transparent;
+    border-bottom: 1px solid #cccccc;
+    flex: 1;
+}
+.rchat-input-text.focus--mouse {
+    border: none !important;
+    border-bottom: 1px solid #777777 !important;
+}
+.rchat-input-text::placeholder {
+    font-size: 1rem;
+    font-weight: normal;
+}
+.rchat-button {
+    border: none;
+    background-color: transparent;
+}
+.rchat-button:hover {
+    color: var(--primary);
+}
+.rchat-button:disabled:hover {
+    color: #cccccc;
+    cursor: default;
+}
+.rchat-button:disabled {
+    color: #cccccc;
+}
+.rchat-input-not-allowed {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    color: var(--primary);
+}

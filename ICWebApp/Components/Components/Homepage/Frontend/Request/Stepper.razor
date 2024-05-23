@@ -1,0 +1,229 @@
+﻿
+<div class="container">
+    @if (Step == 0)
+    {
+        <div class="cmp-info-progress d-flex" data-progress="1">
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end step-active">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_LOCATION")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DATES")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DETAILS")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_REQUESTEE")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_RESUMEE")</span>
+                </div>
+            </div>
+            <div class="iscrizioni-header d-lg-none w-100">
+                <h4 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                    <span class="d-block d-lg-inline">
+                        @TextProvider.Get("HOME_REQUEST_LOCATION")
+                    </span>
+                    <span class="step">1/5</span>
+                </h4>
+                <p class="title-xsmall mt-40 mb-3">@TextProvider.Get("HOME_REQUEST_REQUIRED_FIELDS")</p>
+            </div>
+        </div>
+    }
+    else if (Step == 1)
+    {
+        <div class="cmp-info-progress d-flex" data-progress="2">
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end completed">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_LOCATION")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end step-active">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DATES")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DETAILS")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_REQUESTEE")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_RESUMEE")</span>
+                </div>
+            </div>
+            <div class="iscrizioni-header d-lg-none w-100">
+                <h4 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                    <span class="d-block d-lg-inline">
+                        @TextProvider.Get("HOME_REQUEST_DATES")
+                    </span>
+                    <span class="step">2/5</span>
+                </h4>
+                <p class="title-xsmall mt-40 mb-3">@TextProvider.Get("HOME_REQUEST_REQUIRED_FIELDS")</p>
+            </div>
+        </div>
+    }
+    else if (Step == 2)
+    {
+        <div class="cmp-info-progress d-flex" data-progress="2">
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end completed">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_LOCATION")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end step-active">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DATES")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DETAILS")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_REQUESTEE")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_RESUMEE")</span>
+                </div>
+            </div>
+            <div class="iscrizioni-header d-lg-none w-100">
+                <h4 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                    <span class="d-block d-lg-inline">
+                        @TextProvider.Get("HOME_REQUEST_DETAILS")
+                    </span>
+                    <span class="step">3/5</span>
+                </h4>
+                <p class="title-xsmall mt-40 mb-3">@TextProvider.Get("HOME_REQUEST_REQUIRED_FIELDS")</p>
+            </div>
+        </div>
+    }
+    else if (Step == 3)
+    {
+        <div class="cmp-info-progress d-flex" data-progress="2">
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end completed">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_LOCATION")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end step-active">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DATES")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DETAILS")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_REQUESTEE")</span>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_RESUMEE")</span>
+                </div>
+            </div>
+            <div class="iscrizioni-header d-lg-none w-100">
+                <h4 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                    <span class="d-block d-lg-inline">
+                        @TextProvider.Get("HOME_REQUEST_REQUESTEE")
+                    </span>
+                    <span class="step">4/5</span>
+                </h4>
+                <p class="title-xsmall mt-40 mb-3">@TextProvider.Get("HOME_REQUEST_REQUIRED_FIELDS")</p>
+            </div>
+        </div>
+    }
+    else if (Step == 4)
+    {
+
+        <div class="cmp-info-progress d-flex" data-progress="2">
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end completed">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_LOCATION")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end step-active">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DATES")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_DETAILS")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_REQUESTEE")</span>
+                    <svg class="d-block icon icon-primary icon-sm" aria-hidden="true">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-check"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="info-progress-wrapper d-none d-lg-flex w-100 px-3 flex-column justify-content-end">
+                <div class="info-progress-body d-flex justify-content-between align-self-end align-items-end w-100 py-3">
+                    <span class="d-block h-100 title-medium text-uppercase">@TextProvider.Get("HOME_REQUEST_RESUMEE")</span>
+                </div>
+            </div>
+            <div class="iscrizioni-header d-lg-none w-100">
+                <h4 class="step-title d-flex align-items-center justify-content-between drop-shadow">
+                    <span class="d-block d-lg-inline">
+                        @TextProvider.Get("HOME_REQUEST_RESUMEE")
+                    </span>
+                    <span class="step">5/5</span>
+                </h4>
+                <p class="title-xsmall mt-40 mb-3">@TextProvider.Get("HOME_REQUEST_REQUIRED_FIELDS")</p>
+            </div>
+        </div>
+    }
+</div>

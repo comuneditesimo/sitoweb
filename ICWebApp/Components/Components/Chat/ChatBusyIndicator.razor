@@ -1,0 +1,34 @@
+@if (Busy)
+{
+    <div class="rchat-loading">
+        <i class="fa-duotone fa-spinner fa-spin-pulse fa-2xl"></i>
+    </div>
+    <style>
+    .rchat-loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #0000000c;
+        backdrop-filter: blur(1px);
+        z-index: 5;
+    }
+</style>
+}
+
+@code {
+
+    [Parameter]
+    public bool Busy { get; set; } = true;
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+        base.OnParametersSet();
+    }
+
+}

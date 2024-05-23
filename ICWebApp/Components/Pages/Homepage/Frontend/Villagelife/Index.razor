@@ -1,0 +1,131 @@
+﻿@page "/Hp/Villagelife"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Appointment
+@using ICWebApp.Components.Components.Homepage.Frontend.Location
+@using ICWebApp.Components.Components.Homepage.Frontend.Newsletter
+@using ICWebApp.Components.Components.Images
+
+<section class="hero-img">
+    <section class="it-hero-wrapper it-hero-small-size cmp-hero-img-small">
+        <div class="img-responsive-wrapper">
+            <div class="img-responsive">
+                <div class="img-wrapper">
+                    <Slideshow FileImageList="@FileImageList.Where(p => p.FILE_FileImage_ID != null).Select(p => p.FILE_FileImage_ID.Value).ToList()"></Slideshow>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<div class="bg-grey-dsk py-5">
+    <div class="container">
+        <h2 class="title-xxlarge mb-4">@TextProvider.Get("HOMEPAGE_FRONTEND_HIGHLITGHTED_EVENTS")</h2>
+        <div class="row g-4">
+            @foreach (var e in Events.OrderByDescending(p => p.Highlight).ThenBy(p => p.DateFrom).Take(3).ToList())
+            {
+                <AppointmentItemLarge Appointment="e"></AppointmentItemLarge>
+            }
+            <div class="d-flex justify-content-end">
+                <a href="#" @onclick="GoToEvents" @onclick:stopPropagation="true" class="btn btn-outline-primary full-mb" aria-label="aria-label" data-element="live-button-events">
+                    @TextProvider.Get("HOMEPAGE_FRONTEND_ALL_EVENTS")
+                    <svg class="icon icon-primary icon-xs ml-10">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bg-grey-dsk py-5">
+    <div class="container">
+        <h2 class="title-xxlarge mb-4">@TextProvider.Get("HOMEPAGE_FRONTEND_HIGHLITGHTED_LOCATIONS")</h2>
+        <div class="row g-4">
+            @foreach (var e in Locations.OrderByDescending(p => p.Highlight).ThenBy(p => p.Title).Take(3).ToList())
+            {
+                <LocationItemLarge Location="e"></LocationItemLarge>
+            }
+            <div class="d-flex justify-content-end">
+                <a href="#" @onclick="GoToLocations" @onclick:stopPropagation="true" class="btn btn-outline-primary full-mb" aria-label="aria-label" data-element="live-button-locations">
+                    @TextProvider.Get("HOMEPAGE_FRONTEND_ALL_LOCATIONS")
+                    <svg class="icon icon-primary icon-xs ml-10">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="py-5">
+    <div class="container">
+        <h2 class="title-xxlarge mb-4">@TextProvider.Get("HOMEPAGE_FRONTEND_MUNICIPAL_NEWS")</h2>
+        <div class="row g-4">
+            @foreach (var e in Newsletter.OrderByDescending(p => p.ReleaseDate).ThenByDescending(p => p.CreationDate).ToList())
+            {
+                <NewsletterItemLarge Newsletter="e"></NewsletterItemLarge>
+            }
+            <div class="d-flex justify-content-end">
+                <a @onclick="GoToMunicipalNewsLetter" class="btn btn-outline-primary full-mb" aria-label="aria-label" data-element="live-button-locations">
+                    @TextProvider.Get("HOMEPAGE_FRONTEND_ALL_MUNICIPAL_NEWS")
+                    <svg class="icon icon-primary icon-xs ml-10">
+                        <use href="css/bootstrap-italia/svg/sprites.svg#it-arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ThematicSites != null && ThematicSites.Any())
+{
+    <div class="py-5">
+        <div class="container">
+            <h2 class="title-xxlarge mb-4">@TextProvider.Get("FRONTEND_HOMEPAGE_VILLAGELIFE_THEMATIC_SITE")</h2>
+            <div class="row g-4">
+                @foreach (var ts in ThematicSites.OrderBy(p => p.Title))
+                {
+                    @if (!string.IsNullOrEmpty(ts.Url))
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card-wrapper border border-light rounded shadow-sm">
+                                <div class="card no-after rounded">
+                                    <div class="card-body">
+                                        <a class="text-decoration-none" href="@ts.Url" data-focus-mouse="false" target="_blank">
+                                            <h3 class="card-title">@ts.Title</h3>
+                                        </a>
+                                        @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(ts.DescriptionShort))
+                                        {
+                                            <p class="text-paragraph mb-0">
+                                                @((MarkupString)ts.DescriptionShort)
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card-wrapper border border-light rounded shadow-sm">
+                                <div class="card no-after rounded">
+                                    <div class="card-body">
+                                        <a class="text-decoration-none" ref="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Sites/" + ts.ID)" @onclick="@(() => GoToUrl("/hp/Sites/" + ts.ID))" data-focus-mouse="false">
+                                            <h3 class="card-title">@ts.Title</h3>
+                                        </a>
+                                        @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(ts.DescriptionShort))
+                                        {
+                                            <p class="text-paragraph mb-0">
+                                                @((MarkupString)ts.DescriptionShort)
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

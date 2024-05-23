@@ -1,0 +1,26 @@
+﻿@page "/Backend/Homepage/Questionnaire"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Data.OrderByDescending(p => p.CreationDate).ToList()" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+            <GridPageSettings PageSize="25"></GridPageSettings>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Questionnaire.PageTitle)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_QUESTIONNAIRES_PAGETITLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Questionnaire.Question)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_QUESTIONNAIRES_QUESTION")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Questionnaire.Reponse)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_QUESTIONNAIRES_RESPONSE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Questionnaire.Stars)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_QUESTIONNAIRES_STARTS")" Width="300px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Questionnaire.AdditionalInformation)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_QUESTIONNAIRES_ADDITIONAL_INFOMRATION")" Width="300px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Questionnaire.CreationDate)" Format="dd.MM.yyyy HH:mm" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_QUESTIONNAIRES_CREATION_DATE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>

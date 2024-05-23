@@ -1,0 +1,48 @@
+﻿@if (ItemList != null && ItemList.Any())
+{
+    <div class="filter-main-container">
+        <div class="filter-item-container">
+            @if (SelectedItemList != null && SelectedItemList.Any() && ItemList.Count() > 1)
+            {
+                <div class="btn btn-secondary item-container deactivated" @onclick="@ClearSelectedItems" @onclick:stopPropagation="true">
+                    <div class="item-icon">
+                        <i class="fa-regular fa-filter-slash"></i>
+                    </div>
+                    <div class="item-text">
+                        @TextProvider?.Get("STATUS_TAG_FILTER_ALL")
+                    </div>
+                </div>
+            }
+            else if (ItemList.Count() > 1 && (SelectedItemList == null || SelectedItemList.Count() < ItemList.Count()))
+            {
+                <div class="btn btn-primary item-container" @onclick:stopPropagation="true">
+                    <span class="item-icon">
+                        <i class="fa-regular fa-filter-slash"></i>
+                    </span>
+                    <div class="item-text">
+                        @TextProvider?.Get("STATUS_TAG_FILTER_ALL")
+                    </div>
+                </div>
+            }
+            @foreach (string item in ItemList.OrderBy(p => p))
+            {
+                if (SelectedItemList != null && !SelectedItemList.Select(p => p.ToLower()).Contains(item.ToLower()))
+                {
+                    <div class="btn btn-secondary item-container" @onclick="@(() => OnItemSelect(item))" @onclick:stopPropagation="true">
+                        <div class="item-text">
+                            @(item).
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="btn btn-primary item-container" @onclick="@(() => OnItemSelect(item))" @onclick:stopPropagation="true">
+                        <div class="item-text">
+                            @(item).
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}

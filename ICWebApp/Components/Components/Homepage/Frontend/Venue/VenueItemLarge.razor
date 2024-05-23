@@ -1,0 +1,46 @@
+﻿@if (Venue != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                @if (Venue.FILE_FileInfo_ID != null)
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper">
+                                <img src="@ImageHelper.GetFilePath(Venue.FILE_FileInfo_ID)" alt="@Venue.Title" title="@Venue.Title">
+                            </figure>
+                        </div>
+                    </div>
+                }
+
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (Venue.HOME_Venue_Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(Venue.HOME_Venue_Type_ID.Value))">
+                                    @Venue.Type
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @Venue.Type
+                                </span>
+                            }
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" data-focus-mouse="false">
+                        <h3 class="card-title">@Venue.Title</h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)Venue.DescriptionShort)
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

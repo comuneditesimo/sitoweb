@@ -1,0 +1,312 @@
+﻿@page "/Backend/Homepage/Appointments"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Schedule
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+@using ICWebApp.Components.Components.Homepage.Backend.Documents
+@using ICWebApp.Components.Components.Homepage.Backend.Appointments
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfSchedule @ref="ScheduleRef"
+                    TValue="V_HOME_Appointment_Dates"
+                    AllowDragAndDrop="false"
+                    AllowResizing="false"
+                    Height="80vh"
+                    MinDate="DateTime.Today">
+            <ScheduleResources>
+                <ScheduleResource TItem="V_HOME_Appointment_Type" TValue="Guid" DataSource="@Types" Field="HOME_Appointment_Type_ID" Title="Type"
+                                  Name="Type" IdField="ID" TextField="Type" ColorField="Color" AllowMultiple="false">
+                </ScheduleResource>
+            </ScheduleResources>
+            <ScheduleEventSettings DataSource="@Data">
+                 <Template>
+                    @{
+                        var item = (context as V_HOME_Appointment_Dates);
+                    }
+                    @if (item != null)
+                    {
+                        <div class="app-template-title">
+                            <div class="appointment-template-container">
+                                <div class="appointment-template-text">
+                                    @if (item.Highlight == true)
+                                    {
+                                        <span class="app-highlight">
+                                            <i class="fa-solid fa-star"></i>
+                                        </span>
+                                    }
+                                    @if (item.DateFrom != null && item.DateTo != null)
+                                    {
+                                        @(item.DateFrom.Value.ToString("HH:mm") + " - " + item.DateTo.Value.ToString("HH:mm") + "  " + item.Title)
+                                    }
+                                    else if (item.DateFrom != null)
+                                    {
+                                        @(item.DateFrom.Value.ToString("HH:mm") + "  " + item.Title)
+                                    }
+                                    else if (item.DateTo != null)
+                                    {
+                                        @(item.DateTo.Value.ToString("HH:mm") + "  " + item.Title)
+                                    }
+                                    else
+                                    {
+                                        @(item.Title)
+                                    }
+                                </div>
+                                @* <div class="appointment-template-remove-item" @onclick="@(() => DeleteEvent(item))">
+                                    X
+                                </div> *@
+                            </div>
+                        </div>
+                    }
+                </Template>
+            </ScheduleEventSettings>
+            <ScheduleEvents TValue="V_HOME_Appointment_Dates" OnActionBegin="ActionBegin" OnEventClick="EventClick"
+                            OnCellClick="CellClick" OnCellDoubleClick="CellDoubleClick" OnEventDoubleClick="EventDoubleClick">
+            </ScheduleEvents>
+            <ScheduleViews>
+                <ScheduleView Option="View.Month" FirstDayOfWeek="1" MaxEventsPerRow="4"></ScheduleView>
+            </ScheduleViews>
+        </SfSchedule>
+        <SfContextMenu TValue="MenuItem" Target=".e-schedule">
+            <MenuItems>
+                <MenuItem Text="@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_EDIT")" Id="Edit" />
+                <MenuItem Text="@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_DELETE")" Id="Delete" />
+            </MenuItems>
+            <MenuEvents TValue="MenuItem" OnOpen="OnOpen" ItemSelected="OnItemSelected"></MenuEvents>
+        </SfContextMenu>
+    </div>
+</div>
+
+<SfDialog CssClass="syncfusion-modal-window"
+          AllowDragging="false"
+          IsModal="true"
+          Width="1080px"
+          Height="90vh"
+          @bind-Visible="@EditWindowVisible">
+    <DialogTemplates>
+        <Header>@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_EDIT_TITLE")</Header>
+        <Content>
+            @if (CurrentAppointment != null)
+            {
+                <div class="custom-background-default">
+                    <EditForm Model="@CurrentAppointment">
+                        <div class="form-group">
+                            <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_GENERAL")</div>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_TYPE")</label>
+                            <SfDropDownList TValue="Guid?" TItem="V_HOME_Appointment_Type" PopupHeight="230px"
+                                            @bind-Value="@CurrentAppointment.HOME_Appointment_Type_ID" DataSource="@Types" Placeholder="@TextProvider.Get("BACKEND_HOMEPAGE_PLACEHOLDER_SELECT")">
+                                <DropDownListFieldSettings Value="ID" Text="Type"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                        </div>
+                        @if (CurrentAppointment.HOME_Appointment_Type_ID == HOMEAppointmentTypes.Event)
+                        {
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_KATEGORIE")</label>
+                            <SfDropDownList TValue="Guid?" TItem="V_HOME_Appointment_Kategorie" PopupHeight="230px"
+                                                @bind-Value="@CurrentAppointment.HOME_Appointment_Kategorie_ID" DataSource="@Kategories.Where(p => p.HOME_Appointment_Type_ID == HOMEAppointmentTypes.Event)" Placeholder="@TextProvider.Get("BACKEND_HOMEPAGE_PLACEHOLDER_SELECT")">
+                                <DropDownListFieldSettings Value="ID" Text="Kategorie"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                        </div>
+                        }
+                        <div class="small-element-separator"></div>
+                        <div class="form-group form-group-small">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_HIGHLIGHT")</label>
+                            <SfSwitch @bind-Checked="CurrentAppointment.Highlight"></SfSwitch>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_TITLE")</label>
+                            @if (CurrentAppointment.HOME_Appointment_Extended != null && CurrentAppointment.HOME_Appointment_Extended.Count() > 0 && CurrentLanguage != null)
+                            {
+                                <label class="font-detail">@CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Title</label>
+                            }
+                            <InputText name="@Guid.NewGuid()" @bind-Value="CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Title" class="form-control"></InputText>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_SHORTTEXT")</label>
+                        </div>
+                        <div class="form-group">
+                            @if (CurrentAppointment.HOME_Appointment_Extended != null && CurrentAppointment.HOME_Appointment_Extended.Count() > 0 && CurrentLanguage != null)
+                            {
+
+                                @if (string.IsNullOrEmpty(CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort))
+                                {
+                                    CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort = CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).DescriptionShort;
+                                }
+
+                                <TelerikEditor @bind-Value="CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort"
+                                               Tools="@Tools"
+                                               EditMode="@EditorEditMode.Div"
+                                               Class="font-normal"
+                                               Height="150px">
+                                    <EditorSettings>
+                                        <EditorPasteSettings ConvertMsLists="true"
+                                                             RemoveMsClasses="true"
+                                                             RemoveMsStyles="true"
+                                                             RemoveHtmlComments="true"
+                                                             RemoveAllAttributes="true"
+                                                             StripTags="@StripTags"
+                                                             RemoveAttributes="@RemoveAttributes">
+                                        </EditorPasteSettings>
+                                    </EditorSettings>
+                                </TelerikEditor>
+                            }
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_CONTENT")</label>
+                        </div>
+                        <div class="form-group">
+                            @if (CurrentAppointment.HOME_Appointment_Extended != null && CurrentAppointment.HOME_Appointment_Extended.Count() > 0 && CurrentLanguage != null)
+                            {
+                                @if (string.IsNullOrEmpty(CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                                {
+                                    CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                                }
+
+                                <TelerikEditor @bind-Value="CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                               Tools="@Tools"
+                                               EditMode="@EditorEditMode.Div"
+                                               Class="font-normal"
+                                               Height="250px">
+                                    <EditorSettings>
+                                        <EditorPasteSettings ConvertMsLists="true"
+                                                             RemoveMsClasses="true"
+                                                             RemoveMsStyles="true"
+                                                             RemoveHtmlComments="true"
+                                                             RemoveAllAttributes="true"
+                                                             StripTags="@StripTags"
+                                                             RemoveAttributes="@RemoveAttributes">
+                                        </EditorPasteSettings>
+                                    </EditorSettings>
+                                </TelerikEditor>
+                            }
+                        </div>
+                        <div class="element-separator"></div>
+                        <div class="form-group form-group-small">
+                            <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_MANAGED")</div>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group form-group-small">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MANAGED_BY_PERSON")</label>
+                            <PersonSingleSelection @bind-SelectedPersonID="@CurrentAppointment.Managed_HOME_Person_ID"></PersonSingleSelection>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_THEMES")</label>
+                            <ThemeSelection @bind-SelectedThemes="@SelectedThemes"></ThemeSelection>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_ORGANISATION")</label>
+                            <SfDropDownList TValue="Guid?" TItem="V_HOME_Organisation" PopupHeight="230px"
+                                            @bind-Value="@CurrentAppointment.HOME_Organisation_ID" DataSource="@Organisations" Placeholder="@TextProvider.Get("BACKEND_HOMEPAGE_PLACEHOLDER_SELECT")">
+                                <DropDownListFieldSettings Value="ID" Text="Title"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                        </div>
+                        <div class="element-separator"></div>
+                        <TelerikTabStrip>
+                            <TabStripTab Title="@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENTS_DATES")">
+                                <div class="form-group">
+                                    <DatesInput Appointment="@CurrentAppointment" @bind-Dates="@CurrentAppointment.HOME_Appointment_Dates"></DatesInput>
+                                </div>
+                            </TabStripTab>
+                            <TabStripTab Title="@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENTS_CONTACT")">
+                                <div class="form-group">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_CONTACT_NAME")</label>
+                                    <InputText name="@Guid.NewGuid()" @bind-Value="CurrentAppointment.ContactName" class="form-control"></InputText>
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_CONTACT_PHONENR")</label>
+                                    <CustomPhone @bind-Value="@CurrentAppointment.ContactPhone"></CustomPhone>
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_CONTACT_PHONENR_MOBILE")</label>
+                                    <CustomPhone @bind-Value="@CurrentAppointment.ContactPhoneMobile"></CustomPhone>
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_CONTACT_EMAIL")</label>
+                                    <InputText name="@Guid.NewGuid()" @bind-Value="CurrentAppointment.ContactEMail" type="email" class="form-control"></InputText>
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_CONTACT_WEBSITE")</label>
+                                    <InputText name="@Guid.NewGuid()" @bind-Value="CurrentAppointment.ContactWebsite" class="form-control"></InputText>
+                                </div>
+                            </TabStripTab>
+                            <TabStripTab Title="@TextProvider.Get("BACKEND_HOMEPAGE_CONTACT_ADDRESS")">
+                                <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                    @if (CurrentAppointment.HOME_Appointment_Extended != null && CurrentAppointment.HOME_Appointment_Extended.Count() > 0 && CurrentLanguage != null)
+                                    {
+                                        <Map Language="CurrentLanguage"
+                                             @bind-Address="@CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).ContactAddress"
+                                             @bind-Latitude="CurrentAppointment.ContactLat"
+                                             @bind-Longitude="CurrentAppointment.ContactLang"
+                                             EnableRoom="false"
+                                             AllowDefault="false" />
+                                    }
+                                </div>
+                            </TabStripTab>
+                            <TabStripTab Title="@TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENTS_IMAGE")">
+                                <div class="form-group">
+                                    <ImageUpload @bind-FileInfo="CurrentAppointment.Image"></ImageUpload>
+                                </div>
+                            </TabStripTab>
+                            <TabStripTab Title="@TextProvider.Get("BACKEND_HOMEPAGE_LOCATION")">
+                                <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                @if (CurrentAppointment.HOME_Appointment_Extended != null && CurrentAppointment.HOME_Appointment_Extended.Count() > 0 && CurrentLanguage != null)
+                                {
+                                    <Map Language="CurrentLanguage"
+                                         @bind-Address="@CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Address"
+                                            @bind-Room="@CurrentAppointment.HOME_Appointment_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Room"
+                                            @bind-Latitude="CurrentAppointment.Lat"
+                                            @bind-Longitude="CurrentAppointment.Lang"
+                                         EnableRoom="true"
+                                         AllowDefault="false" />
+                                }
+                                </div>
+                            </TabStripTab>
+                        </TelerikTabStrip>
+                    </EditForm>
+                </div>
+            }
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@CloseEditWindow" />
+    <DialogButtons>
+        <DialogButton IsPrimary="false" Content="@TextProvider.Get("BUTTON_CANCEL")" OnClick="@CloseEditWindow" />
+        @if(CurrentAppointment != null && CurrentAppointment.HOME_Appointment_Dates != null &&
+            CurrentAppointment.HOME_Appointment_Dates.Any() && CurrentAppointment.HOME_Appointment_Type_ID != null)
+        {
+            <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" OnClick="@EventSave" />
+        }
+        else
+        {
+            <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" Disabled="true"/>
+        }
+    </DialogButtons>
+</SfDialog>

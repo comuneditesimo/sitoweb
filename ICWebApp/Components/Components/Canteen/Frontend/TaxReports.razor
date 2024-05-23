@@ -1,0 +1,41 @@
+@using ICWebApp.Domain.Models.User
+<div class="container">
+    <div class="row mt-lg-80 mt-3 mb-4 justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="tax-report-downloads-container">
+                <div class="small-element-separator"></div>
+                <div class="reports-container service-container">
+                    <div class="cmp-accordion">
+                        @if (_reports.Count > 0)
+                        {
+                            <div class="accordion" id="accordion-@AccordionID">
+                            @foreach (var report in _reportsToDisplay.OrderByDescending(e => e.Year))
+                            {
+                                var germanRep = _reports.FirstOrDefault(e => e.AUTH_User_ID == report.AUTH_User_ID && e.Year == report.Year && e.LANG_Language_ID == LanguageSettings.German);
+                                var italian = _reports.FirstOrDefault(e => e.AUTH_User_ID == report.AUTH_User_ID && e.Year == report.Year && e.LANG_Language_ID == LanguageSettings.Italian);
+                                var item = new ServiceDataItem()
+                                {
+                                    Title = @report.Year + " - " + report.UserTaxNumber,
+                                    CreationDate = report.CreationDate,
+                                    CanteenReportGerman = germanRep?.FILE_FileInfo_ID,
+                                    CanteenReportItalian = italian?.FILE_FileInfo_ID
+                                };
+                                <ICWebApp.Components.Components.User.Frontend.ServiceItem Item="@item" ParentID="@AccordionID"></ICWebApp.Components.Components.User.Frontend.ServiceItem>
+                            } 
+                        </div>
+                        } else {
+                            <div class="no-data-container">
+                                @TextProvider.Get("TAX_REPORTS_NO_DATA")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="segment-button-toolbar">
+                    <div class="btn btn-secondary" @onclick="@ReturnToPreviousPage">@TextProvider.Get("BUTTON_RETURN")</div>
+                    <div class="btn-placeholder"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,129 @@
+﻿@page "/User/Services"
+@layout FrontendLayout
+
+@using ICWebApp.Components.Components.User.Frontend.PersonalArea
+
+<AuthorizeView Policy="Citizen">
+    <Authorized Context="authorizedContext">
+        <div class="container personal-area">
+            <div class="col-12 p-0">
+                <div class="cmp-nav-tab mb-4 mb-lg-5 mt-lg-4">
+                    <ul class="nav nav-tabs nav-tabs-icon-text w-100 flex-nowrap" id="myTab" role="tablist">
+                        <li class="nav-item w-100 me-2 p-1" role="tab">
+                            <a @onclick="@(() => SetCurrentTab(1))" class="nav-link justify-content-start pr-10 pb-2 ps-1 pe-lg-none pb-lg-15 ps-lg-3 me-lg-5 text-tab active" href="#message-tab" aria-current="page" aria-controls="tab2" aria-selected="false" data-bs-toggle="tab" role="button" data-focus-mouse="false">
+                                @{
+                                    var newChatCss = "";
+
+                                    if (HasUnreadServiceMessages)
+                                        newChatCss += "unread-messages t1r2";
+
+                                } 
+                                 <span class="@newChatCss">
+                                    <svg class="icon me-1 mr-lg-10" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-mail"></use>
+                                    </svg>
+                                </span>
+
+                                @TextProvider.Get("PERSONAL_AREA_MESSAGES")
+                            </a>
+                        </li>
+                        <li class="nav-item w-100 me-2 p-1" role="tab">
+                            <a @onclick="@(() => SetCurrentTab(2))" class="nav-link justify-content-start pr-10 pb-2 ps-1 pe-lg-none pb-lg-15 ps-lg-3 me-lg-5 text-tab" href="#activity-tab" aria-current="page" aria-controls="tab2" aria-selected="false" data-bs-toggle="tab" role="button" data-focus-mouse="false">
+                                @{
+                                    var css = "";
+                                    if (HasUnreadMessages)
+                                        css += "unread-messages t1r2";
+                                }
+                                <span class="@css">
+                                    <svg class="icon me-1 mr-lg-10" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-bookmark"></use>
+                                    </svg>
+                                </span>
+
+                                @TextProvider.Get("PERSONAL_AREA_AKTIVITIES")
+                            </a>
+                        </li>                        
+                        <li class="nav-item w-100 me-2 p-1" role="tab">
+                            <a @onclick="@(() => SetCurrentTab(3))" class="nav-link justify-content-start pr-10 pb-2 ps-1 pe-lg-none pb-lg-15 ps-lg-3 me-lg-5 text-tab" href="#services-tab" aria-current="page" aria-controls="tab1" aria-selected="false" data-bs-toggle="tab" role="button" data-focus-mouse="false">
+                                <span>
+                                    <svg class="icon me-1 mr-lg-10" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-files"></use>
+                                    </svg>
+                                </span>
+                                @TextProvider.Get("PERSONAL_AREA_MY_SERVICES")
+                            </a>
+                        </li>
+                            <li class="nav-item w-100 me-2 p-1" role="tab">
+                            <a @onclick="@(() => SetCurrentTab(4))" class="nav-link justify-content-start pr-10 pb-2 ps-1 pe-lg-none pb-lg-15 ps-lg-3 me-lg-5 text-tab" href="#request-tab" aria-current="page" aria-controls="tab2" aria-selected="false" data-bs-toggle="tab" role="button" data-focus-mouse="false">
+                                    @{
+                                        var newServiceCss = "";
+
+                                        if (HasNewRequestNotifications)
+                                            newServiceCss += "unread-messages t1r2";
+
+                                    }
+                                    <span class="@newServiceCss">
+                                        <svg class="icon me-1 mr-lg-10" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-note"></use>
+                                        </svg>
+                                    </span>
+
+                                    @TextProvider.Get("PERSONAL_AREA_REQUESTS")
+                                </a>
+                            </li>
+                            <li class="nav-item w-100 me-2 p-1" role="tab">
+                            <a @onclick="@(() => SetCurrentTab(5))" class="nav-link justify-content-start pr-10 pb-2 ps-1 pe-lg-none pb-lg-15 ps-lg-3 me-lg-5 text-tab" href="#notification-tab" aria-current="page" aria-controls="tab2" aria-selected="false" data-bs-toggle="tab" role="button" data-focus-mouse="false">
+                                    <span>
+                                        <svg class="icon me-1 mr-lg-10" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-pa"></use>
+                                        </svg>
+                                    </span>
+
+                                    @TextProvider.Get("PERSONAL_AREA_NOTIFICATIONS")
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="it-page-sections-container">
+            <div class="tab-content">
+                <div class="tab-pane active show" id="message-tab" role="tabpanel">
+                    @if(CurrentTab == 1)
+                    {
+                        <Messages></Messages>
+                    }
+                </div>               
+                <div class="tab-pane" id="activity-tab" role="tabpanel">
+                    @if (CurrentTab == 2)
+                    {
+                        <Activities></Activities>
+                    }
+                </div>                
+                <div class="tab-pane" id="services-tab" role="tabpanel">
+                    @if (CurrentTab == 3)
+                    {
+                        <Services></Services>
+                    }
+                </div>             
+                <div class="tab-pane" id="request-tab" role="tabpanel">
+                    @if (CurrentTab == 4)
+                    {
+                        <Requests></Requests>
+                    }
+                </div>              
+                <div class="tab-pane" id="notification-tab" role="tabpanel">
+                    @if(CurrentTab == 5)
+                    {
+                        <Notifications></Notifications>
+                    }
+                </div>                
+                <br />
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin RedirectURL="@NavManager.Uri"></RedirectToLogin>
+    </NotAuthorized>
+</AuthorizeView>

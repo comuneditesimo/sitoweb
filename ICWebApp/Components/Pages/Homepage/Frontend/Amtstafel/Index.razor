@@ -1,0 +1,31 @@
+﻿@page "/Hp/Albopretorio"
+@page "/Hp/Albopretorio/{SubUrl}"
+
+<div class="container albopretorio-container pb-5">
+    <div class="row border-top border-light row-column-border row-column-menu-left">
+        <aside class="col-lg-3">
+            <AnchorList></AnchorList>
+        </aside>
+        <section class="col-lg-9 it-page-sections-container border-light">
+            @if (!string.IsNullOrEmpty(SubUrl))
+            {
+                <div class="pb-5">
+                    <a class="text-decoration-none" @onclick="BackToRoot" data-element="service-area" data-focus-mouse="false">
+                        <svg class="icon icon-primary icon-sm" aria-hidden="true"><use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-arrow-left"></use></svg>
+                        @TextProvider.Get("BUTTON_BACK")
+                    </a>
+                </div>
+            }
+            @AmtstafelHtml
+            @if (!string.IsNullOrEmpty(SubUrl))
+            {
+                <a class="text-decoration-none" @onclick="BackToRoot" data-element="service-area" data-focus-mouse="false">
+                    <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                        <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-arrow-left"></use>
+                    </svg>
+                    @TextProvider.Get("BUTTON_BACK")
+                </a>
+            }
+        </section>
+    </div>
+</div>

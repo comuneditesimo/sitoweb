@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@syncfusion/blazor-themes": "^25.1.38",
+    "intl-tel-input": "^21.1.3"
+  }
+}

@@ -1,0 +1,196 @@
+﻿@using ICWebApp.Components.Components.Homepage.Backend.Person
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Lists
+
+@if(PersonList != null && SelectedPeople != null && Types != null)
+{
+    <div class="person-add-container">
+        <div class="btn btn-primary" @onclick="@AddPerson">
+            @TextProvider.Get("ADD")
+        </div>
+    </div>
+    <div class="small-element-separator"></div>
+    <div class="person-selected-container">
+        <SfGrid DataSource="@SelectedPeople.OrderBy(p => p.SortOrder).ToList()" Height="300px">
+            <GridPageSettings PageSize="25"></GridPageSettings>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Organisation_Person.HOME_Person_ID)" HeaderText="@TextProvider.Get("BACKEND_PERSON_FULLNAME")">
+                    <Template>
+                        @{
+                            HOME_Organisation_Person item = context as HOME_Organisation_Person;
+
+                            if (item != null)
+                            {
+                                var person = PersonList.FirstOrDefault(p => p.ID == item.HOME_Person_ID);
+
+                                @if (person != null)
+                                {
+                                    <div class="name-container">
+                                        @person.Fullname
+                                    </div>
+                                }
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(HOME_Organisation_Person.HOME_Person_Type_ID)" HeaderText="@TextProvider.Get("BACKEND_PERSON_TYPE")">
+                    <Template>
+                        @{
+                            HOME_Organisation_Person item = context as HOME_Organisation_Person;
+
+                            if (item != null)
+                            {
+                                var type = Types.FirstOrDefault(p => p.ID == item.HOME_Person_Type_ID);
+
+                                @if (type != null)
+                                {
+                                    <div class="name-container">
+                                        @type.Title
+                                    </div>
+                                }
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Width="160px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            HOME_Organisation_Person item = context as HOME_Organisation_Person;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <div class="up-down-container">
+                                        @if (item.SortOrder != SelectedPeople.OrderBy(p => p.SortOrder).FirstOrDefault().SortOrder)
+                                        {
+                                            <div class="btn btn-small btn-up btn-secondary btn-icon" @onclick="@(() => MoveUp(item))">
+                                                <i class="fa-regular fa-chevron-up"></i>
+                                            </div>
+                                        }
+                                        @if (item.SortOrder != SelectedPeople.OrderByDescending(p => p.SortOrder).FirstOrDefault().SortOrder)
+                                        {
+                                            <div class="btn btn-small btn-down btn-secondary btn-icon" @onclick="@(() => MoveDown(item))">
+                                                <i class="fa-regular fa-chevron-down"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => RemovePerson(item))">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => EditPerson(item))">
+                                            <i class="fa-regular fa-pen"></i>
+                                        </div>
+                                    </SfTooltip>
+                                </div>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>    
+    </div>
+
+    <SfDialog Width="550px" IsModal="true" @bind-Visible="@AddPersonVisible">
+        <div class="row-container">
+            <h5 class="primary-color text-center">@TextProvider.Get("BACKEND_HOME_ADD_PERSON")</h5>
+            <div class="small-element-separator"></div>
+            <div class="person-add-container">
+                <div class="btn btn-secondary" @onclick="New">
+                    @TextProvider.Get("ADD")
+                </div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <InputText name="@Guid.NewGuid()" @bind-Value="@SearchText" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="person-selection-container">
+                <SfListView DataSource="@PersonList.Where(p => (string.IsNullOrEmpty(SearchText) || (p.Fullname != null && p.Fullname.ToLower().Contains(SearchText.ToLower())))).OrderBy(p => p.Fullname).ToList()" Height="400px"
+                            ShowHeader="false" SortOrder="Syncfusion.Blazor.Lists.SortOrder.Ascending">
+                    <ListViewFieldSettings TValue="V_HOME_Person" Text="Fullname"></ListViewFieldSettings>
+                    <ListViewTemplates TValue="V_HOME_Person">
+                        <Template>
+                            <div class="person-selection-item" @onclick="@(() => SelectPerson(context))" @onclick:stopPropagation="true">
+                                @if (context.FILE_FileImage_ID != null)
+                                {
+                                    var file = FileProvider.GetFileInfo(context.FILE_FileImage_ID.Value);
+                                    var fileStorage = FileProvider.GetFileStorage(context.FILE_FileImage_ID.Value);
+
+                                    @if (file != null && fileStorage != null)
+                                    {
+                                        var image = string.Format("data:image/" + file.FileExtension.Replace(".", "") + ";base64,{0}", Convert.ToBase64String(fileStorage.FileImage));
+
+                                        <div class="e-avatar e-avatar-small e-avatar-circle">
+                                            <img src=@(image) alt="profile_pic">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="e-avatar e-avatar-small e-avatar-circle">
+                                            <i class="fa-solid fa-user-tie"></i>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="e-avatar e-avatar-small e-avatar-circle">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                    </div>
+                                }
+                                <span class="list-text">@context.Fullname</span>
+                                <div class="list-action">
+                                    <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(context.ID))" @onclick:stopPropagation="true">
+                                        <i class="fa-regular fa-pen"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </Template>
+                    </ListViewTemplates>
+                </SfListView>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-button-container">
+                <div class="btn btn-secondary" @onclick="@HideAddPerson">
+                    @TextProvider.Get("BUTTON_CANCEL")
+                </div>
+            </div>
+        </div>
+    </SfDialog>
+    <SfDialog Width="550px" IsModal="true" @bind-Visible="@AddPersonTypeVisible">
+        <div class="row-container">
+            <h5 class="primary-color text-center">@TextProvider.Get("BACKEND_HOME_SELECT_TYPE")</h5>
+            <div class="row-separator"></div>
+            <div class="person-selection-container">
+                <SfDropDownList DataSource="@Types.OrderBy(p => p.Title).ToList()" @bind-Value="CurrentPerson.HOME_Person_Type_ID"
+                                TValue="Guid?" TItem="@V_HOME_Organisation_Person_Type"
+                                AllowFiltering="true" EnableVirtualization="true">
+                    <DropDownListFieldSettings Text="Title" Value="ID"></DropDownListFieldSettings>
+                </SfDropDownList>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-button-container">
+                <div class="btn btn-primary" @onclick="@AddPersonType">
+                    @TextProvider.Get("BUTTON_SAVE")
+                </div>
+            </div>
+        </div>
+    </SfDialog>
+
+    <SfDialog @bind-Visible="@ShowPersonEdit" AllowDragging="false" ShowCloseIcon="false" IsModal="true" CloseOnEscape="false" Width="1080px" Height="80vh">
+        <DialogTemplates>
+            <Header>
+                @PersonEditTitle
+            </Header>
+            <Content>
+                <div class="person-edit-container">
+                    <PersonEdit PersonID="@PersonEditID" OnCancel="Cancel" OnSave="Save" IsPopUp="true"></PersonEdit>
+                </div>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+}

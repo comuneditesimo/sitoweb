@@ -1,0 +1,39 @@
+﻿@if(Person != null)
+{
+    string hoverCSS = "";
+
+    @if (EnableClicking)
+    {
+        hoverCSS += "person-selected-hover";
+    }
+
+    <div class="person-avatar-container @hoverCSS" @onclick="AvatarClicked">
+        @if (Person.FILE_FileImage_ID != null)
+        {
+            <div class="person-avatar-image">
+                <img src="@ImageHelper.GetFilePath(Person.FILE_FileImage_ID.Value)" />
+            </div>
+        }
+        else
+        {
+            <div class="person-avatar-image">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+        }
+        <div class="person-avatar-content">
+            <div class="person-avatar-name">
+                @Person.Name @Person.Lastname
+            </div>
+            <div class="person-avatar-position">
+                @if (!string.IsNullOrEmpty(SubTitle))
+                {
+                    @SubTitle
+                }
+                else
+                {
+                    @Person.Tasks
+                }
+            </div>
+        </div>
+    </div>
+}

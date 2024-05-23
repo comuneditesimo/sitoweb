@@ -1,0 +1,131 @@
+﻿@if (Authority != null)
+{
+    if (CssColumn)
+    {
+        <div class="col-sm-6 col-lg-6 mb-3">
+            <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+                <div class="card-body pe-3">
+                    <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                        <a class="text-decoration-none" @onclick="OnClick"  data-element="service-area">
+                            @Authority.Title
+                        </a>
+                    </p>
+                    @if (!string.IsNullOrEmpty(Authority.Address))
+                    {
+                        var data = Authority.Address.Replace(", Autonome Provinz Bozen - Südtirol, Italien", "").Split(',').ToList();
+
+                        if (data.Count() > 2)
+                        {
+                            <div class="card-text no-read">
+                                <p class="u-main-black">@data[0] @data[1]</p>
+                                <p class="u-main-black">@data[2]</p>
+                            </div>
+                        }
+                        else if(data.Count() > 1)
+                        {
+                            <div class="card-text no-read">
+                                <p class="u-main-black">@data[0] @data[1]</p>
+                            </div>
+                        }
+                    }
+                    @if (!string.IsNullOrEmpty(Authority.Telefon))
+                    {
+                        <div class="cmp-icon-link contact-title">
+                            <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_PHONE")</strong>
+                            <a class="list-item icon-left" href="tel:@Authority.Telefon" aria-label="Telefono">
+                                <span class="list-item-title-icon-wrapper">
+                                    <span class="list-item t-primary">@Authority.Telefon</span>
+                                </span>
+                            </a>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Authority.EMail))
+                    {
+                        <div class="cmp-icon-link mt-2 contact-title">
+                            <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL")</strong>
+                            <a class="list-item icon-left" href="mailto:@Authority.EMail" aria-label="E-Mail">
+                                <span class="list-item-title-icon-wrapper">
+                                    <span class="list-item t-primary">@Authority.EMail</span>
+                                </span>
+                            </a>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Authority.PecEmail))
+                    {
+                        <div class="cmp-icon-link mt-2 contact-title">
+                            <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL_PEC")</strong>
+                            <a class="list-item icon-left" href="mailto:@Authority.PecEmail" aria-label="PEC E-Mail">
+                                <span class="list-item-title-icon-wrapper">
+                                    <span class="list-item t-primary">@Authority.PecEmail</span>
+                                </span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+            <div class="card-body pe-3">
+                <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                    <a class="text-decoration-none" @onclick="OnClick" data-element="service-area">
+                        @Authority.Title
+                    </a>
+                </p>
+                @if (!string.IsNullOrEmpty(Authority.Address))
+                {
+                    var data = Authority.Address.Replace(", Autonome Provinz Bozen - Südtirol, Italien", "").Split(',').ToList();
+
+                    if (data.Count() > 2)
+                    {
+                        <div class="card-text no-read mb-2">
+                            <p class="u-main-black">@data[0] @data[1]</p>
+                            <p class="u-main-black">@data[2]</p>
+                        </div>
+                    }
+                    else if (data.Count() > 1)
+                    {
+                        <div class="card-text no-read mb-2">
+                            <p class="u-main-black">@data[0] @data[1]</p>
+                        </div>
+                    }
+                }
+                @if (!string.IsNullOrEmpty(Authority.Telefon))
+                {
+                    <div class="cmp-icon-link">
+                        <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_PHONE")</strong>
+                        <a class="list-item icon-left" href="tel:@Authority.Telefon" aria-label="Telefono">
+                            <span class="list-item-title-icon-wrapper">
+                                <span class="list-item t-primary">@Authority.Telefon</span>
+                            </span>
+                        </a>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Authority.EMail))
+                {
+                    <div class="cmp-icon-link">
+                        <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL")</strong>
+                        <a class="list-item icon-left" href="mailto:@Authority.EMail" aria-label="E-Mail">
+                            <span class="list-item-title-icon-wrapper">
+                                <span class="list-item t-primary">@Authority.EMail</span>
+                            </span>
+                        </a>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Authority.PecEmail))
+                {
+                    <div class="cmp-icon-link">
+                        <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL_PEC")</strong>
+                        <a class="list-item icon-left" href="mailto:@Authority.PecEmail" aria-label="PEC E-Mail">
+                            <span class="list-item-title-icon-wrapper">
+                                <span class="list-item t-primary">@Authority.PecEmail</span>
+                            </span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

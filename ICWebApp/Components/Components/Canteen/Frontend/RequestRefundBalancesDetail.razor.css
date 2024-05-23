@@ -1,0 +1,24 @@
+﻿.application-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.application-label {
+    width: 300px;
+}
+
+.application-value {
+    font-weight: 600;
+    word-break: break-all;
+}
+
+.status-template-reason {
+    width: 500px;
+    word-break: break-word;
+    word-wrap: normal;
+    overflow: hidden;
+}
+
+.user-application-container {
+    position: relative;
+}

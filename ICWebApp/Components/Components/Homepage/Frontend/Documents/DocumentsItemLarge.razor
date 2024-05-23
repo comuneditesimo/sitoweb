@@ -1,0 +1,35 @@
+﻿@if (Document != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper rounded shadow-sm border border-light pb-0">
+            <div class="card no-after">
+                <div class="card-body">
+                    <div class="categoryicon-top">
+                        <svg class="icon icon-sm" aria-hidden="true">
+                            <use href="css/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                        </svg>
+                        @if (Document.Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <span class="text fw-semibold">
+                                    <a class="text-decoration-none" @onclick="OnClickType" data-focus-mouse="false">@Document.Type</a>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text fw-semibold">
+                                    <span class="category text-decoration-none">@Document.Type</span>
+                                </span>
+                            }
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnClick" data-focus-mouse="false">
+                        <h6 class="card-title h4">@Document.Title</h6>
+                    </a>
+                    <p class="text-paragraph mb-0">@((MarkupString)Document.DescriptionShort)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

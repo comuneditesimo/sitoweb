@@ -1,0 +1,33 @@
+﻿@if (Item != null)
+{
+    <div class="col-md-6 col-lg-4">
+        <div class="cmp-card-simple card-wrapper pb-0 rounded border border-light">
+            <div class="card shadow-sm rounded">
+                <div class="card-body">
+                    @if(ShowDataElement)
+                    {
+                        <a class="text-decoration-none" @onclick="OnClick" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + Item.Url)" data-element="management-category-link">
+                            <h3 class="card-title t-primary">
+                                @Item.Title
+                            </h3>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="text-decoration-none" @onclick="OnClick" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + Item.Url)">
+                            <h3 class="card-title t-primary">
+                                @Item.Title
+                            </h3>
+                        </a>
+                    }
+                    @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.DescriptionShort))
+                    {
+                        <p class="text-paragraph mb-0">
+                            @((MarkupString)Item.DescriptionShort)
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

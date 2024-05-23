@@ -1,0 +1,76 @@
+﻿@page "/Backend/Homepage/Articles"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Data.OrderByDescending(p => p.CreationDate).ToList()" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+            <GridPageSettings PageSize="25"></GridPageSettings>
+            <SfToolbar>
+                <ToolbarItems>
+                    <ToolbarItem Type="ItemType.Button">
+                        <Template>
+                            <div class="btn btn-secondary" @onclick="New">@TextProvider.Get("ADD")</div>
+                        </Template>
+                    </ToolbarItem>
+                </ToolbarItems>
+            </SfToolbar>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Article.Highlight)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ARTICLE_HIGHLIGHT")" Width="200px">
+                    <Template>
+                        @{
+                            V_HOME_Article? item = context as V_HOME_Article;
+                        }
+                        <div class="grid-checkbox-cell">
+                            <SfCheckBox Checked="item.Highlight" Disabled="true"></SfCheckBox>
+                        </div>
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>              
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Article.Visible)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ARTICLE_VISIBLE")" Width="200px">
+                    <Template>
+                        @{
+                            V_HOME_Article? item = context as V_HOME_Article;
+                        }
+                        <div class="grid-checkbox-cell">
+                            <SfCheckBox Checked="item.Visible" Disabled="true"></SfCheckBox>
+                        </div>
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Article.Type)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ARTICLE_TYPE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Article.Subject)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ARTICLE_SUBJECT")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Article.CreationDate)" Format="dd.MM.yyyy HH:mm" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ARTICLE_CREATION_DATE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Article.ReleaseDate)" Format="dd.MM.yyyy HH:mm" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_ARTICLE_RELEASE_DATE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Width="120px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            V_HOME_Article item = context as V_HOME_Article;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Delete(item))">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(item))">
+                                            <i class="fa-regular fa-pen"></i>
+                                        </div>
+                                    </SfTooltip>
+                                </div>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>

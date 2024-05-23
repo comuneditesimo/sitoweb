@@ -1,0 +1,9 @@
+﻿@if (ThemeList != null)
+{
+    var htmlProperties = new Dictionary<string, object>() { { "height", "38px" } };
+
+    <SfMultiSelect TValue="List<Guid>" TItem="V_HOME_Theme" PopupHeight="230px" Width="100%" EnableCloseOnSelect="false"
+                   @bind-Value="@SelectedList" DataSource="@ThemeList.OrderBy(p => p.Title).ToList()" HtmlAttributes="@htmlProperties">
+        <MultiSelectFieldSettings Value="ID" Text="Title"></MultiSelectFieldSettings>
+    </SfMultiSelect>
+}

@@ -1,0 +1,14 @@
+﻿.segment-button-toolbar
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-icon {
+    color: var(--primary);
+    margin-left: 10px;
+}
+
+    .edit-icon:hover {
+        color: var(--secondary);
+    }

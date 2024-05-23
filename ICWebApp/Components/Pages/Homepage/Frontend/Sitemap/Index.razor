@@ -1,0 +1,104 @@
+﻿@page "/Hp/Sitemap"
+
+
+<div class="container py-5" id="sitemap">
+    <div class="row">
+        <div class="col-lg-6 col-12 pb-5">
+            <h2 class="title-xxlarge">@TextProvider.Get("HP_MAINMENU_VERWALTUNG")</h2>
+            <div class="row g-4">
+                <div class="sitemap-container">
+                    <ul id="menu-amministrazione" class="sitemap-list">
+                        <li><a @onclick="@(() => GoToUrl("/hp/Organisation"))">@TextProvider.Get("HOMEPAGE_FRONTEND_ORGANISATIONS")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Authority"))">@TextProvider.Get("HOMEPAGE_FRONTEND_AUTHORITIES")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Association"))">@TextProvider.Get("HOMEPAGE_FRONTEND_ASSOCIATIONS")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Type/Person/" + PersonType.Politician))">@TextProvider.Get("HOMEPAGE_FRONTEND_POLITICIANS")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Type/Person/" + PersonType.Employee))">@TextProvider.Get("HOMEPAGE_FRONTEND_EMPLOYEES")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Document"))">@TextProvider.Get("HOMEPAGE_FRONTEND_DOCUMENTS")</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @if (Newstypes != null && Newstypes.Any())
+        {
+            <div class="col-lg-6 col-12 pb-5">
+                <h2 class="title-xxlarge">@TextProvider.Get("HP_MAINMENU_NEWS")</h2>
+                <div class="row g-4">
+                    <div class="sitemap-container">
+                        <ul id="menu-novita" class="sitemap-list">
+                            @foreach (var type in Newstypes.OrderBy(p => p.Type).ToList())
+                            {
+                                <li><a @onclick="@(() => GoToUrl("/Hp/Type/News/" + type.ID))">@type.Type</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Categories != null && Categories.Any())
+        {
+            <div class="col-lg-6 col-12 pb-5">
+                <h2 class="title-xxlarge">@TextProvider.Get("HOMEPAGE_FOOTER_SERVICE_CATEGORIES")</h2>
+                <div class="row g-4">
+                    <div class="sitemap-container">
+                        <ul id="menu-novita" class="sitemap-list">
+                            @foreach (var cat in Categories.OrderBy(p => p.Title).ToList())
+                            {
+                                @if (!string.IsNullOrEmpty(cat.Url) && !string.IsNullOrEmpty(cat.Title))
+                                {
+                                    <li><a @onclick="@(() => GoToUrl(cat.Url))">@cat.Title</a></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Services != null && Services.Any())
+        {
+            <div class="col-lg-6 col-12 pb-5">
+                <h2 class="title-xxlarge">@TextProvider.Get("HP_MAINMENU_DIENSTE")</h2>
+                <div class="row g-4">
+                    <div class="sitemap-container">
+                        <ul id="menu-novita" class="sitemap-list">
+                            @foreach (var serv in Services.OrderBy(p => p.Title).ToList())
+                            {
+                                @if (!string.IsNullOrEmpty(serv.Url) && !string.IsNullOrEmpty(serv.Title))
+                                {
+                                    <li><a @onclick="@(() => GoToUrl(serv.Url))">@serv.Title</a></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-lg-6 col-12 pb-5">
+            <h2 class="title-xxlarge">@TextProvider.Get("HP_MAINMENU_DORFLEBEN")</h2>
+            <div class="row g-4">
+                <div class="sitemap-container">
+                    <ul id="menu-vivere-il-comune" class="sitemap-list">
+                        <li><a @onclick="@(() => GoToUrl("/hp/Location"))">@TextProvider.Get("HOMEPAGE_FOOTER_LOCATION")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Event"))">@TextProvider.Get("HOMEPAGE_FOOTER_EVENTS")</a></li>
+                        <li><a @onclick="@(() => GoToUrl("/hp/Newsletter"))">@TextProvider.Get("HOMEPAGE_FOOTER_NEWSLETTER")</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @if (Themes != null && Themes.Any())
+        {
+            <div class="col-lg-6 col-12 pb-5">
+                <h2 class="title-xxlarge">@TextProvider.Get("FRONTEND_HOMEPAGE_THEME_TITLE")</h2>
+                <div class="row g-4">
+                    <div class="sitemap-container">
+                        <ul id="menu-novita" class="sitemap-list">
+                            @foreach (var themes in Themes.OrderBy(p => p.Title).ToList())
+                            {
+                                <li><a @onclick="@(() => GoToUrl("/Hp/Theme/" + themes.ID))">@themes.Title</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

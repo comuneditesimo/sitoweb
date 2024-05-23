@@ -1,0 +1,69 @@
+﻿ @page "/attuazione-misure-pnrr/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Organisation
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+@using ICWebApp.Components.Components.Homepage.Frontend.Address
+
+@if (Item != null && Chapter != null)
+{
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @foreach (var d in Chapter.OrderBy(p => p.SortOrder).ToList())
+                {
+                    var docs = HomeProvider.GetPNRRChapter_DocumentSync(d.ID, LangProvider.GetCurrentLanguageID());
+
+                    <Anchor Title="@d.Title" ID="@d.Title" Order="@d.SortOrder">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)d.Description)
+
+                            @if (docs != null && docs.Any())
+                            {
+                                <br />
+                                <div class="row">
+                                    @foreach (var doc in docs.OrderBy(p => p.Filename).ToList())
+                                    {
+                                        if (doc.FILE_FileInfo_ID != null)
+                                        {
+                                            <div class="col-sm-6 col-lg-6 mb-3">
+                                                <DownloadCardComponent FILE_FileInfoID="@doc.FILE_FileInfo_ID.Value" FileName="@doc.Filename"/>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.ManagedByAuthorithyID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_PNRR_CONTACT")" ID="a-cura-di" Order="40">
+                        <div class="row">
+                            @if (Item.ManagedByAuthorithyID != null)
+                            {
+                                <div class="col-12 col-sm-8">
+                                    <AuthorityItemContact HOME_Authority_ID="@Item.ManagedByAuthorithyID.Value" CssColumn="false"></AuthorityItemContact>
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.LastModificationDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                            <span class="h6 fw-normal">@Item.LastModificationDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

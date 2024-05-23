@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="var(--primary)" />
+    <meta name="description" content="Sito Web. Servizi Online. Informazioni sul comune">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+    <base href="/" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" href="logo_512.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="css/colors/green.css?v=@ComunixSettings.CSSVersion" rel="stylesheet" />
+    <link rel="stylesheet" href="css/critical.min.css?v=@ComunixSettings.CSSVersion" />
+    <link rel="stylesheet" href="css/site.min.css?v=@ComunixSettings.CSSVersion">
+    <link rel="stylesheet" href="ICWebApp.styles.css?v=@ComunixSettings.CSSVersion">
+    <link rel="preconnect" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://kit.fontawesome.com/d126685a67.css" crossorigin="anonymous">
+    <link href="css/connectionLost.css" rel="stylesheet" />
+    <noscript><link rel="stylesheet" href="https://kit.fontawesome.com/d126685a67.css"></noscript>
+    
+    <script nonce="comunix123" src="js/critical.min.js?v=@ComunixSettings.CSSVersion"></script>
+    <script nonce="comunix123" src="js/syncfusion/cmx-boostrap5.min.js?v=@ComunixSettings.CSSVersion" async></script>
+    <script rel="preconnect" src="https://kit.fontawesome.com/d126685a67.js" crossorigin="anonymous" async></script>
+    
+    <HeadOutlet @rendermode="RenderMode.InteractiveServer" />
+</head>
+<body>
+    <script data-element="metatag" type="application/ld+json" id="metaelement">
+        {
+            "areaServed": {
+            "name": "Comune"
+            },
+            "audience": {
+            "audienceType": "citizen"
+            },
+            "availableChannel": {
+            "availableLanguage": {
+                "alternateName": "it",
+                "name": "Italiano"
+            },
+            "name": "Dove rivolgersi",
+            "serviceLocation": {
+                "address": {
+                "addressLocality": "Bolzano",
+                "postalCode": "39040",
+                "streetAddress": "Via Giotto 5"
+                },
+                "name": "Ufficio Licenze"
+            },
+            "serviceUrl": "https://services.tisens.bz.it/"
+            },
+            "name": "Accesso a Comunix",
+            "serviceOperator": {
+            "name": "Comune"
+            },
+            "serviceType": "Servizio online"
+        }
+    </script>
+    <Routes @rendermode="RenderMode.InteractiveServer" />
+    <div id="blazor-error-ui" style="display: none">
+        An error has occurred. This application may no longer respond until reloaded.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <div id="components-reconnect-modal" class="my-reconnect-modal components-reconnect-hide">
+        <div class="show">
+            <div class="connection-lost-panel" onclick="window.location.reload();">
+                <div class="connection-lost-container">
+                    <div id="connection-lost-text" class="font-bold">
+                        Verbindung aufgrund von Inaktivität getrennt
+                    </div>
+                    <div class="reconnect-container">
+                        <div class="reconnect-icon">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                        <div id="reconnect-text" class="font-normal">
+                            Erneut verbinden
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script nonce="comunix123">
+                document.addEventListener("DOMContentLoaded", () => {
+                    var language = window.navigator.userLanguage || window.navigator.language;
+
+                    if (language.includes("it")) {
+                        document.getElementById("connection-lost-text").textContent = "Disconnesso per inattività";
+                        document.getElementById("reconnect-text").textContent = "Riconnetti";
+                    }
+                    else {
+                        document.getElementById("connection-lost-text").textContent = "Verbindung aufgrund von Inaktivität getrennt";
+                        document.getElementById("reconnect-text").textContent = "Erneut verbinden";
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    <script nonce="comunix123" src="_framework/blazor.web.js"></script>
+    <script nonce="comunix123">navigator.serviceWorker.register('service-worker.js')</script> 
+    <script nonce="comunix123" src="css/bootstrap-italia/js/bootstrap-italia.bundle.min.js" async></script>
+    <script nonce="comunix123" src="/js/jquery/jquery_3_3_1.min.js" async></script>
+    <script nonce="comunix123" src="/js/utility/frontend/utility.min.js?v=@ComunixSettings.CSSVersion" async></script>
+    <script nonce="comunix123" src="/js/frontend.min.js?v=@ComunixSettings.CSSVersion" async></script>
+    <script nonce="comunix123" src="/js/Services/enviromentHelper.min.js?v=@ComunixSettings.CSSVersion" async></script>
+    <script>
+        window.CookieFunction = {
+            acceptMessage: function (cookieString) {
+                document.cookie = cookieString;
+                $('#cookieConsent').hide(0);
+            }
+        };
+    </script>
+</body>
+</html>

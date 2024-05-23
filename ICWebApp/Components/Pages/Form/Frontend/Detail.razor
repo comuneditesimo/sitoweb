@@ -1,0 +1,297 @@
+﻿@page "/Form/Detail/{ID}"
+@using HtmlAgilityPack
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Theme
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+
+@layout FrontendLayout
+
+<div class="container">
+    <div class="row mt-lg-80 mt-3 mb-4">
+        <div class="col-lg-3 mb-4 border-col hide-max-576">
+            <AnchorList></AnchorList>
+        </div>
+        <div class="col-lg-8 offset-lg-1">
+            <div class="form-detail-container it-page-sections-container">
+                @if (Data != null)
+                {
+                    @if (!string.IsNullOrEmpty(Data.ForWhom))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.ForWhom);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.ForWhom);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_FOR_WHOM"))" ID="for-whom" Order="0">
+                                <div class="styled-list-container" data-element="service-addressed">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Data.Description))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.Description);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.Description);
+
+                            <Anchor Title="@(TextProvider.Get("FORM_DETAIL_DESCRIPTION"))" ID="@(TextProvider.Get("FORM_DETAIL_DESCRIPTION"))" Order="1">
+                                <div class="styled-list-container">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Data.HowTo))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.HowTo);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.HowTo);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_HOW_TO"))" ID="how-to" Order="2">
+                                <div class="styled-list-container" data-element="service-how-to">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Data.WhatFor))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.WhatFor);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.WhatFor);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_WHATFOR"))" ID="what-for" Order="3" CSS="mb-30 has-bg-grey p-4">
+                                <div class="styled-list-container" data-element="service-needed">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Data.Result))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.Result);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.Result);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_RESULT"))" ID="result" Order="4">
+                                <div class="styled-list-container" data-element="service-achieved">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+
+                    @if (Events != null && Events.Count() > 0)
+                    {
+                        <Anchor Title="@(TextProvider.Get("HOMEPAGE_FRONTEND_SERVICE_DEADLINES"))" ID="deadlines" Order="5">
+                            <div class="richtext-wrapper lora" data-element="service-calendar-text">
+                                <p>@(TextProvider.Get("FORM_DETAIL_EVENTS_DESCRIPTION"))</p>
+                            </div>
+                            <div class="calendar-vertical mb-3" data-element="service-calendar-list">
+                                @foreach (var e in Events.OrderBy(p => p.Date))
+                                {
+                                    <div class="calendar-date">
+                                        <div class="calendar-date-day">
+                                            <h3 class="calendar-date-day-content">                                                    
+                                                <small class="calendar-date-day__year">@e.Date.ToString("yyyy")</small>
+                                                <span class="title-xxlarge-regular d-flex justify-content-center">@e.Date.ToString("dd")</span>
+                                                <small class="calendar-date-day__month">@e.Date.ToString("MMM")</small>     
+                                            </h3>
+                                        </div>
+                                        <div class="calendar-date-description rounded">
+                                            <div class="calendar-date-description-content">
+                                                @if (!string.IsNullOrEmpty(e.Title))
+                                                {
+                                                    <h4 class="h5 mb-0 ">@e.Title</h4>
+                                                }
+                                                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(e.Description))
+                                                {
+                                                    <p class="text-paragraph">@((MarkupString)e.Description)</p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }                          
+                            </div>
+                        </Anchor>
+                    }
+                    @if (!string.IsNullOrEmpty(Data.Costs))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.Costs);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.Costs);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_COSTS"))" ID="costs" Order="6">
+                                <div class="styled-list-container" data-element="service-achieved">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+                    @if (DataProperties != null)
+                    {
+                        int orderID = 7;
+
+                        @foreach (var p in DataProperties.OrderBy(p => p.SortOrder))
+                        {
+                            if (!string.IsNullOrEmpty(p.Description))
+                            {
+                                var markupDescription = new MarkupString(p.Description);
+
+                                <Anchor Title="@p.Title" ID="@p.Title" Order="@orderID">
+                                    @markupDescription
+                                </Anchor>
+
+                                orderID++;
+                            }
+                        }
+                    }
+                    @if (DataRessources != null && DataRessources.Count() > 0)
+                    {
+                        <Anchor Title="@(TextProvider.Get("FORM_DETAIL_RESSOURCES"))" ID="@(TextProvider.Get("FORM_DETAIL_RESSOURCES"))" Order="20">
+                            <div class="row">
+                                @foreach (var r in DataRessources.OrderBy(p => p.SortOrder))
+                                {
+                                    var res = DataResourceExtendeds.FirstOrDefault(e => e.FORM_Definition_Ressources_ID == r.ID);
+
+                                    <div class="col-sm-6 col-lg-6 mb-3">
+                                        @if (res != null && res.FILE_FileInfo_ID != null)
+                                        {
+                                            <DownloadCardComponent FILE_FileInfoID="@res.FILE_FileInfo_ID.Value" FileName="@r.Description"/>
+                                        }
+                                        else if (r.FILE_FileInfo_ID != null)
+                                        {
+                                            <DownloadCardComponent FILE_FileInfoID="@r.FILE_FileInfo_ID.Value" FileName="@r.Description" />
+                                        }
+                                    </div>
+                                    }
+                            </div>
+                        </Anchor>
+                    }
+                    @if (((Data.IsActive == true && !ApplicationAlreadyRunning && (Data.ApplicationDeadline == null || Data.ApplicationDeadline >= DateTime.Now) && Data.IsOfflineForm != true) || Data.AllowPrenotation))
+                    {
+                        <Anchor Title="@TextProvider.Get("HOMEPAGE_FORM_SERVICE_ACCESS")" ID="access" Order="21" CSS="mb-30 has-bg-grey p-4">
+                            @if(Data.IsOfflineForm != true)
+                            {
+                                <p class="text-paragraph lora mb-4" data-element="service-generic-access">@TextProvider.Get("HOMEPAGE_FORM_SERVICE_ACCESS_DESCRIPTION")</p>
+                                <button type="button" class="btn btn-primary mobile-full" href="@(NavManager.BaseUri.TrimEnd('/') + "/Form/Application/" + Data.ID + "/New")" @onclick="SubmitForm" @onclick:stopPropagation="true" data-element="service-online-access">
+                                    <span class="">@TextProvider.Get("FORM_DETAIL_SUBMIT_BUTTON")</span>
+                                </button>
+                                <p class="text-paragraph lora mt-4" data-element="service-generic-access">@TextProvider.Get("HOMEPAGE_FORM_SERVICE_ACCESS_OFFLINE_DESCRIPTION")</p>
+                            }
+                            @if(Data.AllowPrenotation)
+                            {
+                                <button type="button" class="btn btn-outline-primary t-primary bg-white mobile-full" href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Request")" @onclick="GoToReservations" @onclick:stopPropagation="true" data-element="service-booking-access">
+                                    <span class="">@TextProvider.Get("HOMEPAGE_ASSISTANCE_RESERVATION")</span>
+                                </button>
+                            }
+                        </Anchor>
+                    }
+                    @if (!string.IsNullOrEmpty(Data.Conditions))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.Conditions);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.Conditions);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_CONDITIONS"))" ID="conditions" Order="22">
+                                <div class="styled-list-container" data-element="service-achieved">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+                        }
+                    }
+                    @if (People != null && People.Any())
+                    {
+                        <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_FORMS_PERSONS")" ID="dipendenti" Order="23">
+                            <div class="row">
+                                @foreach (var p in People)
+                                {
+                                    <PersonItemSmall Item="@p"></PersonItemSmall>
+                                }
+                            </div>
+                        </Anchor>
+                    }
+                    <Anchor Title="@TextProvider.Get("HOMEPAGE_FORM_CONTACT")" ID="contact" Order="24">
+                        <AuthorityItemSmall HOME_Authority_ID="Data.AUTH_Authority_ID"/>
+                        <div class="col-12 mb-30">
+                            @if(DataThemes != null && DataThemes.Any())
+                            {
+                                <span class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FORM_CONTACT_THEMES"):</span>
+                                <ul class="d-flex flex-wrap gap-2 mt-10 mb-30">
+                                    @foreach (var t in DataThemes)
+                                    {
+                                        <ThemeChip Theme="@t" HasDataElement="true"></ThemeChip>
+                                    }
+                                </ul>
+
+                            }
+                            <p class="text-paragraph-small mb-0">@TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION") @Data.LastModificationDate.ToString("dd/MM/yyyy, HH:mm")</p>
+                        </div>
+                    </Anchor>
+                    @if (ApplicationAlreadyRunning)
+                    {
+                        <div class="element-separator"></div>
+                        <div class="form-deadline-expired-message font-normal">
+                            @TextProvider.Get("FORM_DETAIL_APPLICATION_ALREADY_RUNNING")
+                        </div>
+                        <br />
+                    }
+                    else if ((Data.ApplicationDeadline == null || Data.ApplicationDeadline >= DateTime.Now) && Data.IsActive == true)
+                    {
+                        if (Data.IsOfflineForm == true && Data.AllowPrenotation)
+                        {
+                            <div class="element-separator"></div>
+                            <div class="form-detail-footer">
+                                <div class="btn btn-primary" @onclick="OfflineForm">@TextProvider.Get("FORM_DETAIL_OFFLINE_FORM_BUTTON")</div>
+                            </div>
+                            <br />
+                        }
+                        else
+                        {
+                            <div class="element-separator"></div>
+                            <div class="form-detail-footer">
+                                <div class="btn btn-primary" @onclick="SubmitForm">@TextProvider.Get("FORM_DETAIL_SUBMIT_BUTTON")</div>
+                            </div>
+                            <br />
+                        }
+                    }
+                    else if (Data.IsActive != true)
+                    {
+                        <div class="element-separator"></div>
+                        <div class="form-deadline-expired-message font-normal">
+                            @TextProvider.Get("HOMEPAGE_SERVICE_IN_PREPARATION_DESCRIPTION")
+                        </div>
+                        <br />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,162 @@
+﻿@page "/Backend/Homepage/PNRR/Edit/{ID}"
+
+@layout MainLayout
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+@if(Data != null && Languages != null)
+{
+    <div class="element-separator"></div>
+    <div class="custom-background-default">
+        <EditForm Model="Data">
+            <DataAnnotationsValidator />
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_GENERAL")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_TITLE")</label>
+                @if (Data.HOME_PNRR_Extended != null && Data.HOME_PNRR_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Title</label>
+                }
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Title" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_TYPE")</label>
+                <SfDropDownList TValue="Guid?" TItem="V_HOME_PNRR_Type" PopupHeight="230px"
+                                @bind-Value="@Data.HOME_PNRR_Type_ID" DataSource="@Types.OrderBy(p => p.SortOrder)" Placeholder="@TextProvider.Get("BACKEND_HOMEPAGE_PLACEHOLDER_SELECT")">
+                    <DropDownListFieldSettings Value="ID" Text="Type"></DropDownListFieldSettings>
+                </SfDropDownList>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_CONTENT_LIST")</label>
+            </div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_PNRR_Extended != null && Data.HOME_PNRR_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+
+                    @if (string.IsNullOrEmpty(Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionList) && ID == "New")
+                    {
+                        Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionList = Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).DescriptionList;
+                    }
+
+                    <SfRichTextEditor @bind-Value="Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionList" Height="150px">
+                        <RichTextEditorToolbarSettings Items="@RichTextEditor.ToolsOnlyDecoration" />
+                        <RichTextEditorPasteCleanupSettings Prompt="true" />
+                    </SfRichTextEditor>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_CONTENT_SHORT")</label>
+            </div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_PNRR_Extended != null && Data.HOME_PNRR_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+
+                    @if (string.IsNullOrEmpty(Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort) && ID == "New")
+                    {
+                        Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort = Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).DescriptionShort;
+                    }
+
+                    <SfRichTextEditor @bind-Value="Data.HOME_PNRR_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort" Height="350px">
+                        <RichTextEditorToolbarSettings Items="@RichTextEditor.ToolsOnlyDecoration" />
+                        <RichTextEditorPasteCleanupSettings Prompt="true" />
+                    </SfRichTextEditor>
+                }
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_MANAGED")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_THEMES")</label>
+                <ThemeSelection @bind-SelectedThemes="@SelectedThemes"></ThemeSelection>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MANAGED_BY_AUTHORITY")</label>
+                <AuthoritySingleSelection @bind-SelectedAuthorityID="@Data.ManagedByAuthorithyID"></AuthoritySingleSelection>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_CONTENT")</label>
+            </div>
+            <div class="form-group form-group-small">
+                <SfGrid DataSource="@Chapter.OrderBy(p => p.SortOrder).ToList()" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+                    <GridPageSettings PageSize="25"></GridPageSettings>
+                    <SfToolbar>
+                        <ToolbarItems>
+                            <ToolbarItem Type="ItemType.Button">
+                                <Template>
+                                    <div class="btn btn-secondary" @onclick="NewChapter">@TextProvider.Get("ADD")</div>
+                                </Template>
+                            </ToolbarItem>
+                        </ToolbarItems>
+                    </SfToolbar>
+                    <Syncfusion.Blazor.Grids.GridColumns>
+                        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_PNRR_Chapter.Title)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_CHAPTER_TITLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                        <Syncfusion.Blazor.Grids.GridColumn Width="220px" HeaderText="@TextProvider.Get("ACTIONS")">
+                            <Template Context="chapterContext">
+                                @{
+                                    V_HOME_PNRR_Chapter item = chapterContext as V_HOME_PNRR_Chapter;
+
+                                    if (item != null)
+                                    {
+                                        <div class="action-button-container">
+                                            @if (Chapter != null && Chapter.Any())
+                                            {
+                                                <div class="up-down-container">
+                                                    @if (item.SortOrder != Chapter.OrderBy(p => p.SortOrder).FirstOrDefault().SortOrder)
+                                                    {
+                                                        <div class="btn btn-small btn-up btn-secondary btn-icon" @onclick="@(() => MoveUpChapter(item))">
+                                                            <i class="fa-regular fa-chevron-up"></i>
+                                                        </div>
+                                                    }
+                                                    @if (item.SortOrder != Chapter.OrderByDescending(p => p.SortOrder).FirstOrDefault().SortOrder)
+                                                    {
+                                                        <div class="btn btn-small btn-down btn-secondary btn-icon" @onclick="@(() => MoveDownChapter(item))">
+                                                            <i class="fa-regular fa-chevron-down"></i>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                            <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                                <div class="btn btn-secondary btn-icon" @onclick="@(() => DeleteChapter(item))">
+                                                    <i class="fa-regular fa-trash-can"></i>
+                                                </div>
+                                            </SfTooltip>
+                                            <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                                <div class="btn btn-secondary btn-icon" @onclick="@(() => EditChapter(item))">
+                                                    <i class="fa-regular fa-pen"></i>
+                                                </div>
+                                            </SfTooltip>
+                                        </div>
+                                    }
+                                }
+                            </Template>
+                        </Syncfusion.Blazor.Grids.GridColumn>
+                    </Syncfusion.Blazor.Grids.GridColumns>
+                </SfGrid>
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-button-container-separated form-group-small">
+                <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.X" Class="k-standalone-button"
+                               OnClick="@Cancel">@TextProvider.Get("BUTTON_CANCEL")</TelerikButton>
+                <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@(() => Save(true))">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+}

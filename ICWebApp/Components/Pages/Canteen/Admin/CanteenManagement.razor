@@ -1,0 +1,124 @@
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@page "/Admin/Canteen/CanteenManagement"
+
+@layout MainLayout
+
+<div class="segment-container custom-background-default">
+
+    <div class="segment-separator custom-border-primary"></div>
+
+    <div class="extra-small-element-separator"></div>
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Canteens" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true">
+            <SfToolbar>
+                <ToolbarItems>
+                    <ToolbarItem Type="ItemType.Button">
+                        <Template>
+                            <div class="btn btn-secondary" @onclick="AddCanteen">@TextProvider.Get("ADD")</div>
+                        </Template>
+                    </ToolbarItem>
+                </ToolbarItems>
+            </SfToolbar>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(CANTEEN_Canteen.Name)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_CANTEEN_CANTEEN_TABLE_NAME")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(CANTEEN_Canteen.EMail)" HeaderText="@TextProvider.Get("ADMINTOOL_MAINMENU_CANTEEN_CANTEEN_EMAIL")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(CANTEEN_Canteen.TotalSpots)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_CANTEEN_CANTEEN_TABLE_TOTAL_SPOTS")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(CANTEEN_Canteen.PricePerUse)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_CANTEEN_CANTEEN_TABLE_PRICE")" Width="200px">
+                    <Template>
+                        @{
+                            var item = context as CANTEEN_Canteen;
+                        }
+                        @string.Format("{0:C}", item.PricePerUse ?? 0)
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Width="250px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            CANTEEN_Canteen item = context as CANTEEN_Canteen;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => EditCanteen(item))">
+                                            <i class="fa-regular fa-pen"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_PERIOD")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => EditCanteenPeriod(item))">
+                                            <i class="fa-light fa-calendar-days"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => RemoveCanteen(item))">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_SENDCHILDLISTLINK")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => OpenSendListWindow(item))">
+                                            <i class="fa-solid fa-list-check"></i>
+                                        </div>
+                                    </SfTooltip>
+                                </div>
+                                //<GridCommandButton Command="MyEditCommand" Class="btn btn-secondary" OnClick="@(() => EditCanteen(item))" Icon="SvgIcon.Pencil" title="@TextProvider.Get("TOOLTIP_EDIT")"></GridCommandButton>
+                                //<GridCommandButton Command="MyEditCommand" Class="btn btn-secondary" OnClick="@(() => EditCanteenPeriod(item))" Icon="SvgIcon.Calendar" title="@TextProvider.Get("TOOLTIP_PERIOD")"></GridCommandButton>
+                                //-<GridCommandButton Command="MyDeleteCommand" Class="btn btn-secondary" OnClick="@(() => StudentListCanteen(item))" Icon="user" title="@TextProvider.Get("TOOLTIP_STUDENTS_PER_DAY")"></GridCommandButton>
+                                //<GridCommandButton Command="MyDeleteCommand" Class="btn btn-secondary" OnClick="@(() => RemoveCanteen(item))" Icon="SvgIcon.Trash" title="@TextProvider.Get("TOOLTIP_DELETE")"></GridCommandButton>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>
+<SfDialog CssClass="password-change-modal-window"
+              AllowDragging="true"
+              IsModal="true"
+              Width="800px"
+              ShowCloseIcon="@false"
+    @bind-Visible="@_openModalWindow">
+        <DialogTemplates>
+            <Header>@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_SENDCHILDLISTLINK")</Header>
+            <Content>
+                <div class="container-fluid">
+                    <div class="dialog-row-item">
+                        <div class="dialog-row-name">@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_EMAIL")</div>
+                        <div class="dialog-row-value">
+                            <SfTextBox @bind-Value="@_destinationEmailAddress" />
+                        </div>
+                    </div>
+                    <div class="small-element-separator"></div>
+                    <div class="dialog-row-item">
+                        <div class="dialog-row-name">@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_TOKENEXPIRATIONTIME")</div>
+                        <div class="dialog-row-value">
+                            <SfDateTimePicker @bind-Value="@_expirationTime" TValue="DateTime" Min="@DateTime.Now.AddHours(1)" Max="@DateTime.Now.AddDays(31)" />
+                        </div>
+                    </div>
+                    <div class="small-element-separator"></div>
+                    <div class="dialog-row-item">
+                        <div class="dialog-row-name">@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_EMAILLANGUAGE")</div>
+                        <div class="dialog-row-value">
+                            <SfDropDownList TValue="Guid?" TItem="LANG_Languages"
+                                            DataSource="@_languages" @bind-Value="@_emailLangId"
+                                            PopupHeight="230px"
+                                            Placeholder="@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_SELECTEMAILLANGUAGE")"
+                                            EnableVirtualization="true">
+                                <DropDownListFieldSettings Text="NameShort" Value="ID" />
+                            </SfDropDownList>
+                        </div>
+                    </div>
+                </div>
+            </Content>
+        </DialogTemplates>
+        <DialogEvents Closed="@CloseSendListWindow" />
+        <DialogButtons>
+            <DialogButton IsPrimary="false" Content="@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_CLOSEBUTTON")" OnClick="@CloseSendListWindow" />
+            <DialogButton IsPrimary="true" Content="@TextProvider.Get("ADMINTOOL_CANTEEN_SENDCHILDLISTLINK_SEND")" OnClick="@EMailSendCredentials" />
+        </DialogButtons>
+    </SfDialog>

@@ -1,0 +1,152 @@
+﻿@inject IJSRuntime JSRuntime
+
+
+<div class="upload-component @SmallStyleCSS">
+     <CustomLoader Visible="@(isLoading)" Text="@null" Class="initial-data-loader">
+    </CustomLoader>
+    <div class="upload-file-list-container drop-zone" @ref="dropZoneElement">
+        @if (FileInfoList != null && FileInfoList.Count() > 0 && !ReadOnly)
+        {
+            @foreach (var f in FileInfoList)
+            {
+                <div class="upload-file-container" @onclick="@(() => DownloadFile(f.ID))" @onclick:stopPropagation="true">
+                    <div class="upload-file-actions">
+                        <div class="upload-file-name">@(f.FileName + " " + f.FileExtension)</div>
+                        <button class="btn btn-primary" @onclick="@(() => RemoveFile(f.ID))" @onclick:stopPropagation="true">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </div>
+                    <div class="upload-file-preview">
+                        @if (f.FileExtension != null)
+                        {
+                            @if (f.FileExtension.ToLower().Contains(".pdf"))
+                            {
+                                <i class="fa-solid fa-file-pdf"></i>
+                            }
+                            else if (f.FileExtension.ToLower().Contains(".docx"))
+                            {
+                                <i class="fa-solid fa-file-word"></i>
+                            }
+                            else if (f.FileExtension.ToLower().Contains(".xls"))
+                            {
+                                <i class="fa-solid fa-file-excel"></i>
+                            }
+                            else if (f.FileExtension.ToLower().Contains(".csv"))
+                            {
+                                <i class="fa-solid fa-file-csv"></i>
+                            }
+                            else if (f.FileExtension.ToLower().Contains(".jpg") || f.FileExtension.ToLower().Contains(".png"))
+                            {
+                                <img class="upload-file-image" src="@GetBase64Image(f)" />
+                            }
+                        }
+                    </div>
+                    <div class="upload-file-footer-actions">
+                        @TextProvider.Get("DOWNLOAD")
+                    </div>
+                </div>
+            }
+        }
+        else if (FileInfo != null)
+        {
+            <div class="upload-file-container" @onclick="@(() => DownloadFile(FileInfo.ID))" @onclick:stopPropagation="true">
+                <div class="upload-file-actions">
+                    <div class="upload-file-name">@(FileInfo.FileName + " " + FileInfo.FileExtension)</div>
+                    <button class="btn btn-primary" @onclick="@(() => RemoveFile(FileInfo.ID))" @onclick:stopPropagation="true">
+                        <i class="fa-solid fa-x"></i>
+                    </button>
+                </div>
+                <div class="upload-file-preview">
+                    @if (FileInfo.FileExtension != null)
+                    {
+                        @if (FileInfo.FileExtension.ToLower().Contains(".pdf"))
+                        {
+                            <i class="fa-solid fa-file-pdf"></i>
+                        }
+                        else if (FileInfo.FileExtension.ToLower().Contains(".docx"))
+                        {
+                            <i class="fa-solid fa-file-word"></i>
+                        }
+                        else if (FileInfo.FileExtension.ToLower().Contains(".xls"))
+                        {
+                            <i class="fa-solid fa-file-excel"></i>
+                        }
+                        else if (FileInfo.FileExtension.ToLower().Contains(".csv"))
+                        {
+                            <i class="fa-solid fa-file-csv"></i>
+                        }
+                        else if (FileInfo.FileExtension.ToLower().Contains(".jpg") || FileInfo.FileExtension.ToLower().Contains(".png"))
+                        {
+                            <img class="upload-file-image" src="@GetBase64Image(FileInfo)" />
+                        }
+                    }
+                </div>
+                <div class="upload-file-footer-actions">
+                    @TextProvider.Get("DOWNLOAD")
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="upload-file-empty">
+                @if (string.IsNullOrEmpty(ErrorMessage))
+                {
+                    @TextProvider.Get("NO_DOKUMENT_FOUND")
+                }
+                else
+                {
+                    <span class="upload-error">
+                        @ErrorMessage
+                    </span>
+                }
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="upload-file-empty">
+                <span class="upload-error">
+                    @ErrorMessage
+                </span>
+            </div>
+        }
+        @{
+            var fileInputID = "fileInput-" + ID;
+        }
+
+        @if (!ReadOnly)
+        {
+            <label for="@fileInputID" id="fileInput-label-@ID" class="file-input-label"></label>
+            <InputFile name="@Guid.NewGuid()" @ref="InptuFileElement" OnChange="LoadFiles" type="file" multiple id="@fileInputID" class="file-input-label" accept="@Accept" title="" />
+        }
+    </div>
+    <div class="small-element-separator"></div>
+    @if (Multiple == false)
+    {
+        <div class="font-small">@TextProvider.Get("FILE_UPLOAD_SINGLE_DOC_DESC")</div>
+        <div class="extra-small-element-separator"></div>
+    }
+    <div class="upload-file-new">
+        @if (!ReadOnly)
+        {
+            <button class="d-flex flex-nowrap upload-file-button" onclick="enviromentHelper_clickElement('@(fileInputID)')">
+                <svg class="icon upload-file-clip" aria-hidden="true">
+                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                </svg>
+                <div class="text-decoration-none upload-file-text" aria-label="@TextProvider?.Get("UPLOAD")" title="@TextProvider?.Get("UPLOAD")" data-focus-mouse="false">
+                    @TextProvider?.Get("UPLOAD")
+                </div>
+            </button>
+        }
+        else
+        {
+            <button class="d-flex flex-nowrap upload-file-button" disabled>
+                <svg class="icon upload-file-clip" aria-hidden="true">
+                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                </svg>
+                <div class="text-decoration-none upload-file-text" aria-label="@TextProvider?.Get("UPLOAD")" title="@TextProvider?.Get("UPLOAD")" data-focus-mouse="false">
+                    @TextProvider?.Get("UPLOAD")
+                </div>
+            </button>
+        }
+    </div>
+</div>

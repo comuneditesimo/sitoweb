@@ -1,0 +1,268 @@
+﻿<AuthorizeView Policy="Citizen">
+    <Authorized>
+        @if (CurrentRequest != null)
+        {
+            <div class="container">
+                <div class="row mt-lg-80 mt-3 mb-4">
+                    <div class="col-lg-3 mb-4 border-col hide-max-576">
+                        <AnchorList></AnchorList>
+                    </div>
+                    <div class="col-lg-8 offset-lg-1">
+                        <div class="user-application-container it-page-sections-container">
+                            <CustomLoader Visible="@(IsDataBusy)"
+                                          Text="@null" Class="initial-data-loader">
+                            </CustomLoader>
+                            <Anchor Title="@(TextProvider?.Get("FRONTEND_CANTEEN_REQUESTREFUNDBALANCES_STATUS"))" ID="@(TextProvider?.Get("FRONTEND_CANTEEN_REQUESTREFUNDBALANCES_STATUS"))" Order="1">
+                                <div class="calendar-vertical mb-3">
+                                    @if (CurrentStatusLogList != null && CurrentStatusLogList.Any() && CurrentRequest.SignedDate != null)
+                                    {
+                                        @foreach (CANTEEN_RequestRefundBalances_Status_Log logEntry in CurrentStatusLogList.Where(p => (p.ChangeDate > CurrentRequest.SignedDate)).OrderByDescending(p => p.ChangeDate))
+                                        {
+                                            <div class="calendar-date">
+                                                <div class="calendar-date-day">
+                                                    <h3 class="calendar-date-day-content">
+                                                        <small class="calendar-date-day__year">@logEntry.ChangeDate.ToString("yyyy")</small>
+                                                        <span class="title-xxlarge-regular d-flex justify-content-center">@logEntry.ChangeDate.ToString("dd")</span>
+                                                        <small class="calendar-date-day__month">@logEntry.ChangeDate.ToString("MMM")</small>
+                                                    </h3>
+                                                </div>
+                                                <div class="calendar-date-description rounded">
+                                                    <div class="calendar-date-description-content">
+                                                        @if (!string.IsNullOrEmpty(logEntry.Status))
+                                                        {
+                                                            <div class="calendar-status-container">
+                                                                <i class="@logEntry.StatusIcon"></i>
+                                                                <div class="calendar-status-container-right">
+                                                                    <div class="font-small">@(logEntry.ChangeDate.ToString("HH:mm"))</div>
+                                                                    <h4 class="h5 mb-0 ">@logEntry.Status</h4>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    @if (CurrentRequest.SignedDate != null)
+                                    {
+                                        CANTEEN_RequestRefundBalances_Status? _committedStatus = StatusListRequest.FirstOrDefault(p => p.ID == Canteen_Request_Status.Comitted);
+
+                                        @if (_committedStatus != null)
+                                        {
+                                            <div class="calendar-date">
+                                                <div class="calendar-date-day">
+                                                    <h3 class="calendar-date-day-content">
+                                                        <small class="calendar-date-day__year">@CurrentRequest.SignedDate.Value.ToString("yyyy")</small>
+                                                        <span class="title-xxlarge-regular d-flex justify-content-center">@CurrentRequest.SignedDate.Value.ToString("dd")</span>
+                                                        <small class="calendar-date-day__month">@CurrentRequest.SignedDate.Value.ToString("MMM")</small>
+                                                    </h3>
+                                                </div>
+                                                <div class="calendar-date-description rounded">
+                                                    <div class="calendar-date-description-content">
+                                                        @{
+                                                            string? _name = TextProvider?.Get(_committedStatus.TEXT_SystemTexts_Code);
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(_name))
+                                                        {
+                                                            <div class="calendar-status-container">
+                                                                <i class="@_committedStatus.Icon"></i>
+                                                                <div class="calendar-status-container-right">
+                                                                    <div class="font-small">@(CurrentRequest.SignedDate.Value.ToString("HH:mm"))</div>
+                                                                    <h4 class="h5 mb-0 ">@_name</h4>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    @if (CurrentStatusLogList != null && CurrentStatusLogList.Any())
+                                    {
+                                        @foreach (CANTEEN_RequestRefundBalances_Status_Log logEntry in CurrentStatusLogList.Where(p => (CurrentRequest.SignedDate == null || p.ChangeDate < CurrentRequest.SignedDate)).OrderByDescending(p => p.ChangeDate))
+                                        {
+                                            <div class="calendar-date">
+                                                <div class="calendar-date-day">
+                                                    <h3 class="calendar-date-day-content">
+                                                        <small class="calendar-date-day__year">@logEntry.ChangeDate.ToString("yyyy")</small>
+                                                        <span class="title-xxlarge-regular d-flex justify-content-center">@logEntry.ChangeDate.ToString("dd")</span>
+                                                        <small class="calendar-date-day__month">@logEntry.ChangeDate.ToString("MMM")</small>
+                                                    </h3>
+                                                </div>
+                                                <div class="calendar-date-description rounded">
+                                                    <div class="calendar-date-description-content">
+                                                        @if (!string.IsNullOrEmpty(logEntry.Status))
+                                                        {
+                                                            <div class="calendar-status-container">
+                                                                <i class="@logEntry.StatusIcon"></i>
+                                                                <div class="calendar-status-container-right">
+                                                                    <div class="font-small">@(logEntry.ChangeDate.ToString("HH:mm"))</div>
+                                                                    <h4 class="h5 mb-0 ">@logEntry.Status</h4>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    @if (CurrentRequest.Date != null)
+                                    {
+                                        <div class="calendar-date">
+                                            <div class="calendar-date-day">
+                                                <h3 class="calendar-date-day-content">
+                                                    <small class="calendar-date-day__year">@CurrentRequest.Date.Value.ToString("yyyy")</small>
+                                                    <span class="title-xxlarge-regular d-flex justify-content-center">@CurrentRequest.Date.Value.ToString("dd")</span>
+                                                    <small class="calendar-date-day__month">@CurrentRequest.Date.Value.ToString("MMM")</small>
+                                                </h3>
+                                            </div>
+                                            <div class="calendar-date-description rounded">
+                                                <div class="calendar-date-description-content">
+                                                    <div class="calendar-status-container">
+                                                        <i class="fa-regular fa-file-plus"></i>
+                                                        <div class="calendar-status-container-right">
+                                                            <div class="font-small">@(CurrentRequest.Date.Value.ToString("HH:mm"))</div>
+                                                            <h4 class="h5 mb-0 ">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_CREATE_STATUS")</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </Anchor>
+                            <Anchor Title="@(TextProvider?.Get("FRONTEND_CANTEEN_REQUESTREFUNDBALANCES_REQUEST_DATA"))" ID="@(TextProvider?.Get("FRONTEND_CANTEEN_REQUESTREFUNDBALANCES_REQUEST_DATA"))" Order="2" IsCard="true">
+                                <h3>
+                                    @TextProvider?.Get("FRONTEND_CANTEEN_REQUESTREFUNDBALANCES_REQUEST_APPLICANT")
+                                </h3>
+                                <div class="element-separator"></div>
+                                <h4>
+                                    @TextProvider?.Get("APPLICANT_ANAGRAFIC_DATA")
+                                </h4>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_NAME")</label>
+                                    <label class="application-value">@CurrentRequest.UserFirstName @CurrentRequest.UserLastName</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_FISCALNUMBER")</label>
+                                    <label class="application-value">@CurrentRequest.UserTaxNumber</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_GENDER")</label>
+                                    <label class="application-value">
+                                        @if (CurrentRequest.UserGender == "M")
+                                        {
+                                            @TextProvider?.Get("REGISTRATION_GENDER_MALE")
+                                        }
+                                        else if (CurrentRequest.UserGender == "W")
+                                        {
+                                            @TextProvider?.Get("REGISTRATION_GENDER_FEMALE")
+                                        }
+                                    </label>
+                                </div>
+                                <div class="element-separator"></div>
+                                <h4>
+                                    @TextProvider?.Get("APPLICANT_BIRTH_DATA")
+                                </h4>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_COUNTY_OF_BIRTH")</label>
+                                    <label class="application-value">@CurrentRequest.UserCountryOfBirth</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_PLACE_OF_BIRTH")</label>
+                                    <label class="application-value">@CurrentRequest.UserPlaceOfBirth</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_DATE_OF_BIRTH")</label>
+                                    <label class="application-value">
+                                        @if (CurrentRequest.UserDateOfBirth != null)
+                                        {
+                                            @CurrentRequest.UserDateOfBirth.Value.ToString("dd.MM.yyyy")
+                                        }
+                                    </label>
+                                </div>
+                                <div class="element-separator"></div>
+                                <h4>
+                                    @TextProvider?.Get("APPLICANT_DOMICILE_DATA")
+                                </h4>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_ADDRESS")</label>
+                                    <label class="application-value">@CurrentRequest.UserDomicileStreetAdress</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_POSTAL_CODE")</label>
+                                    <label class="application-value">@CurrentRequest.UserDomicilePostalCode</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_MUNICIPALITY")</label>
+                                    <label class="application-value">@CurrentRequest.UserDomicileMunicipality</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_PROVINCE")</label>
+                                    <label class="application-value">@CurrentRequest.UserDomicileProvince</label>
+                                </div>
+                                <div class="element-separator"></div>
+                                <h4>
+                                    @TextProvider?.Get("APPLICANT_KONTAKT_DATA")
+                                </h4>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_EMAIL")</label>
+                                    <label class="application-value">@CurrentRequest.UserEmail</label>
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-row">
+                                    <label class="application-label">@TextProvider?.Get("APPLICANT_PHONE")</label>
+                                    <label class="application-value">
+                                        @if (!string.IsNullOrEmpty(CurrentRequest.UserMobilePhone))
+                                        {
+                                            var IntPhoneNumber = long.Parse(CurrentRequest.UserMobilePhone.Replace("+", ""));
+
+                                            @IntPhoneNumber.ToString("+## ### ### ####")
+                                        }
+                                    </label>
+                                </div>
+                                @if (CurrentFileInfo != null)
+                                {
+                                    <div class="element-separator"></div>
+                                    <h4>
+                                        @TextProvider?.Get("FRONTEND_APPLICATION_DOCUMENTS")
+                                    </h4>
+                                    <div class="application-row">
+                                        <div class="document-detail-download" @onclick="@(() => DownloadRessource(CurrentFileInfo.ID, CurrentFileInfo.FileName))">
+                                            <div class="document-detail-download-icon">
+                                                <svg class="icon icon-primary icon-sm me-1" aria-hidden="true">
+                                                    <use href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                                                </svg>
+                                            </div>
+                                            <div class="document-detail-download-description font-normal">
+                                                @CurrentFileInfo.FileName (@(CurrentFileInfo.Size / 1024) kb)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </Anchor>
+                            <button class="btn btn-secondary" @onclick="BackToPrevious">@TextProvider.Get("BUTTON_BACK")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        @if (NavManager != null)
+        {
+            <RedirectToLogin RedirectURL="@NavManager.Uri"></RedirectToLogin>
+        }
+    </NotAuthorized>
+</AuthorizeView>

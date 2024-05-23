@@ -1,0 +1,29 @@
+﻿.h1 {
+    color: var(--primary);
+}
+
+.h2 {
+    color: var(--primary);
+}
+
+.InfoPageSection.h3 {
+    color: var(--primary) !important;
+}
+
+.h3 {
+    color: var(--primary) !important;
+}
+
+.h4 {
+    color: var(--primary);
+}
+
+
+.h5 {
+    color: var(--primary);
+}
+
+.h6 {
+    color: var(--primary);
+}
+

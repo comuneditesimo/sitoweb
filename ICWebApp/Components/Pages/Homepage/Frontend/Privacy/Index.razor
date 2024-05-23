@@ -1,0 +1,49 @@
+﻿@page "/Hp/Privacy"
+
+@if (Data != null)
+{
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @foreach(var d in Data.OrderBy(p => p.SortOrder).ToList())
+                {
+                    var docs = HomeProvider.GetPrivacy_DocumentSync(d.ID);
+
+                    <Anchor Title="@d.Title" ID="@d.Title" Order="@d.SortOrder">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)d.Description)
+
+                            @if(docs != null && docs.Any())
+                            {
+                                <br />
+                                <div class="row">
+                                    @foreach(var doc in docs.OrderBy(p => p.CreationDate).ToList())
+                                    {
+                                        if (doc.FILE_FileInfo_ID != null)
+                                        {
+                                            <div class="col-sm-6 col-lg-6 mb-3">
+                                                <DownloadCardComponent FILE_FileInfoID="@doc.FILE_FileInfo_ID.Value" />
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+            </section>
+            @if (Data.Any() && Data.Max(p => p.LastModificationDate).Value != null)
+            {
+                <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                    <h4 class="h6">
+                        @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                        <span class="h6 fw-normal">@Data.Max(p => p.LastModificationDate).Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                    </h4>
+                </article>
+            }
+        </div>
+    </div>
+}

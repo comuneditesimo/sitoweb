@@ -1,0 +1,66 @@
+﻿@if (Newsletter != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                @if ((Newsletter.Image_FILE_FileInfo_ID != null)) 
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper">
+                                <img src="@ImageHelper.GetFilePath(Newsletter.Image_FILE_FileInfo_ID)" alt="@Newsletter.Title" title="@Newsletter.Title">
+                            </figure>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper img-top">
+                                <img src="@ImageHelper.GetPDFThumbnail(Newsletter.Download_FILE_FileInfo_ID)" alt="@Newsletter.Title" title="@Newsletter.Title">
+                            </figure>
+                        </div>
+                    </div>
+                }
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (Newsletter.HOME_Municipal_Newsletter_Type_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(Newsletter.HOME_Municipal_Newsletter_Type_ID.Value))" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + "/hp/Type/Newsletter/" + Newsletter.HOME_Municipal_Newsletter_Type_ID)">
+                                    @Newsletter.Type
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @Newsletter.Type
+                                </span>
+                            }
+                        }
+                        @if (Newsletter.ReleaseDate != null)
+                        {
+                            <span class="data u-grey-light">
+                                @Newsletter.ReleaseDate.Value.ToString("dd MMM yy").Replace(".", "")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="data u-grey-light">
+                                @Newsletter.CreationDate.ToString("dd MMM yy").Replace(".", "")
+                            </span>
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" data-focus-mouse="false">
+                        <h3 class="card-title">@Newsletter.Title</h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)Newsletter.DescriptionShort)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

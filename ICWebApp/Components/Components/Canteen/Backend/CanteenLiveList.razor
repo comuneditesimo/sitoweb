@@ -1,0 +1,44 @@
+@using Syncfusion.Blazor.Grids;
+@{
+    var toolBar = new List<string>();
+    if (External)
+    {
+        toolBar.Add("Search");
+    }
+}
+@if (External)
+{
+    TextProvider.Get("CANTEEN_CHECKIN_LIST_EXTERNAL_TITLE");
+    <div class="element-separator"></div>
+}
+<SfGrid DataSource="@_movements" ToolBar="@toolBar">
+    <GridColumns>
+        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.LastName)" HeaderText="@TextProvider.Get("CANTEEN_STUDENT_FIRSTNAME")"></Syncfusion.Blazor.Grids.GridColumn>
+        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.FirstName)" HeaderText="@TextProvider.Get("CANTEEN_STUDENT_NAME")"></Syncfusion.Blazor.Grids.GridColumn>
+        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.TaxNumber)" HeaderText="@TextProvider.Get("CANTEEN_STUDENT_TAXNUMBER")"></Syncfusion.Blazor.Grids.GridColumn>
+        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.SchoolName)" HeaderText="@TextProvider.Get("CANTEEN_SCHOOL")"></Syncfusion.Blazor.Grids.GridColumn>
+        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.SchoolClass)" HeaderText="@TextProvider.Get("CANTEEN_CLASS")"></Syncfusion.Blazor.Grids.GridColumn>
+        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Used)" HeaderText="@TextProvider.Get("EXTERNALACCESSLINK_CHECKED_IN")">
+            <Template>
+                @{
+                    var movement = context as V_CANTEEN_Subscriber_Movements;
+                }
+                @if (movement.Used && !movement.UsedWhileCanceled)
+                {
+                    <span><i class="fa-regular fa-check-to-slot fa-xl" style="color: green;"></i></span>
+                } else if (movement.Used)
+                {
+                    <span><i class="fa-regular fa-check-to-slot fa-xl" style="color: orange;"></i></span>
+                }
+                else
+                {
+                    <span><i class="fa-regular fa-xmark-to-slot fa-xl" style="color: grey"></i></span>
+                    @if (External)
+                    {
+                        <button class="checkin-button"type="button" @onclick="() => CheckIn(movement.ID)"><span><i class="fa-regular fa-user-check" style="color: #0b5ed7"></i></span></button>
+                    }
+                }
+            </Template>
+        </Syncfusion.Blazor.Grids.GridColumn>
+    </GridColumns>
+</SfGrid>

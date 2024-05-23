@@ -1,0 +1,204 @@
+﻿@page "/Backend/Homepage/Maintenance"
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+
+@layout MainLayout
+
+@if(Data != null && Languages != null)
+{
+    <div class="custom-background-default">
+        <EditForm Model="Data">
+            <DataAnnotationsValidator />
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_GENERAL")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_DATA")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.MAIN_Detail_Extended != null && Data.MAIN_Detail_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+
+                    @if (string.IsNullOrEmpty(Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                    {
+                        Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                    Tools="@Tools"
+                                    EditMode="@EditorEditMode.Div"
+                                    Class="font-normal"
+                                    Height="250px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                    RemoveMsClasses="true"
+                                                    RemoveMsStyles="true"
+                                                    RemoveHtmlComments="true"
+                                                    RemoveAllAttributes="true"
+                                                    StripTags="@StripTags"
+                                                    RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label custom-color-primary">@TextProvider.Get("BACKEND_FORM_DEFINITION_FOR_WHOM")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.MAIN_Detail_Extended != null && Data.MAIN_Detail_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    @if (string.IsNullOrEmpty(Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).ForWhom))
+                    {
+                        Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).ForWhom = Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).ForWhom;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).ForWhom"
+                                   Tools="@Tools"
+                                   EditMode="@EditorEditMode.Div"
+                                   Class="font-normal"
+                                   Height="250px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                 RemoveMsClasses="true"
+                                                 RemoveMsStyles="true"
+                                                 RemoveHtmlComments="true"
+                                                 RemoveAllAttributes="true"
+                                                 StripTags="@StripTags"
+                                                 RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label custom-color-primary">@TextProvider.Get("BACKEND_FORM_DEFINITION_HOW_TO")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.MAIN_Detail_Extended != null && Data.MAIN_Detail_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    @if (string.IsNullOrEmpty(Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).HowTo))
+                    {
+                        Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).HowTo = Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).HowTo;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).HowTo"
+                                   Tools="@Tools"
+                                   EditMode="@EditorEditMode.Div"
+                                   Class="font-normal"
+                                   Height="250px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                 RemoveMsClasses="true"
+                                                 RemoveMsStyles="true"
+                                                 RemoveHtmlComments="true"
+                                                 RemoveAllAttributes="true"
+                                                 StripTags="@StripTags"
+                                                 RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label custom-color-primary">@TextProvider.Get("BACKEND_FORM_DEFINITION_WHATFOR")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.MAIN_Detail_Extended != null && Data.MAIN_Detail_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    @if (string.IsNullOrEmpty(Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).WhatFor))
+                    {
+                        Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).WhatFor = Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).WhatFor;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).WhatFor"
+                                   Tools="@Tools"
+                                   EditMode="@EditorEditMode.Div"
+                                   Class="font-normal"
+                                   Height="250px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                 RemoveMsClasses="true"
+                                                 RemoveMsStyles="true"
+                                                 RemoveHtmlComments="true"
+                                                 RemoveAllAttributes="true"
+                                                 StripTags="@StripTags"
+                                                 RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label custom-color-primary">@TextProvider.Get("BACKEND_FORM_DEFINITION_RESULT")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.MAIN_Detail_Extended != null && Data.MAIN_Detail_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    @if (string.IsNullOrEmpty(Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Result))
+                    {
+                        Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Result = Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Result;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.MAIN_Detail_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Result"
+                                   Tools="@Tools"
+                                   EditMode="@EditorEditMode.Div"
+                                   Class="font-normal"
+                                   Height="250px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                 RemoveMsClasses="true"
+                                                 RemoveMsStyles="true"
+                                                 RemoveHtmlComments="true"
+                                                 RemoveAllAttributes="true"
+                                                 StripTags="@StripTags"
+                                                 RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_MANAGED")</div>
+            </div>          
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MANAGED_BY_AUTHORITY")</label>
+                <AuthoritySingleSelection @bind-SelectedAuthorityID="@Data.Managed_AUTH_Authority_ID"></AuthoritySingleSelection>
+            </div>     
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_THEMES")</label>
+                <ThemeSelection @bind-SelectedThemes="@SelectedThemes"></ThemeSelection>
+            </div>      
+            <div class="element-separator"></div>
+            <div class="form-button-container form-group-small">
+                @if (!string.IsNullOrEmpty(SaveMessage))
+                {
+                    <div class="extra-small-element-separator"></div>
+                    <div class="form-group form-group-small form-success">
+                        @SaveMessage
+                    </div>
+                }
+                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+}

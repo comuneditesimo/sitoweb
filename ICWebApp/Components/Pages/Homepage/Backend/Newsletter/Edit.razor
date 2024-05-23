@@ -1,0 +1,157 @@
+﻿@page "/Backend/Homepage/Newsletter/Edit/{ID}"
+
+@layout MainLayout
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+
+@if(Data != null && CurrentLanguage != null)
+{
+    <div class="element-separator"></div>
+    <div class="custom-background-default">
+        <EditForm Model="Data">
+            <DataAnnotationsValidator />
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_GENERAL")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_TITLE")</label>
+                @if (Data.HOME_Municipal_Newsletter_Extended != null && Data.HOME_Municipal_Newsletter_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Title</label>
+                }
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Title" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_TYPE")</label>
+                <SfDropDownList TValue="Guid?" TItem="V_HOME_Municipal_Newsletter_Type" PopupHeight="230px"
+                                @bind-Value="@Data.HOME_Municipal_Newsletter_Type_ID" DataSource="@Types" Placeholder="@TextProvider.Get("BACKEND_HOMEPAGE_PLACEHOLDER_SELECT")">
+                    <DropDownListFieldSettings Value="ID" Text="Type"></DropDownListFieldSettings>
+                </SfDropDownList>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_DESCRIPTION_SHORT")</label>
+            </div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_Municipal_Newsletter_Extended != null && Data.HOME_Municipal_Newsletter_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+
+                    @if (string.IsNullOrEmpty(Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort))
+                    {
+                        Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort = Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).DescriptionShort;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort"
+                                   Tools="@Tools"
+                                   EditMode="@EditorEditMode.Div"
+                                   Class="font-normal"
+                                   Height="150px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                 RemoveMsClasses="true"
+                                                 RemoveMsStyles="true"
+                                                 RemoveHtmlComments="true"
+                                                 RemoveAllAttributes="true"
+                                                 StripTags="@StripTags"
+                                                 RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_DESCRIPTION")</label>
+            </div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_Municipal_Newsletter_Extended != null && Data.HOME_Municipal_Newsletter_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+
+                    @if (string.IsNullOrEmpty(Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                    {
+                        Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                    Tools="@Tools"
+                                    EditMode="@EditorEditMode.Div"
+                                    Class="font-normal"
+                                    Height="250px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                    RemoveMsClasses="true"
+                                                    RemoveMsStyles="true"
+                                                    RemoveHtmlComments="true"
+                                                    RemoveAllAttributes="true"
+                                                    StripTags="@StripTags"
+                                                    RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_RELEASE_DATE")</label>
+                <TelerikDatePicker Format="dd.MM.yyyy" @bind-Value="Data.ReleaseDate" class="form-control"></TelerikDatePicker>
+            </div>           
+            <div class="element-separator"></div>
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_DOCUMENTS")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Languages != null)
+                {
+                    @foreach (var l in Languages)
+                    {
+                        <div class="form-group form-group-small">
+                            <label class="form-label custom-color-primary">@TextProvider.Get(l.TEXT_SystemsText_Code)</label>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-multicolumn">
+                            <div class="form-multicolumn-column">
+                                <div class="form-group">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_THUMBNAIL")</label>
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                    @if (Data.HOME_Municipal_Newsletter_Extended != null && Data.HOME_Municipal_Newsletter_Extended.Count() > 0)
+                                    {
+                                        <UploadComponent ID="@("imageUpload_" + l.ID)" @bind-FileInfo="Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == l.ID).Image" Multiple="false" Accept=".jpg, .png, .webp, .jpeg"></UploadComponent>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-multicolumn-column">
+                                <div class="form-group ">
+                                    <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_NEWSLETTER_FILE")</label>
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group">
+                                @if (Data.HOME_Municipal_Newsletter_Extended != null && Data.HOME_Municipal_Newsletter_Extended.Count() > 0)
+                                {
+                                    <UploadComponent ID="@("fileUpload_" + l.ID)" @bind-FileInfo="Data.HOME_Municipal_Newsletter_Extended.FirstOrDefault(p => p.LANG_Language_ID == l.ID).File" Multiple="false" Accept=".pdf"></UploadComponent>
+                                }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="element-separator"></div>
+                    }
+                }
+            </div>
+            <div class="form-button-container-separated form-group-small">
+                <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.X" Class="k-standalone-button"
+                               OnClick="@Cancel">@TextProvider.Get("BUTTON_CANCEL")</TelerikButton>
+                <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+}

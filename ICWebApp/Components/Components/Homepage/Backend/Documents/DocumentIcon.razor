@@ -1,0 +1,23 @@
+﻿@if (Document != null)
+{
+    string hoverCSS = "";
+
+    @if (EnableClicking)
+    {
+        hoverCSS += "person-selected-hover";
+    }
+
+    <div class="document-container @hoverCSS" @onclick="Clicked">   
+        <div class="document-image">
+            <i class="fa-light fa-paperclip-vertical"></i>
+        </div>
+        <div class="document-content">
+            <div class="document-name">
+                @Document.Title
+            </div>
+            <div class="document-language">
+                @Document.Format
+            </div>
+        </div>
+    </div>
+}

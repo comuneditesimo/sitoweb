@@ -1,0 +1,245 @@
+﻿@page "/Backend/Students/List"
+
+@layout MainLayout
+
+@using ICWebApp.Components.Components.Canteen
+
+<div class="row">
+    <div class="col-12">
+        <TelerikGrid Data="@Data.ToList()" Pageable="true" Sortable="false" Resizable="false" PageSize="20"
+                     FilterMode="GridFilterMode.FilterRow" ScrollMode="@GridScrollMode.Scrollable" Groupable="false" Reorderable="false">
+            <GridToolBarTemplate>
+                <GridSearchBox DebounceDelay="200"></GridSearchBox>
+            </GridToolBarTemplate>
+            <GridColumns>
+                <GridColumn Field="@nameof(V_CANTEEN_Student.Lastname)" Title="@TextProvider.Get("CANTEEN_STUDENTS_LASTNAME")"></GridColumn>
+                <GridColumn Field="@nameof(V_CANTEEN_Student.Firstname)" Title="@TextProvider.Get("CANTEEN_STUDENTS_FIRSTNAME")"></GridColumn>
+                <GridColumn Field="@nameof(V_CANTEEN_Student.Taxnumber)" Title="@TextProvider.Get("CANTEEN_STUDENTS_TAXNUMBER")"></GridColumn>
+                <GridColumn Field="@nameof(V_CANTEEN_Student.DateOfBirth)" Title="@TextProvider.Get("CANTEEN_STUDENTS_BIRTHDATE")" Width="150px" DisplayFormat="{0:dd.MM.yyy}" Filterable="false"></GridColumn>
+                <GridColumn Field="@nameof(V_CANTEEN_Student.PlaceOfBirth)" Title="@TextProvider.Get("CANTEEN_STUDENTS_BIRTHLOCATION")" Filterable="false"></GridColumn>
+                <GridCommandColumn Width="200px" Title="@TextProvider.Get("ACTIONS")">
+                    @{
+                        V_CANTEEN_Student item = context as V_CANTEEN_Student;
+
+                        if (item != null)
+                        {
+                            <div class="button-group">
+                                @if (item.ActiveSubscription == 1)
+                                {
+                                    <GridCommandButton Command="ShowSubcriptions" Class="btn btn-secondary" OnClick="@(() => ShowAbsences(item))" Icon="@("fa-regular fa-phone-missed")" title="@TextProvider.Get("CANTEEN_STUDENTS_ABSENCES")"></GridCommandButton>
+                                    <GridCommandButton Command="ShowSubcriptions" Class="btn btn-secondary" OnClick="@(() => ShowMovements(item))" Icon="@("fas fa-stream")" title="@TextProvider.Get("CANTEEN_STUDENTS_MOVEMENTS")"></GridCommandButton>
+                                    @if (Configuration != null && Configuration.PosMode == true)
+                                    {
+                                        <GridCommandButton Command="ShowCards" Class="btn btn-secondary" OnClick="@(() => ShowCards(item))" Icon="@("fa-regular fa-address-card")" title="@TextProvider.Get("CANTEEN_STUDENTS_CARDS")"></GridCommandButton>
+                                    }
+                                }
+                                <GridCommandButton Command="ShowSubcriptions" Class="btn btn-secondary" OnClick="@(() => ShowSubcriptions(item))" Icon="@("fas fa-fork-knife")" title="@TextProvider.Get("CANTEEN_STUDENTS_SUBSCRIPTIONS")"></GridCommandButton>
+                            </div>
+                        }
+                    }
+                </GridCommandColumn>
+            </GridColumns>
+        </TelerikGrid>
+    </div>
+</div>
+<TelerikWindow Modal="true" @bind-Visible="@ShowSubscriptionWindow" Width="1620px">
+    <WindowTitle>
+        @TextProvider.Get("CANTEEN_STUDENTS_SUBSCRIPTIONS")
+    </WindowTitle>
+    <WindowContent>
+        <div class="popup-container">
+            <div class="popup-content">
+                @if (Subscriptions != null)
+                {
+                    <TelerikGrid Data="@Subscriptions" Pageable="true" Sortable="false" Resizable="false" PageSize="10" Height="70vh">
+                        <DetailTemplate Context="contextDetail">
+                            @{
+                                var SubscriberDetail = contextDetail as V_CANTEEN_Subscriber;
+                                <SubscriptionDetailComponent SubscriberDetailList="@(new List<Guid> { SubscriberDetail.ID })"></SubscriptionDetailComponent>
+                            }
+                        </DetailTemplate>
+                        <GridColumns>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.StatusText)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_STATUS")" Width="150px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.SchoolyearDescription)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_SCHOOlYEAR")" Width="150px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.SignedDate)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_DATE")" DisplayFormat="{0:dd.MM.yyyy}" Width="200px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.ProgressivNumber)" Title="@TextProvider.Get("PROGRESSIV_NUMBER")" Width="200px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.FullName)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_NAME")" Width="150px">
+                                <Template>
+                                    @{
+                                        V_CANTEEN_Subscriber subscriber = context as V_CANTEEN_Subscriber;
+                                        if (subscriber.InChange == true)
+                                        {
+                                            <div>
+                                                @TextProvider.Get("CANTEEN_CHANGED_APPLICATION") - @subscriber.FullName
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @subscriber.FullName
+                                            </div>
+                                        }
+                                    }
+                                </Template>
+                            </GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.TaxNumber)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_TAXNUMBER")" Width="150px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.CanteenNameText)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_CANTEEN")" Width="150px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber.ReminderDate)" DisplayFormat="{0:dd.MM.yyyy HH:mm}" Title="@TextProvider.Get("CANTEEN_DASHBOARD_LAST_REMINDER")" Width="150px"></GridColumn>
+                        </GridColumns>
+                    </TelerikGrid>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="segment-button-toolbar">
+                <div class="btn btn-secondary" @onclick="HideSubscriptions">@TextProvider.Get("BUTTON_CANCEL")</div>
+            </div>
+        </div>
+    </WindowContent>
+</TelerikWindow>
+<TelerikWindow Modal="true" @bind-Visible="@ShowCardWindow" Width="1620px">
+    <WindowTitle>
+        @TextProvider.Get("CANTEEN_STUDENTS_CARDS")
+    </WindowTitle>
+    <WindowContent>
+        <div class="popup-container">
+            <div class="popup-content">
+                @if (Subscriber != null)
+                {
+                    <ICWebApp.Components.Components.Canteen.Backend.CardList SubscriberID="@Subscriber.ID" Taxnumber="@Subscriber.TaxNumber"></ICWebApp.Components.Components.Canteen.Backend.CardList>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="segment-button-toolbar">
+                <div class="btn btn-secondary" @onclick="HideCards">@TextProvider.Get("BUTTON_CANCEL")</div>
+            </div>
+        </div>
+    </WindowContent>
+</TelerikWindow>
+<TelerikWindow Modal="true" @bind-Visible="@ShowMovementWindow" Width="1620px">
+    <WindowTitle>
+        @TextProvider.Get("CANTEEN_STUDENTS_MOVEMENTS")
+    </WindowTitle>
+    <WindowContent>
+        <div class="popup-container">
+            <div class="popup-content">
+                @if (Movements != null)
+                {
+                    <TelerikGrid Data="@Movements.OrderByDescending(p => p.Date).ToList()" Pageable="true" Sortable="true" Resizable="false" PageSize="50"
+                                 ScrollMode="@GridScrollMode.Scrollable" Groupable="false" Reorderable="false" Height="70vh">
+                        <GridColumns>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Date)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_DATE")" Width="200px">
+                                <Template>
+                                    @{
+                                        var item = context as V_CANTEEN_Subscriber_Movements;
+                                    }
+                                    <span>@item!.Date!.Value.ToShortDateString()</span>
+                                </Template>
+                            </GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Description)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_DESCRIPTION")" Width="150px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Fee)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_AMOUNT")" Width="200px">
+                                <Template>
+                                    @{
+                                        V_CANTEEN_Subscriber_Movements item = context as V_CANTEEN_Subscriber_Movements;
+
+                                        string fontColorCSS = "fee-value-red";
+
+                                        if (item != null && item.Fee != null && item.Fee > 0)
+                                        {
+                                            fontColorCSS = "fee-value-green";
+                                        }
+
+                                        if (item != null && item.Fee != null)
+                                        {
+                                            <span class="odemand-status-container @fontColorCSS">
+                                                @item.Fee.Value.ToString("C2")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="demand-status-container">
+                                                0,00 €
+                                            </span>
+                                        }
+                                    }
+                                </Template>
+                            </GridColumn>
+                        </GridColumns>
+                    </TelerikGrid>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="segment-button-toolbar">
+                <div class="btn btn-secondary" @onclick="HideMovements">@TextProvider.Get("BUTTON_CANCEL")</div>
+            </div>
+        </div>
+
+    </WindowContent>
+</TelerikWindow>
+<TelerikWindow Modal="true" @bind-Visible="@ShowAbsenceWindow" Width="1620px">
+    <WindowTitle>
+        @TextProvider.Get("CANTEEN_STUDENTS_ABSENCES")
+    </WindowTitle>
+    <WindowContent>
+        <div class="popup-container">
+            <div class="popup-content">
+                @if (NextMovements != null)
+                {
+                    <TelerikGrid Data="@NextMovements.OrderBy(p => p.Date).ToList()" Pageable="true" Sortable="true" Resizable="false" PageSize="10" Height="70vh"
+                                 ScrollMode="@GridScrollMode.Scrollable" Groupable="false" Reorderable="false">
+                        <GridColumns>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Date)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_DATE")" DisplayFormat="{0:ddd, dd.MM.yyyy}" Width="160px"></GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.CancelDate)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_STATUS")" Width="160px">
+                                <Template>
+                                    @{
+                                        V_CANTEEN_Subscriber_Movements item = context as V_CANTEEN_Subscriber_Movements;
+
+                                        <div class="segment-line-right segment-value custom-color-details flex-left">
+
+                                            @if (item != null && item.CancelDate != null)
+                                            {
+                                                string fontColorCSS = "fee-value-red";
+
+                                                <div class="demand-status-container @fontColorCSS">@TextProvider.Get("CANTEEN_STATUS_AWAY")</div>
+                                            }
+
+                                            @if (item != null && item.CancelDate == null)
+                                            {
+                                                string fontColorCSS = "fee-value-green";
+
+                                                <div class="demand-status-container @fontColorCSS">@TextProvider.Get("CANTEEN_STATUS_OK")</div>
+                                            }
+                                        </div>
+
+                                    }
+                                </Template>
+                            </GridColumn>
+                            <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Description)" Title="@TextProvider.Get("CANTEEN_DASHBOARD_DESCRIPTION")"></GridColumn>
+                            <GridCommandColumn Width="160px" Title="@TextProvider.Get("ACTIONS")">
+                                @{
+                                    V_CANTEEN_Subscriber_Movements item = context as V_CANTEEN_Subscriber_Movements;
+
+                                    if (item != null && item.CancelDate == null && item.Fee < 0)
+                                    {
+                                        <div class="btn btn-secondary btn-full-width" @onclick="(() => DailyCancellation(item))">
+                                            @TextProvider.Get("CANTEEN_ACTION_DAILYCANCEL")
+                                        </div>
+                                    }
+                                    if (item != null && item.CancelDate != null && item.Fee < 0)
+                                    {
+                                        <div class="btn btn-secondary btn-full-width" @onclick="(() => DailyCancellation(item))">
+                                            @TextProvider.Get("CANTEEN_ACTION_REOPEN")
+                                        </div>
+                                    }
+                                }
+                            </GridCommandColumn>
+                        </GridColumns>
+                    </TelerikGrid>
+                }
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="segment-button-toolbar">
+                <div class="btn btn-secondary" @onclick="HideAbsences">@TextProvider.Get("BUTTON_CLOSE")</div>
+            </div>
+        </div>
+    </WindowContent>
+</TelerikWindow>

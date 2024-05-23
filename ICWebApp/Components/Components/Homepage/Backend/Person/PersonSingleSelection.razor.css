@@ -1,0 +1,105 @@
+﻿.person-dropdown-container
+{
+    position: relative;
+    display: inline-block;
+    min-width: 380px;
+}
+.person-selected-container {
+    height: 56px;
+    border: 1px solid lightgrey;
+}
+    .person-selected-container:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        cursor: pointer;
+    }
+        .person-selected-container:hover .person-selected-container-empty{
+            color: var(--primary);
+        }
+        .person-list-empty-container {
+            text-align: center;
+            color: #808080;
+        }
+.person-selected-container-empty{
+    text-align: center;
+    color: #808080;
+    line-height: 52px;
+}
+.person-list-container {
+    border: 1px solid lightgray;
+    border-top: 0px;
+    margin-top: 0px;
+    position: absolute;
+    display: inline-block;
+    min-width: 380px;
+    top: 56px;
+    z-index: 993;
+    background-color: var(--primary-text-color);
+}
+.person-list-searchbar{
+    padding: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid lightgray;
+}
+.person-list-item-container{
+    height: 380px;
+    padding-top: 5px;
+    overflow: auto;
+}
+.avatar-separator{
+    height: 4px;
+}
+.person-selected-avatar-container{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.person-selected-cancel{
+    color: #808080 !important;
+    font-size: 22px;
+    line-height: 54px;
+    text-align: center;
+    width: 40px;
+}
+    .person-selected-cancel:hover {
+        color: var(--primary) !important;
+    }
+
+.click-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 992;
+}
+.person-list-item-new-container {
+    border: 1px dashed #d9d9d9;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 5px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.person-list-item-new-container {
+    margin-left: 5px;
+    text-align: center;
+}
+    .person-list-item-new-container:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+.person-list-item-sub-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid #f2f2f2;
+    padding-top: 5px;
+    padding-right: 5px;
+}
+.person-list-item-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}

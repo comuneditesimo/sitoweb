@@ -1,0 +1,30 @@
+﻿.document-selected-avatar-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid lightgray;
+    min-width: 300px;
+}
+    .document-selected-avatar-container:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+.document-selected-cancel {
+    color: #808080 !important;
+    font-size: 22px;
+    line-height: 54px;
+    text-align: center;
+    width: 40px;
+    cursor: pointer;
+}
+
+    .document-selected-cancel:hover {
+        color: var(--primary) !important;
+    }
+.document-selected-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}

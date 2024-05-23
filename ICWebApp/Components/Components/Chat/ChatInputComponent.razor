@@ -1,0 +1,25 @@
+<div class="rchat-input-container">
+    @if (AllowSend)
+    {
+        <ChatUploadComponent Visible="_displayUpload" DocsChanged="OnUploadsChanged" @ref="_uploadComponent"></ChatUploadComponent>
+        <form @onsubmit="SendMessage" class="rchat-input-form">
+            <input name="@Guid.NewGuid()" class="rchat-input-text" type="text" @bind="currentMessage" @bind:event="oninput" placeholder="@TextProvider.Get("PLACEHOLDER_TYPE_MESSAGE")" />
+            <button type="button" class="rchat-button" @onclick="ToggleUploadComponent">
+                <span>
+                    <i class="fa-light fa-paperclip-vertical fa-lg"></i>
+                </span>
+            </button>
+            <button class="rchat-button" type="submit" disabled="@(!currentMessageHasContent || !AllowSend)">
+                <span>
+                    <i class="fa-light fa-paper-plane-top fa-lg"></i>
+                </span>
+            </button>
+        </form>
+    }
+    else
+    {
+        <div class="rchat-input-not-allowed">
+            @TextProvider.Get("FORM_APPLICATION_CHAT_NOT_ENABLED_YET")
+        </div>
+    }
+</div>

@@ -1,0 +1,258 @@
+﻿@page "/Hp/Theme/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Theme
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.News
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+
+@if(Theme != null)
+{
+    <div class="it-hero-wrapper it-wrapped-container" id="main-container">
+        <div class="img-responsive-wrapper">
+            <div class="img-responsive">
+                <div class="img-wrapper">
+                    <img src="@ImageHelper.GetFilePath(Theme.FILE_FileInfo_ID)" alt="@Theme.Title" title="@Theme.Title">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 px-0 px-lg-2">
+                    <div class="it-hero-card it-hero-bottom-overlapping rounded hero-p pb-lg-80 drop-shadow ">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-lg-10">
+                                <ICWebApp.Components.Components.Breadcrumb.Frontend.Breadcrumb></ICWebApp.Components.Components.Breadcrumb.Frontend.Breadcrumb>
+                            </div>
+                        </div>
+                        <div class="row sport-wrapper justify-content-between mt-lg-2">
+                            <div class="col-12 col-lg-5 offset-lg-1">
+                                <h1 class="mb-3 mb-lg-4 title-xxlarge">
+                                    @Theme.Title
+                                </h1>
+                                <h2 class="visually-hidden" id="news-details">@TextProvider.Get("HOMEPAGE_THEME_DETAILS")</h2>
+                                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Theme.Description))
+                                {
+                                    <p class="u-main-black text-paragraph-regular-medium mb-60">
+                                        @((MarkupString)Theme.Description)
+                                    </p>
+                                }
+                            </div>
+                            @if (Person != null || Authority != null)
+                            {
+                                <div class="col-12 col-lg-5 me-lg-5">
+                                    <div class="card-wrapper card-column">
+                                        <h3 class="title-xsmall-semi-bold">@TextProvider.Get("HOMEPAGE_THEME_MANAGED_BY")</h3>
+                                        @if (Person != null)
+                                        {
+                                            <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+                                                <div class="card-body pe-3">
+                                                    <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                                                        <a class="text-decoration-none" @onclick="GoToPerson" data-element="service-area">
+                                                            @Person.Fullname
+                                                        </a>
+                                                    </p>
+                                                    <div class="card-text">
+                                                        @if (!string.IsNullOrEmpty(Person.EMail))
+                                                        {
+                                                            <p class="u-main-black">
+                                                                <a href="mailto:@Person.EMail">@Person.EMail</a>
+                                                            </p>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(Person.PhoneNr))
+                                                        {
+                                                            <p class="u-main-black">
+                                                                <a href="tel:@Person.PhoneNr">@Person.PhoneNr</a>
+                                                            </p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Authority != null)
+                                        {
+                                            <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+                                                <div class="card-body pe-3">
+                                                    <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                                                        <a class="text-decoration-none" @onclick="GoToAuthority" data-element="service-area">
+                                                            @Authority.Title
+                                                        </a>
+                                                    </p>
+                                                    <div class="card-text">
+                                                        @if (!string.IsNullOrEmpty(Authority.EMail))
+                                                        {
+                                                            <p class="u-main-black">
+                                                                <a href="mailto:@Authority.EMail">@Authority.EMail</a>
+                                                            </p>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(Authority.Telefon))
+                                                        {
+                                                            <p class="u-main-black">
+                                                                <a href="tel:@Authority.Telefon">@Authority.Telefon</a>
+                                                            </p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="novita">
+        <div class="bg-grey-card pt-40 pt-md-100 pb-50">
+            <div class="container">
+                <div class="row row-title">
+                    <div class="col-12">
+                        <h3 class="u-grey-light border-bottom border-semi-dark pb-2 pb-lg-3 mt-lg-3 title-large-semi-bold">
+                            @TextProvider.Get("HP_MAINMENU_NEWS")
+                        </h3>
+                    </div>
+                </div>
+                <div class="row pt-4 mt-lg-2 pb-lg-4">
+                    @if (Articles != null && Articles.Any())
+                    {
+                        @foreach (var art in Articles.OrderByDescending(p => p.ReleaseDate).Take(3).ToList())
+                        {
+                            <NewsItemLarge News="art" OnClick="GoToArticle"></NewsItemLarge>                             
+                        }
+                    }
+                </div>
+                <div class="row mt-lg-2">
+                    <div class="col-12 col-lg-3 offset-lg-9">
+                        <button type="button" class="btn btn-primary text-button w-100" @onclick="GoToAllNews">
+                            @TextProvider.Get("HOMEPAGE_ALL_NEWS")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="amministrazione">
+        <div class="pb-40 pt-40 pt-lg-80">
+            <div class="container">
+                <div class="row row-title">
+                    <div class="col-12">
+                        <h3 class="u-grey-light border-bottom border-semi-dark pb-2 pb-lg-3 title-large-semi-bold">
+                            @TextProvider.Get("HOMEPAGE_ORGANISATION_TITLE")
+                        </h3>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="card-wrapper px-0 card-teaser-wrapper card-teaser-wrapper-equal card-teaser-block-3">
+                        @if (Organizations != null && Organizations.Any())
+                        {
+                            @foreach (var org in Organizations.OrderBy(p => p.Title).Take(3).ToList())
+                            {
+                                <div class="card card-teaser card-teaser-image card-flex no-after rounded shadow-sm border border-light mb-0">
+                                    <div class="card-image-wrapper with-read-more">
+                                        <div class="card-body p-3">
+                                            @if(org.HOME_Organisation_Type_ID != null){
+                                                <div class="category-top">
+                                                    <a class="title-xsmall-semi-bold fw-semibold text-decoration-none" @onclick="@(() => GoToOrganisationType(org.HOME_Organisation_Type_ID.Value))">@org.Type</a>
+                                                </div>
+                                            }
+                                            <h4 class="card-title text-paragraph-medium u-grey-light">
+                                                <a @onclick="@(() => GoToOrganisation(org.ID))" class="text-decoration-none">@org.Title</a>
+                                            </h4>
+                                            <p class="text-paragraph-card u-grey-light m-0 text-ellipsis">@((MarkupString)org.Description)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 col-lg-3 offset-lg-9">
+                        <button type="button" class="btn btn-primary text-button w-100" @onclick="GoToAllOrganisations">
+                            @TextProvider.Get("HOMEPAGE_ALL_ORGANISATIONS")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="servizi">
+        <div class="pb-40 pt-40 pt-lg-80">
+            <div class="container">
+                <div class="row row-title">
+                    <div class="col-12">
+                        <h3 class="u-grey-light border-bottom border-semi-dark pb-2 pb-lg-3 title-large-semi-bold">
+                            @TextProvider.Get("HOMEPAGE_SERVICES_TITLE")
+                        </h3>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="card-wrapper px-0 card-teaser-wrapper card-teaser-wrapper-equal card-teaser-block-3">
+                        @if (Services != null && Services.Any())
+                        {
+                            @foreach (var serv in Services.OrderBy(p => p.Title).Take(3).ToList())
+                            {
+                                 <div class="card card-teaser card-teaser-image card-flex no-after rounded shadow-sm border border-light mb-0">
+                                    <div class="card-image-wrapper with-read-more">
+                                        <div class="card-body p-3">
+                                            @if (serv.KategorieID != null)
+                                            {
+                                                <div class="category-top">
+                                                    <a class="title-xsmall-semi-bold fw-semibold text-decoration-none" @onclick="@(() => GoToServiceType(serv.Kategorie_Url))">@serv.Kategorie</a>
+                                                </div>
+                                            }
+                                            <h4 class="card-title text-paragraph-medium u-grey-light">
+                                                <a @onclick="@(() => GoToService(serv.Url))" class="text-decoration-none">@serv.Title</a>
+                                            </h4>
+                                            <p class="text-paragraph-card u-grey-light m-0 text-ellipsis">@serv.ShortText</p>
+                                        </div>
+                                    </div>
+                                </div> 
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 col-lg-3 offset-lg-9">
+                        <button type="button" class="btn btn-primary text-button w-100" @onclick="GoToAllServices">
+                            @TextProvider.Get("HOMEPAGE_ALL_SERVICES")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="documenti">
+        <div class="pb-40 pt-40 pt-lg-80">
+            <div class="container">
+                <div class="row row-title">
+                    <div class="col-12">
+                        <h3 class="u-grey-light border-bottom border-semi-dark pb-2 pb-lg-3 title-large-semi-bold">
+                            @TextProvider.Get("HOMEPAGE_DOCUMENTS_TITLE")
+                        </h3>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="card-wrapper px-0 card-teaser-wrapper card-teaser-wrapper-equal card-teaser-block-3">
+                        @if (Documents != null && Documents.Any())
+                        {
+                            @foreach (var doc in Documents.OrderBy(p => p.Title).Take(3).ToList())
+                            {
+                                <DocumentsItemTeaser Document="@doc"></DocumentsItemTeaser>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 col-lg-3 offset-lg-9">
+                        <button type="button" class="btn btn-primary text-button w-100" @onclick="GoToAllDocuments" aria-label="@TextProvider.Get("HOMEPAGE_ALL_DOCUMENTS")">
+                            @TextProvider.Get("HOMEPAGE_ALL_DOCUMENTS")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

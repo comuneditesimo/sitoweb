@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="row mt-lg-80 mt-3 mb-4">
+        <div class="col-12">
+            @if (_request != null)
+            {
+                <div class="h2">
+                    @TextProvider.Get("FRONTEND_POS_CARD_REQUEST_SUCCESSFUL")
+                </div>
+                <br/>
+                <div class="segment-container">
+                    @TextProvider.Get("FRONTEND_POS_CARD_REQUEST_SUCCESSFUL_DESC")
+                </div>
+                <div class="element-separator"></div>
+                <div class="segment-button-container">
+                    <button class="btn btn-primary" @onclick="BackToOverview">@TextProvider.Get("BUTTON_BACK")</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+﻿@using Syncfusion.Blazor.Inputs
+
+<div class="bg-grey-card no-read">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-6 offset-lg-3 py-5">
+                <div class="cmp-contacts">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <h2 class="title-medium-2-semi-bold">@TextProvider.Get("HOMEPAGE_ASSISTANCE_KONTAKT")</h2>
+                            <ul class="contact-list p-0">
+                                <li>
+                                    <a class="list-item" href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Faq")" @onclick="GoToFaQ" @onclick:stopPropagation="true" data-element="faq">
+                                        <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-help-circle"></use>
+                                        </svg><span>@TextProvider.Get("HOMEPAGE_ASSISTANCE_FAQ")</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="list-item" href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Assistance")" @onclick="GoToHelp" @onclick:stopPropagation="true" data-element="contacts">
+                                        <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-mail"></use>
+                                        </svg><span>@TextProvider.Get("HOMEPAGE_ASSISTANCE_HELP")</span>
+                                    </a>
+                                </li>
+                                @if (Mun != null && Mun.ShowGreenSupportNumber == true)
+                                {
+                                    <li>
+                                        <a class="list-item" href="tel:800500522">
+                                            <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                                <use href="css/bootstrap-italia/svg/sprites.svg#it-hearing"></use>
+                                            </svg><span>@TextProvider.Get("HOMEPAGE_ASSISTANCE_GREEN_NUMBER") 800500522</span>
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a class="list-item" href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Request")" @onclick="GoToReservations" @onclick:stopPropagation="true" data-element="appointment-booking">
+                                        <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-calendar"></use>
+                                        </svg><span>@TextProvider.Get("HOMEPAGE_ASSISTANCE_OFFICE_RESERVATION")</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="list-item" href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Person/Request")" @onclick="GoToPeopleReservations" @onclick:stopPropagation="true">
+                                        <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-calendar"></use>
+                                        </svg><span>@TextProvider.Get("HOMEPAGE_ASSISTANCE_PERSON_RESERVATION")</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <h2 class="title-medium-2-semi-bold mt-4">
+                                @TextProvider.Get("HOMEPAGE_ASSISTANCE_PROBLEMS")
+                            </h2>
+                            <ul class="contact-list p-0">
+                                <li>
+                                    <a class="list-item" href="@(NavManager.BaseUri.TrimEnd('/') + "/Mantainance/Landing")" @onclick="GoToMaintenance" @onclick:stopPropagation="true" data-element="report-inefficiency">
+                                        <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-map-marker-circle"></use>
+                                        </svg><span>@TextProvider.Get("HOMEPAGE_ASSISTANCE_NOTIFY")</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

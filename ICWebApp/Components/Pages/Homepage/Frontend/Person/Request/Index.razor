@@ -1,0 +1,574 @@
+﻿@page "/Hp/Person/Request"
+@page "/Hp/Person/Request/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Request
+@using ICWebApp.Domain.Models.Homepage.Request
+@using ICWebApp.Domain.Models.Homepage.Services
+
+@if (Data != null)
+{
+    <Stepper Step="@Step"></Stepper>
+    <div class="element-separator"></div>
+    <div class="container">
+        @if (Step == 0)
+        {
+            <div class="row">
+                <div class="col-12 col-lg-3 mb-4 d-none d-lg-block">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-12 col-lg-8 offset-lg-1 section-wrapper">
+                    <div class="steppers-content" aria-live="polite">
+                        <div class="it-page-sections-container">
+                            <section class="firstStep page-step it-page-section active" data-steps="1">
+                                <div class="cmp-card mb-40" id="office">
+                                    <div class="card has-bkg-grey shadow-sm p-big">
+                                        <div class="card-header border-0 p-0 mb-lg-30">
+                                            <div class="d-flex">
+                                                <AnchorTitle Title="@TextProvider.Get("HOMEPAGE_FRONTEND_PERSON_AUTHORITY")" ID="authority" Order="1"></AnchorTitle>
+                                            </div>
+                                            <p class="subtitle-small mb-0">
+                                                @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_PERSON_DESCRIPTION")
+                                            </p>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="select-wrapper p-0 select-partials">
+                                                <label for="office-choice" class="visually-hidden">
+                                                    @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_AUTHORITY_TYPE")
+                                                </label>
+                                                <SfDropDownList DataSource="People" @bind-Value="@Data.HOME_Person_ID" TValue="Guid?" TItem="@V_HOME_Person">
+                                                    <DropDownListFieldSettings Text="Fullname" Value="ID"></DropDownListFieldSettings>
+                                                    <DropDownListEvents TItem="V_HOME_Person" TValue="Guid?" ValueChange="PersonChanged"></DropDownListEvents>
+                                                </SfDropDownList>
+                                            </div>
+                                            @if (SelectedPerson != null)
+                                            {
+                                                <fieldset id="place-cards-wrapper">
+                                                    <legend class="visually-hidden">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_AUTHORITY_CHOOSE_OFFICE")</legend>
+                                                    <div class="cmp-info-radio radio-card has-border-green">
+                                                        <div class="card p-3 p-lg-4">
+                                                            @if (!string.IsNullOrEmpty(SelectedPerson.Address))
+                                                            {
+                                                                var data = SelectedPerson.Address.Replace(", Autonome Provinz Bozen - Südtirol, Italien", "").Split(',').ToList();
+
+                                                                if (data.Count() > 1)
+                                                                {
+                                                                    <div class="card-header mb-0 p-0">
+                                                                        <div class="form-check m-0">
+                                                                            <input class="radio-input" checked="checked" value="@locationSelection" @onchange="@(() => LocationChanged(true))" name="beneficiaries" type="radio" id="6954" data-focus-mouse="false" />
+                                                                            <label for="6954">
+                                                                                <h3 class="big-title mb-0 pb-0">
+                                                                                    @data[0]
+                                                                                </h3>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body p-0">
+                                                                        <div class="info-wrapper">
+                                                                            <span class="info-wrapper__label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_ADDRESS")</span>
+                                                                            <p class="info-wrapper__value">
+                                                                                @data[0] @data[1]
+                                                                            </p>
+                                                                        </div>
+                                                                        @if (Timeslots != null && Timeslots.Where(p => p.TimeFrom != null && p.TimeTo != null).Any())
+                                                                        {
+                                                                            <div class="info-wrapper">
+                                                                                <span class="info-wrapper__label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_OPENING")</span>
+                                                                                @{
+                                                                                    var start = Timeslots.Min(p => p.TimeFrom).Value.ToString("HH:mm");
+                                                                                    var end = Timeslots.Min(p => p.TimeTo).Value.ToString("HH:mm");
+                                                                                }
+
+                                                                                <p class="info-wrapper__value">
+                                                                                </p>
+                                                                                <p>@start - @end</p>
+                                                                                <p>
+
+                                                                                </p>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="cmp-nav-steps">
+                            <nav class="steppers-nav" aria-label="Step">
+                                <button type="button" class="btn btn-sm steppers-btn-prev p-0 btn-back-step" data-focus-mouse="false" disabled="">
+                                    <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                                    </svg>
+                                    <span class="text-button-sm t-primary">@TextProvider.Get("BUTTON_BACK")</span>
+                                </button>
+                                @if (SelectedPerson != null && locationSelection == true && Timeslots != null && Timeslots.Any())
+                                {
+                                    <button type="submit" @onclick="NextStep" class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false">
+                                        <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                        <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false" disabled="">
+                                        <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                        <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                }
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (Step == 1)
+        {
+            <div class="row">
+                <div class="col-12 col-lg-3 mb-4 d-none d-lg-block">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-12 col-lg-8 offset-lg-1 section-wrapper">
+                    <div class="it-page-sections-container">
+                        <div class="steppers-content" aria-live="polite">
+                            <section class="page-step it-page-section active" data-steps="2">
+                                <div class="cmp-card mb-40" id="appointment-available">
+                                    <div class="card has-bkg-grey shadow-sm p-big">
+                                        <div class="card-header border-0 p-0 mb-lg-30">
+                                            <div class="d-flex">
+                                                <AnchorTitle Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_AVAILABLE_APPOINTMENTS")" ID="app" Order="1"></AnchorTitle>
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            @if (OpenSlots != null && OpenSlots.Any())
+                                            {
+                                                <div class="select-wrapper p-0 mt-1 select-partials">
+                                                    <label for="office-choice" class="visually-hidden">
+                                                        @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_MONTH")
+                                                    </label>
+                                                    <SfDropDownList DataSource="MonthItems.OrderBy(p => p.YearMonth).ToList()" @bind-Value="@Month" TValue="int" TItem="@MonthItem" Placeholder="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_MONTH")">
+                                                        <DropDownListFieldSettings Text="Month" Value="MonthInt"></DropDownListFieldSettings>
+                                                        <DropDownListEvents TItem="MonthItem" TValue="int" ValueChange="ValueChanged"></DropDownListEvents>
+                                                    </SfDropDownList>
+                                                </div>
+                                                <div class="select-wrapper p-0 mt-4 select-partials">
+                                                    <label for="office-choice" class="visually-hidden">
+                                                        @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_DAY")
+                                                    </label>
+                                                    @{
+                                                        var daySlots = new List<DaySlot>();
+
+                                                        foreach (var s in OpenSlots.Where(p => p.MonthInt == Month && p.DateFrom != null).ToList())
+                                                        {
+                                                            if (daySlots.FirstOrDefault(p => p.DateFrom != null &&
+                                                            p.DateFrom.Value.Year == s.DateFrom.Value.Year &&
+                                                            p.DateFrom.Value.Month == s.DateFrom.Value.Month &&
+                                                            p.DateFrom.Value.Day == s.DateFrom.Value.Day) == null)
+                                                            {
+                                                                daySlots.Add(new DaySlot()
+                                                                {
+                                                                    DateFrom = s.DateFrom
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                    <SfDropDownList DataSource="daySlots.OrderBy(p => p.DateFrom).ToList()" @bind-Value="@Day" TValue="int?" TItem="@DaySlot" Placeholder="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_DAY")">
+                                                        <DropDownListFieldSettings Text="Day" Value="DayInt"></DropDownListFieldSettings>
+                                                        <DropDownListEvents TItem="DaySlot" TValue="int?" ValueChange="ValueChanged"></DropDownListEvents>
+                                                    </SfDropDownList>
+                                                </div>
+                                                <div class="cmp-card-radio-list mt-4">
+                                                    <div class="card p-3">
+                                                        <div class="card-body p-0">
+                                                            <div class="form-check m-0">
+                                                                <fieldset id="radio-appointment">
+                                                                    <legend class="visually-hidden">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_DAY")</legend>
+                                                                    @foreach (var slot in OpenSlots.Where(p => p.DateFrom != null && p.MonthInt == Month && p.DateFrom.Value.Day == Day).OrderBy(p => p.DateFrom).ToList())
+                                                                    {
+                                                                        @if (slot.DateFrom != null && slot.DateTo != null)
+                                                                        {
+                                                                            <div class="radio-body border-bottom border-light">
+                                                                                <input name="slots" id="radio-@slot.ID" type="radio" value="@slot.Selected" @onchange="@(() => SlotChanged(true, slot))">
+                                                                                <label for="radio-@slot.ID" class="text-capitalize">@slot.DateFrom.Value.ToString("dd MMMM yyyy    HH:mm") - @slot.DateTo.Value.ToString("HH:mm")</label>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="cmp-card-radio-list mt-4">
+                                                    <div class="card p-3">
+                                                        <div class="card-body p-0">
+                                                            <div class="form-check m-0">
+                                                                <fieldset id="radio-appointment">
+                                                                    @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_NO_AVAILABLE_APPOINTMENTS")
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="cmp-nav-steps">
+                            <nav class="steppers-nav" aria-label="Step">
+                                <button type="button" @onclick="PreviousStep" class="btn btn-sm steppers-btn-prev p-0 btn-back-step" data-focus-mouse="false">
+                                    <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                                    </svg>
+                                    <span class="text-button-sm t-primary">@TextProvider.Get("BUTTON_BACK")</span>
+                                </button>
+                                @if (OpenSlots != null && OpenSlots.Where(p => p.Selected).Any())
+                                {
+                                    <button type="submit" @onclick="NextStep" class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false">
+                                        <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                        <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false" disabled="">
+                                        <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                        <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                }
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (Step == 2)
+        {
+            <div class="row">
+                <div class="col-12 col-lg-3 mb-4 d-none d-lg-block">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-12 col-lg-8 offset-lg-1 section-wrapper">
+                    <div class="it-page-sections-container">
+                        <div class="steppers-content" aria-live="polite">
+                            <section class="page-step it-page-section active" data-steps="3">
+                                <div class="cmp-card mb-40" id="details">
+                                    <div class="card has-bkg-grey shadow-sm p-big">
+                                        <div class="card-header border-0 p-0 mb-lg-30 m-0">
+                                            <div class="d-flex">
+                                                <h2 class="title-xxlarge mb-0">
+                                                    <AnchorTitle Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_DETAILS")" ID="details" Order="2"></AnchorTitle>
+                                                </h2>
+                                            </div>
+                                            <p class="subtitle-small mb-0 mb-3">
+                                                @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_DETAILS_DESCRIPTION")
+                                            </p>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="cmp-text-area p-0">
+                                                <div class="form-group">
+                                                    <input type="text" @bind-value="@Data.Details" maxlength="200" class="text-area" id="form-details" rows="2"></input>
+                                                    <span class="label">
+                                                        @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_DETAILS_MAX_CHARS")
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="cmp-nav-steps">
+                            <nav class="steppers-nav" aria-label="Step">
+                                <button type="button" @onclick="PreviousStep" class="btn btn-sm steppers-btn-prev p-0 btn-back-step" data-focus-mouse="false">
+                                    <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                                    </svg>
+                                    <span class="text-button-sm t-primary">@TextProvider.Get("BUTTON_BACK")</span>
+                                </button>
+                                @if (!string.IsNullOrEmpty(Data.Details))
+                                {
+                                    <button type="submit" @onclick="NextStep" class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false">
+                                        <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                        <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false" disabled="">
+                                        <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                        <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                }
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (Step == 3)
+        {
+            @if(Data != null)
+            {
+                <div class="row">
+                    <div class="col-12 col-lg-3 mb-4 d-none d-lg-block">
+                        <AnchorList></AnchorList>
+                    </div>
+                    <div class="col-12 col-lg-8 offset-lg-1 section-wrapper">
+                        <div class="it-page-sections-container">
+                            <div class="steppers-content" aria-live="polite">
+                                <Anchor Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_REQUESTEE")" IsCard="true" ID="req" Order="1">
+                                    <div class="form-group">
+                                        <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_FIRSTNAME")</label>
+                                        @if (SessionWrapper.CurrentUser == null)
+                                        {
+                                            <input type="text" @bind-value="Data.Firstname" class="form-control"></input>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" @bind-value="Data.Firstname" class="form-control" disabled></input>
+                                        }
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_LASTNAME")</label>
+                                        @if (SessionWrapper.CurrentUser == null)
+                                        {
+                                            <input type="text" @bind-value="Data.Lastname" class="form-control"></input>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" @bind-value="Data.Lastname" class="form-control" disabled></input>
+                                        }
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_FISCALNUMBER")</label>
+                                        @if (SessionWrapper.CurrentUser == null)
+                                        {
+                                            <input type="text" @bind-value="Data.Fiscalnumber" class="form-control"></input>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" @bind-value="Data.Fiscalnumber" class="form-control" disabled></input>
+                                        }
+                                    </div>
+                                </Anchor>
+                                <Anchor Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_CONTACT")" IsCard="true" ID="contacts" Order="1">
+                                    <div class="form-group">
+                                        <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_PHONE")</label>
+                                        @if (SessionWrapper.CurrentUser == null)
+                                        {
+                                            <EditForm Model="@Data">
+                                                <DataAnnotationsValidator></DataAnnotationsValidator>
+                                                <CustomPhone @bind-Value="@Data.Phone"></CustomPhone>
+                                            </EditForm>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" @bind-value="Data.Phone" class="form-control" disabled></input>
+                                        }
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_EMAIL")</label>
+                                        @if (SessionWrapper.CurrentUser == null)
+                                        {
+                                            <input type="email" @bind-value="Data.EMail" class="form-control"></input>
+                                        }
+                                        else
+                                        {
+                                            <input type="email" @bind-value="Data.EMail" class="form-control" disabled></input>
+                                        }
+                                    </div>
+                                </Anchor>
+                            </div>
+                            <div class="cmp-nav-steps">
+                                <nav class="steppers-nav" aria-label="Step">
+                                    <button type="button" @onclick="PreviousStep" class="btn btn-sm steppers-btn-prev p-0 btn-back-step" data-focus-mouse="false">
+                                        <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                                        </svg>
+                                        <span class="text-button-sm t-primary">@TextProvider.Get("BUTTON_BACK")</span>
+                                    </button>
+                                    @if (!string.IsNullOrEmpty(Data.Firstname) && !string.IsNullOrEmpty(Data.Lastname) && !string.IsNullOrEmpty(Data.Fiscalnumber) && (!string.IsNullOrEmpty(Data.EMail) || !string.IsNullOrEmpty(Data.Phone)))
+                                    {
+                                        <button type="submit" @onclick="NextStep" class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false">
+                                            <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                            <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                                <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                            </svg>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false" disabled="">
+                                            <span class="text-button-sm">@TextProvider.Get("BUTTON_NEXT")</span>
+                                            <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                                <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                            </svg>
+                                        </button>
+                                    }
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else if (Step == 4)
+        {
+            @if (SelectedPerson != null && Data.DateFrom != null && Data.DateTo != null)
+            {
+                <div class="row">
+                    <div class="col-12 col-lg-3 mb-4 d-none d-lg-block">
+                        <AnchorList></AnchorList>
+                    </div>
+                    <div class="col-12 col-lg-8 offset-lg-1 section-wrapper">
+                        <div class="steppers-content" aria-live="polite">
+                            <div class="it-page-sections-container">
+                                <Anchor Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_PERSON").Replace("*", "")" ID="authority" IsCard="true" Order="1">
+                                    <div class="cmp-info-summary bg-white">
+                                        <div class="card">
+                                            <div class="card-header border-bottom border-light p-0 mb-0 d-flex justify-content-between d-flex justify-content-end">
+                                                <h3 class="title-large-semi-bold mb-3">
+                                                    @SelectedPerson.Fullname
+                                                </h3>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(SelectedPerson.Address))
+                                            {
+                                                var data = SelectedPerson.Address.Replace(", Autonome Provinz Bozen - Südtirol, Italien", "").Split(',').ToList();
+
+                                                if (data.Count() > 1)
+                                                {
+                                                    <div class="card-body p-0">
+                                                        <div class="single-line-info border-light">
+                                                            <div class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_ADDRESS")</div>
+                                                            <div class="border-light">
+                                                                <p class="data-text">
+                                                                    @data[0] @data[1]
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            <div class="card-footer p-0"></div>
+                                        </div>
+                                    </div>
+                                </Anchor>
+                                <Anchor Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_APPOINTMENT").Replace("*", "")" ID="app" IsCard="true" Order="2">
+                                    <div class="card-body p-0">
+                                        <div class="single-line-info border-light">
+                                            <div class="border-light">
+                                                <p class="data-text">
+                                                    @Data.DateFrom.Value.ToString("dddd, dd. MMMM yyyy    HH:mm") - @Data.DateTo.Value.ToString("HH:mm")
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Anchor>
+                                <Anchor Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_DETAILS").Replace("*", "")" ID="details" IsCard="true" Order="3">
+                                    <div class="card-body p-0">
+                                        <div class="single-line-info border-light">
+                                            <div class="border-light">
+                                                <p class="data-text">
+                                                    @Data.Details
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Anchor>
+                                <Anchor Title="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_REQUESTEE").Replace("*", "")" ID="requestee" IsCard="true" Order="4">
+                                    <div class="cmp-info-summary">
+                                        <div class="card">
+                                            <div class="card-body p-0">
+                                                <div class="single-line-info border-light">
+                                                    <div class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_FIRSTNAME")</div>
+                                                    <div class="border-light">
+                                                        <p class="data-text">
+                                                            @Data.Firstname
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="single-line-info border-light">
+                                                    <div class="card-footer p-0"></div>
+                                                    <div class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_LASTNAME")</div>
+                                                    <div class="border-light">
+                                                        <p class="data-text">
+                                                            @Data.Lastname
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="single-line-info border-light">
+                                                    <div class="card-footer p-0"></div>
+                                                    <div class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_FISCALNUMBER")</div>
+                                                    <div class="border-light">
+                                                        <p class="data-text">
+                                                            @Data.Fiscalnumber
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="single-line-info border-light">
+                                                    <div class="card-footer p-0"></div>
+                                                    <div class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_PHONE")</div>
+                                                    <div class="border-light">
+                                                        <p class="data-text">
+                                                            @Data.Phone
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="single-line-info border-light">
+                                                    <div class="card-footer p-0"></div>
+                                                    <div class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_EMAIL")</div>
+                                                    <div class="border-light">
+                                                        <p class="data-text">
+                                                            @Data.EMail
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Anchor>
+                            </div>
+                        </div>
+                        <div class="cmp-nav-steps">
+                            <nav class="steppers-nav" aria-label="Step">
+                                <button type="button" @onclick="PreviousStep" class="btn btn-sm steppers-btn-prev p-0 btn-back-step" data-focus-mouse="false">
+                                    <svg class="icon icon-primary icon-sm" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                                    </svg>
+                                    <span class="text-button-sm t-primary">@TextProvider.Get("BUTTON_BACK")</span>
+                                </button>
+                                <button type="submit" @onclick="Save" class="btn btn-primary btn-sm steppers-btn-confirm btn-next-step" data-bs-validate="validate" data-focus-mouse="false">
+                                    <span class="text-button-sm">@TextProvider.Get("BUTTON_SEND")</span>
+                                    <svg class="icon icon-white icon-sm" aria-hidden="true">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                    </svg>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

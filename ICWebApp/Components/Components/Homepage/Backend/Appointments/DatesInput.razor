@@ -1,0 +1,31 @@
+﻿<div class="dates-container">
+    <div class="button-container">
+        <div class="btn btn-secondary" @onclick="Add">@TextProvider.Get("ADD")</div>
+    </div>
+    <div class="dates-title-bar">
+        <div class="dates-title-value">
+            @TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_FROM")
+        </div>
+        <div class="dates-title-value">
+            @TextProvider.Get("BACKEND_HOMEPAGE_APPOINTMENT_TO")
+        </div>
+        <div class="dates-title-action">
+        </div>
+    </div>
+    <div class="dates-value-container">
+        @foreach(var date in Dates)
+        {
+            <div class="dates-item">
+                <div class="dates-value">
+                    <SfDateTimePicker @bind-Value="date.DateFrom" OnChange="@((args) => ValueFromChanged(args.Value, date))"></SfDateTimePicker>
+                </div>
+                <div class="dates-value">
+                    <SfDateTimePicker @bind-Value="date.DateTo" OnChange="@((args) => ValueToChanged(args.Value, date))"></SfDateTimePicker>
+                </div>
+                <div class="dates-action">
+                    <SfButton IconCss="fa-regular fa-trash" OnClick="@(() => Remove(date))"></SfButton>
+                </div>
+            </div>
+        }
+    </div>
+</div>

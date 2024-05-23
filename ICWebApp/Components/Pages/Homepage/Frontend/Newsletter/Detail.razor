@@ -1,0 +1,82 @@
+﻿@page "/Hp/Newsletter/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+@using ICWebApp.Components.Components.Homepage.Frontend.Address
+@using ICWebApp.Components.Components.Homepage.Frontend.Organisation
+
+@if (Item != null)
+{
+    @if (Item.Image_FILE_FileInfo_ID != null)
+    {
+        <div class="container-fluid my-3">
+            <div class="row">
+                <figure class="figure px-0 img-full">
+                    <img src="@ImageHelper.GetFilePath(Item.Image_FILE_FileInfo_ID.Value)" class="figure-img img-fluid" alt="@Item.Title">
+                </figure>
+            </div>
+        </div>
+    }
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.Description))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DESCRIPTION")" ID="descrizione" Order="0">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)Item.Description)     
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.Download_FILE_FileInfo_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD")" ID="download" Order="1">
+                        <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+                            <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light">
+                                <div class="d-flex flex-nowrap">
+                                    <div class="icon">
+                                        <i class="fa-regular fa-book-open-cover"></i>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a class="text-decoration-none" @onclick="OpenPDF" aria-label="@TextProvider.Get("FRONTEND_HOMEPAGE_OPEN_BUTTON")" title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" data-focus-mouse="false">
+                                                @TextProvider.Get("FRONTEND_HOMEPAGE_OPEN_BUTTON")
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-nowrap">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                                    </svg>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a class="text-decoration-none" @onclick="Download" aria-label="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" data-focus-mouse="false">
+                                                @TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")
+                                            </a>
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Anchor>
+                }             
+                @if (Item.ReleaseDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_RELEASE_DATE")
+                            <span class="h6 fw-normal">@Item.ReleaseDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

@@ -1,0 +1,63 @@
+﻿@if (Appointment != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="card-wrapper border border-light rounded shadow-sm">
+            <div class="card no-after rounded">
+                @if (Appointment.FILE_FileImage_ID != null)
+                {
+                    <div class="img-responsive-wrapper">
+                        <div class="img-responsive img-responsive-panoramic">
+                            <figure class="img-wrapper">
+                                <img src="@ImageHelper.GetFilePath(Appointment.FILE_FileImage_ID)" alt="@Appointment.Title" title="@Appointment.Title">
+                            </figure>
+                        </div>
+                    </div>
+                }
+                <div class="card-body">
+                    <div class="category-top">
+                        @if (Appointment.HOME_Appointment_Kategorie_ID != null)
+                        {
+                            @if (TypeClickable)
+                            {
+                                <a class="category text-decoration-none" @onclick="@(() => OnTypeItemClicked(Appointment.HOME_Appointment_Kategorie_ID.Value))">
+                                    @Appointment.Kategorie
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    @Appointment.Kategorie
+                                </span>
+                            }
+                        }
+                        @if (Appointment.DateFrom != null)
+                        {
+                            @if (Appointment.HOME_Appointment_Kategorie_ID != null)
+                            {
+                                <span class="data category text-decoration-none">
+                                    <span class="u-grey-light">
+                                        @Appointment.DateFrom.Value.ToString("dd MMM yyyy").Replace(".", "")
+                                    </span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="category text-decoration-none">
+                                    <span class="u-grey-light">
+                                        @Appointment.DateFrom.Value.ToString("dd MMM yyyy").Replace(".", "")
+                                    </span>
+                                </span>
+                            }
+                        }
+                    </div>
+                    <a class="text-decoration-none" @onclick="OnItemClicked" @onclick:stopPropagation="true" href="#" data-focus-mouse="false">
+                        <h3 class="card-title">@Appointment.Title</h3>
+                    </a>
+                    <p class="text-paragraph mb-0">
+                        @((MarkupString)Appointment.DescriptionShort)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

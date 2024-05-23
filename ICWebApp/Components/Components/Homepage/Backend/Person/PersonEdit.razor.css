@@ -1,0 +1,35 @@
+﻿.person-avatar-container
+{
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 5px;
+    cursor: pointer;
+}
+.person-avatar-image {
+    height: 46px;
+    width: 46px;
+    border: 1px solid var(--primary);
+    border-radius: 54px;
+    overflow: hidden;
+    text-align: center;
+    line-height: 52px;
+}
+.person-avatar-content{
+    border-left: 1px solid lightgray;
+    padding-left: 10px;
+}
+.person-avatar-image img {
+    height: 46px;
+    width: 46px;
+}
+.person-avatar-name{
+    font-weight: bold;
+}
+.person-avatar-position {
+    font-size: 16px;
+    color: #808080;
+}
+.person-selected-hover:hover{
+    color: var(--primary);
+}

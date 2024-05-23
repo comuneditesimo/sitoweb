@@ -1,0 +1,83 @@
+﻿@page "/Hp/News/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+
+@if (News != null)
+{
+    @if(News.FILE_FileInfo_ID != null)
+    {
+        <div class="container-fluid my-3">
+            <div class="row">
+                <figure class="figure px-0 img-full">
+                    <img src="@ImageHelper.GetFilePath(News.FILE_FileInfo_ID.Value)" class="figure-img img-fluid" alt="@News.Subject">
+                </figure>
+            </div>
+        </div>
+    }
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(News.Content) && News.Content.Replace("<p>", "").Replace("</p>", "") != "")
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_CONTENT")" ShowTitle="false" ID="descrizione" Order="0">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)News.Content)
+                        </div>
+                    </Anchor>
+                }
+                @if (Documents != null && Documents.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DOCUMENTS")" ID="documents">
+                        <div class="row">
+                            @foreach (var doc in Documents)
+                            {
+                                <DocumentsItemSmall Document="@doc"></DocumentsItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (News.Managed_AUTH_Authority_ID != null || News.Managed_HOME_Person_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_MANAGED_BY")" ID="a-cura-di">
+                        <div class="row">
+                            @if (News.Managed_AUTH_Authority_ID != null)
+                            {
+                                <div class="col-12 col-sm-8">
+                                    <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_AUTHORITY")</small></h6>
+                                    <AuthorityItemSmall HOME_Authority_ID="@News.Managed_AUTH_Authority_ID.Value" CssColumn="false"></AuthorityItemSmall>
+                                </div>
+                            }
+                            @if (News.Managed_HOME_Person_ID != null)
+                            {
+                                <div class="col-12 col-sm-4">
+                                    <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_PERSONS")</small></h6>
+                                    <ul class="d-flex flex-wrap gap-1 mt-2">
+                                        <li>
+                                            <PersonChip HOME_Person_ID="@News.Managed_HOME_Person_ID.Value"></PersonChip>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (News.LastModificationDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                            <span class="h6 fw-normal">@News.LastModificationDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

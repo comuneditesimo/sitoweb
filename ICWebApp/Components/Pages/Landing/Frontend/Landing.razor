@@ -1,0 +1,451 @@
+﻿@page "/"
+@page "/Home"
+@page "/News/{ID}"
+
+@layout FrontendLayout
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+
+@if (News != null && IsHomepage == true)
+{
+    <section id="head-section">
+        <h2 class="visually-hidden">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_HIGHLIGHTED_CONTENT")</h2>
+        <section id="notizie" aria-describedby="novita-in-evidenza">
+            <div class="section-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-5 order-2 order-lg-1">
+                            <div class="card mb-1">
+                                <div class="card-body pb-5">
+                                    <div class="category-top landing-news-item">
+                                        <svg class="icon icon-sm" aria-hidden="true">
+                                            <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-calendar"></use>
+                                        </svg>
+                                        @if (News.HOME_Article_Type_ID != null)
+                                        {
+                                            <a class="category text-decoration-none" @onclick="GoToNewsType">@News.Type</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="title-xsmall-semi-bold fw-semibold">@News.Type</span>
+                                        }
+                                        @if (News.ReleaseDate != null)
+                                        {
+                                            <span class="data fw-normal">
+                                                @News.ReleaseDate.Value.ToString("dd MMM yy").Replace(".", "")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="data fw-normal">
+                                                @News.CreationDate.ToString("dd MMM yy").Replace(".", "")
+                                            </span>
+                                        }
+                                    </div>
+                                    <a @onclick="GoToNews" class="text-decoration-none">
+                                        <h3 class="card-title">
+                                            @News.Subject
+                                        </h3>
+                                    </a>
+                                    <p class="mb-4 font-serif pt-3">
+                                        @((MarkupString)News.ShortText)
+                                    </p>
+                                    @if (Themes != null && Themes.Any())
+                                    {
+                                        <ul class="d-flex flex-wrap gap-1">
+                                            @foreach (var t in Themes)
+                                            {
+                                                <li>
+                                                    <a class="chip chip-simple" @onclick="@(() => GoToTheme(t.ID))">
+                                                        <span class="chip-label">
+                                                            @t.Title
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (News.FILE_FileInfo_ID != null)
+                        {
+                            <div class="col-lg-6 offset-lg-1 order-1 order-lg-2 px-0 px-lg-2">
+                                <img src="@ImageHelper.GetFilePath(News.FILE_FileInfo_ID)" class="img-fluid" height="430px" width="640px" alt="@News.Subject" title="@News.Subject" loading="eager">
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <section id="calendario">
+            <div class="section section-muted pb-90 pb-lg-50 px-lg-5 pt-0">
+                <div class="container">
+                    <div class="row row-title pt-5 pt-lg-60 pb-3">
+                        <div class="col-12 d-lg-flex justify-content-between">
+                            <h2 class="mb-lg-0">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_EVENTS")</h2>
+                        </div>
+                    </div>
+                    @if (Events != null && Events.Any())
+                    {
+                        var dates = Events.Where(p => p.FromDateYearMonth != null).Select(p => p.FromDateYearMonth).Distinct().ToList();
+
+                        <div class="row">
+                            @{
+                                int firstcolCount = 4;
+                            }
+                            @foreach (var date in dates.OrderBy(p => p).ToList())
+                            {
+                                int colcount = 4;
+
+                                if (dates.Count() == 1)
+                                {
+                                    colcount = 12;
+                                }
+                                else if (dates.Count() == 2)
+                                {
+                                    colcount = 4 * Events.Where(p => p.DateFrom != null && p.DateFrom.Value.Year == date.Value.Year && p.DateFrom.Value.Month == date.Value.Month).Count();
+
+                                    firstcolCount = colcount;
+
+                                    if (date == dates.OrderBy(p => p).Last() && Events.Count() == 2)
+                                    {
+                                        colcount = 12 - firstcolCount;
+                                    }
+                                }
+                                else if (dates.Count() == 3)
+                                {
+                                    colcount = 4;
+                                }
+
+                                <div class="col-lg-@colcount col-xl-@colcount mb-3">
+                                    <div class="it-carousel-wrapper it-carousel-landscape-abstract-four-cols it-calendar-wrapper">
+                                        <div class="it-header-block">
+                                            <div class="it-header-block-title">
+                                                <h4 class="mb-0 text-center home-carousel-title">@date.Value.ToString("MMMM yyyy")</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @foreach (var e in Events.Where(p => p.DateFrom != null).OrderBy(p => p.DateFrom).ToList())
+                            {
+                                <div class="col-lg-4 col-xl-4">
+                                    <div class="card-wrapper shadow-sm rounded border border-light">
+                                        <div class="card no-after rounded">
+                                            <div class="img-responsive-wrapper">
+                                                <div class="img-responsive img-responsive-panoramic">
+                                                    @if (e.FILE_FileImage_ID != null)
+                                                    {
+                                                        <figure class="img-wrapper">
+                                                            <img src="@ImageHelper.GetFilePath(e.FILE_FileImage_ID.Value)" class="rounded-top img-fluid" title="VESOD-giardino-verticale_2590x1600-2-2">
+                                                        </figure>
+                                                    }
+                                                    <div class="card-calendar d-flex flex-column justify-content-center">
+                                                        <span class="card-date">@e.DateFrom.Value.Day.ToString()</span>
+                                                        <span class="card-day">@e.DateFrom.Value.ToString("MMMM")</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 class="card-title">
+                                                    <a class="text-decoration-none" @onclick="@(() => GoToEvent(e.ID))" data-element="live-category-link">
+                                                        @e.Title
+                                                    </a>
+                                                </h3>
+                                                <p class="card-text text-secondary pb-3">
+                                                    @((MarkupString)e.DescriptionShort)
+                                                </p>
+                                                <a class="read-more t-primary text-uppercase" @onclick="@(() => GoToEvent(e.ID))" aria-label="@TextProvider.Get("FRONTEND_HOMEPAGE_EVENTS_READ_MORE") @e.Title">
+                                                    <span class="text">@TextProvider.Get("FRONTEND_HOMEPAGE_EVENTS_READ_MORE")</span>
+                                                    <span class="visually-hidden"></span>
+                                                    <svg class="icon icon-primary icon-xs ml-10">
+                                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-arrow-right"></use>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row row-calendar">
+                            <div class="it-carousel-wrapper it-carousel-landscape-abstract-four-cols it-calendar-wrapper">
+                                <div class="it-header-block">
+                                    <div class="it-header-block-title">
+                                        <h4 class="mb-0 text-center home-carousel-title">@DateTime.Today.ToString("MMMM yyyy")</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_NO_EVENTS_PLANNED")</div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </section>
+    @if (HighlightThemes != null && HighlightThemes.Any())
+    {
+        List<Guid> usedThemes = new List<Guid>();
+
+        <section id="evidenza" class="evidence-section">
+            <div class="section py-5 pb-lg-80 px-lg-5 position-relative" style="background-image: linear-gradient(top, var(--primary) 0px, var(--primary) 300px, #fff 300px, #fff 100%);
+                                                                                background-image: -moz-linear-gradient(top, var(--primary) 0px, var(--primary) 300px, #fff 300px, #fff 100%);
+                                                                                background-image: -webkit-linear-gradient(top, var(--primary) 0px, var(--primary) 300px, #fff 300px, #fff 100%); ">
+                <div class="container">
+                    <div class="row">
+                        <h2 class="text-white title-xlarge mb-3">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_HIGHLIGHTED_THEMES")</h2>
+                    </div>
+                    <div>
+                        <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal card-teaser-block-3">
+                            @foreach (var theme in HighlightThemes.OrderByDescending(p => p.Highlight).ThenBy(p => p.Title).Take(3).ToList())
+                            {
+                                <div class="card card-teaser no-after rounded shadow-sm border border-light">
+                                    <div class="card-body pb-5">
+                                        <h3 class="card-title title-xlarge-card">@theme.Title</h3>
+                                        <p class="card-text card-text-min-height">
+                                            @((MarkupString)theme.Description)
+                                        </p>
+                                    </div>
+                                    <a class="read-more pt-0" @onclick="@(() => GoToTheme(theme.ID))">
+                                        <span class="list-item-title-icon-wrapper">
+                                            <span class="text">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_SEARCH_THEME")</span>
+                                            <svg class="icon">
+                                                <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-arrow-right"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                </div>
+
+                                usedThemes.Add(theme.ID);
+                            }
+                        </div>
+                    </div>
+                    <div class="row pt-30">
+                        <div class="col-lg-10 col-xl-6 offset-lg-1 offset-xl-2">
+                            <div class="row d-lg-inline-flex cmx-full-width">
+                                <div class="col-lg-3">
+                                    <h3 class="text-uppercase mb-3 title-xsmall-bold text u-grey-light">
+                                        @TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_OTHER_THEME")
+                                    </h3>
+                                </div>
+                                <div class="col-lg-9">
+                                    <ul class="d-flex flex-wrap gap-1">
+                                        @foreach (var t in HighlightThemes.Where(p => !usedThemes.Contains(p.ID)).OrderBy(p => p.Title).Take(6).ToList())
+                                        {
+                                            <li>
+                                                <a class="chip chip-simple" @onclick="@(() => GoToTheme(t.ID))">
+                                                    <span class="chip-label">
+                                                        @t.Title
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2 text-center">
+                            <a @onclick="GoToAllThemes" class="btn btn-primary mt-40">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_THEME_SHOW_ALL")</a>
+                        </div>
+                    </div>
+                </div>
+
+                @if (ThematicSites != null && ThematicSites.Any())
+                {
+                    <div class="container">
+                        <div class="row pt-5">
+                            <h2 class="mb-0 u-grey-light">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_THEMATIC_SITE")</h2>
+                        </div>
+                        <div class="pt-4 pt-lg-30">
+                            <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal card-teaser-block-3">
+                                @foreach (var ts in ThematicSites.OrderBy(p => p.Title))
+                                {
+                                    string color = "var(--primary)";
+
+                                    if(!string.IsNullOrEmpty(ts.Color))
+                                    {
+                                        color = ts.Color;
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(ts.Url))
+                                    {
+
+                                        <a href="@ts.Url" class="card card-teaser card-bg-blue rounded mt-0 p-3" style="background-color: @color" target="_blank">
+                                            @if (ts.FILE_FileInfo_ID != null)
+                                            {
+                                                <div class="avatar size-lg me-3">
+                                                    <img src="@ImageHelper.GetFilePath(ts.FILE_FileInfo_ID.Value)" alt="@ts.Title" loading="lazy" title="@ts.Title">
+                                                </div>
+                                            }
+                                            <div class="card-body">
+                                                <h3 class="card-title text-white sito-tematico">
+                                                    @ts.Title
+                                                </h3>
+                                                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(ts.DescriptionShort))
+                                                {
+                                                    <p class="card-text text-sans-serif text-white">
+                                                        @((MarkupString)ts.DescriptionShort)
+                                                    </p>
+                                                }
+                                            </div>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Sites/" + ts.ID)" @onclick="@(() => GoToUrl("/hp/Sites/" + ts.ID))" @onclick:stopPropagation="true" class="card card-teaser card-bg-blue rounded mt-0 p-3" style="background-color: @color">
+                                            @if (ts.FILE_FileInfo_ID != null)
+                                            {
+                                                <div class="avatar size-lg me-3">
+                                                    <img src="@ImageHelper.GetFilePath(ts.FILE_FileInfo_ID.Value)" alt="@ts.Title" loading="lazy" title="@ts.Title">
+                                                </div>
+                                            }
+                                            <div class="card-body">
+                                                <h3 class="card-title text-white sito-tematico">
+                                                    @ts.Title
+                                                </h3>
+                                                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(ts.DescriptionShort))
+                                                {
+                                                    <p class="card-text text-sans-serif text-white">
+                                                        @((MarkupString)ts.DescriptionShort)
+                                                    </p>
+                                                }
+                                            </div>
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+        <section id="novita" class="useful-links-section">
+            <div class="section section-muted p-0 py-5">
+                <div class="container">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-12 col-lg-6">
+                            <form role="search" id="search-form" method="get" class="search-form" @onsubmit="GoToSearchPage">
+                                <div class="cmp-input-search">
+                                    <div class="form-group autocomplete-wrapper mb-2 mb-lg-4">
+                                        <div class="input-group">
+                                            <label for="autocomplete-three" class="visually-hidden">@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_SEARCH_BY_KEYWORD")</label>
+                                            <input type="search" @bind-value="SearchText" class="autocomplete form-control" placeholder="@TextProvider.Get("FRONTEND_HOMEPAGE_LANDING_SEARCH_BY_KEYWORD")" id="autocomplete-three" name="s" data-bs-autocomplete="[]">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" @onclick="GoToSearchPage" id="button-3">@TextProvider.Get("FORMS_FRONTEND_SEARCH_BUTTON")</button>
+                                            </div>
+                                            <span class="autocomplete-icon" aria-hidden="true">
+                                                <svg class="icon icon-sm icon-primary"><use href="css/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+else
+{
+    @if (Article != null)
+    {
+         <section id="head-section" class="news-main-article">
+            <h2 class="visually-hidden">@TextProvider.Get("AGID_HIGHLIGHTED_CONTENT")</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5 order-2 order-lg-1">
+                        <div class="card mb-5">
+                            <div class="card-body pb-5">
+                                @if (Article.PublishingDate != null)
+                                {
+                                    <div class="category-top">
+                                        <svg class="icon icon-sm" aria-hidden="true">
+                                            <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-calendar"></use>
+                                        </svg>
+                                        <span class="title-xsmall-semi-bold fw-semibold">@TextProvider.Get("AGID_LANDING_NOTIFICATION_TITLE")</span>
+                                        <span class="data fw-normal">@Article.PublishingDate.Value.ToString("dd MMM yyyy")</span>
+                                    </div>
+                                }
+                                <a href="@Article.Link" target="_blank" class="text-decoration-none">
+                                    <h3 class="h4 card-title title-xlarge">
+                                        @Article.Title
+                                    </h3>
+                                </a>
+                                <p class="mb-4 subtitle-small pt-3">
+                                    @((MarkupString)Article.Content)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-image col-lg-6 offset-lg-1 order-1 order-lg-2 px-0 px-lg-2">
+                        @if (Article.Image != null)
+                        {
+                            var image = (MarkupString)(Article.Image);
+
+                            @image
+                        }
+                        else
+                        {
+                            bool ShowDefault = true;
+
+                            @if (Article.FamilyID != null)
+                            {
+                                var ress = NEWSProvider.GetArticleImageSync(Article.FamilyID.Value);
+
+                                @if (ress != null && ress.FILE_Fileinfo_ID != null)
+                                {
+                                    var file = FileProvider.GetFileStorage(ress.FILE_Fileinfo_ID.Value);
+
+                                    @if (file != null && file.FileImage != null)
+                                    {
+                                        ShowDefault = false;
+                                        var base64 = Convert.ToBase64String(file.FileImage);
+
+                                        <img src="data:image/png;base64,@base64" alt="@Article.Title" title="@Article.Title" />
+                                    }
+                                }
+                            }
+
+                            @if (ShowDefault == true)
+                            {
+                                <img src="/Images/Backend/Logo_512x512.png" alt="Comunix Default Image" title="Comunix Default Image" />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="news-section">
+            @if (AktiveApps != null && AktiveApps.Select(p => p.APP_Application_ID).ToList().Contains(Applications.News)) //NEWS
+            {
+                <div class="py-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                @if (Article != null)
+                                {
+                                    <ICWebApp.Components.Components.News.Desktop.LatestNewsComponent CurrentArticleId="@Article.ID"></ICWebApp.Components.Components.News.Desktop.LatestNewsComponent>
+                                }
+                                else
+                                {
+                                    <ICWebApp.Components.Components.News.Desktop.LatestNewsComponent></ICWebApp.Components.Components.News.Desktop.LatestNewsComponent>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+}

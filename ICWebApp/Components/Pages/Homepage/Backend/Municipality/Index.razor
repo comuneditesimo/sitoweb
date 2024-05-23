@@ -1,0 +1,130 @@
+﻿@page "/Backend/Homepage/Municipality"
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+
+@layout MainLayout
+
+@if(Data != null && Languages != null)
+{
+    <div class="custom-background-default">
+        <EditForm Model="Data">
+            <DataAnnotationsValidator />
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_GENERAL")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_TITLE")</label>
+                @if (Data.HOME_Municipality_Extended != null && Data.HOME_Municipality_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Name</label>
+                }
+
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Name" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_DATA")</label>
+            </div>
+            <div class="extra-small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_Municipality_Extended != null && Data.HOME_Municipality_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+
+                    @if (string.IsNullOrEmpty(Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                    {
+                        Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                    }
+
+                    <TelerikEditor @bind-Value="Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                    Tools="@Tools"
+                                    EditMode="@EditorEditMode.Div"
+                                    Class="font-normal"
+                                    Height="400px">
+                        <EditorSettings>
+                            <EditorPasteSettings ConvertMsLists="true"
+                                                    RemoveMsClasses="true"
+                                                    RemoveMsStyles="true"
+                                                    RemoveHtmlComments="true"
+                                                    RemoveAllAttributes="true"
+                                                    StripTags="@StripTags"
+                                                    RemoveAttributes="@RemoveAttributes">
+                            </EditorPasteSettings>
+                        </EditorSettings>
+                    </TelerikEditor>
+                }
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_KONTAKT")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_PHONE")</label>
+                <CustomPhone @bind-Value="@Data.Telefon"></CustomPhone>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_EMAIL")</label>
+                @if (Data.HOME_Municipality_Extended != null && Data.HOME_Municipality_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).EMail</label>
+                }
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).EMail" type="email" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_MUNICIPALITY_PECEMAIL")</label>
+                @if (Data.HOME_Municipality_Extended != null && Data.HOME_Municipality_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).PecEMail</label>
+                }
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).PecEMail" type="email" class="form-control"></InputText>
+            </div>
+
+            <div class="element-separator"></div>
+            <div class="form-group form-group-small">
+                <div class="segment-title">@TextProvider.Get("BACKEND_HOMEPAGE_IMAGES")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <UploadComponent @bind-FileInfoList="Images" Multiple="true" Accept=".jpg, .png, .webp, .jpeg"></UploadComponent>
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-group form-group-small">
+                <div class="segment-title">@TextProvider.Get("BACKEND_HOMEPAGE_LOCATION")</div>
+            </div>
+            <div class="small-element-separator"></div>
+                <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                @if (Data.HOME_Municipality_Extended != null && Data.HOME_Municipality_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <Map Language="CurrentLanguage"
+                         @bind-Address="@Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Address"
+                         @bind-Room="@Data.HOME_Municipality_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Room"
+                         @bind-Latitude="@Data.Lat"
+                         @bind-Longitude="@Data.Lang"
+                         EnableRoom="true"
+                         AllowDefault="false" />
+                }
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-button-container form-group-small">
+                @if (!string.IsNullOrEmpty(SaveMessage))
+                {
+                    <div class="extra-small-element-separator"></div>
+                    <div class="form-group form-group-small form-success">
+                        @SaveMessage
+                    </div>
+                }
+                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+}

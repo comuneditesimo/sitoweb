@@ -1,0 +1,42 @@
+﻿<div class="selection-container">
+    <SfDropDownList DataSource="@Data" @bind-Value="@SelectedTemplate" TValue="V_TEXT_Template" TItem="@V_TEXT_Template" Placeholder="@TextProvider.Get("TEXT_TEMPLATES_PLACEHOLDER")" >
+        <DropDownListFieldSettings Text="Name" Value="ID"></DropDownListFieldSettings>
+        <DropDownListEvents TValue="V_TEXT_Template" TItem="V_TEXT_Template" OnValueSelect="@SelectionChanged"></DropDownListEvents>
+    </SfDropDownList>
+</div>
+<div class="small-element-separator"></div>
+<div class="template-editor-input">
+    <CustomLoader Visible="@IsDataBusy">
+    </CustomLoader>
+    <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+    <div class="extra-small-element-separator"></div>
+    <div class="form-group form-group-small">
+        <label class="form-label">@TextProvider.Get("TEXT_TEMPLATE_EDIT_CONTENT")</label>
+    </div>
+    <div class="extra-small-element-separator"></div>
+    <div class="form-group">
+        <div class="template-input-container">
+            <div class="editor-container">
+                @if (TextItem != null)
+                {
+                    @if (CurrentLanguage == LanguageSettings.German)
+                    {
+                        <SfRichTextEditor @bind-Value="@TextItem.German"
+                                  Height="400px" CssClass="font-normal">
+                            <RichTextEditorToolbarSettings Items="@Tools" />
+                            <RichTextEditorPasteCleanupSettings Prompt="false" PlainText="true"/>
+                        </SfRichTextEditor>
+                    }
+                    else if (CurrentLanguage == LanguageSettings.Italian)
+                    {
+                        <SfRichTextEditor @bind-Value="@TextItem.Italian"
+                                  Height="400px" CssClass="font-normal">
+                            <RichTextEditorToolbarSettings Items="@Tools" />
+                            <RichTextEditorPasteCleanupSettings Prompt="false" PlainText="true" />
+                        </SfRichTextEditor>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

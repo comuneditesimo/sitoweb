@@ -1,0 +1,7 @@
+﻿.flipbook-container {
+    height: calc(100vh - 180px);
+    height: -moz-calc(100vh - 180px);
+    height: -webkit-calc(100vh - 180px);
+    height: -o-calc(100vh - 180px);
+    min-height: 500px;
+}

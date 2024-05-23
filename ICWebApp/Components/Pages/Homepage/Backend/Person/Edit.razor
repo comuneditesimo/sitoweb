@@ -1,0 +1,13 @@
+﻿@page "/Backend/Homepage/Person/Edit/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+
+@layout MainLayout
+
+@if (!string.IsNullOrEmpty(ID))
+{
+    <div class="element-separator"></div>
+    <div class="custom-background-default form-group-small">
+        <PersonEdit PersonID="@ID" OnCancel="Cancel" OnSave="Save"></PersonEdit>
+    </div>
+}

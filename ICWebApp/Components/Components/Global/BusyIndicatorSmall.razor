@@ -1,0 +1,18 @@
+﻿@if (BusyIndicatorService.IsBusy) 
+{
+    <div class="loader-small-overlay">
+        <div class="loader-container">
+            @if (BusyIndicatorService.TotalProgress == null)
+            {
+                <div class="loader-spinner">
+                    <span class="loader"></span>
+                </div>       
+            }
+            @if(BusyIndicatorService.Description != null)
+            {
+                <div class="small-element-separator"></div>
+                <div class="loader-text h5">@BusyIndicatorService.Description</div>
+            }
+        </div>
+    </div>
+}

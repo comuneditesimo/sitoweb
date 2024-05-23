@@ -1,0 +1,649 @@
+﻿@page "/Backend/Canteen/RequestRefundBalances/Details/{ID}"
+
+@layout MainLayout
+
+<div class="segment-container custom-background-default application-detail-container">
+    <div class="application-detail-left">
+        <TelerikWindow Modal="true" @bind-Visible="@FilterWindowVisible" Width="700px">
+            <WindowTitle>
+                @TextProvider?.Get("BACKEND_FORM_DETAIL_TABLE_FILTER")
+            </WindowTitle>
+            <WindowContent>
+                <div class="filter-container">
+                    <ICWebApp.Components.Components.Canteen.CanteenRequestRefundBalancesFilterComponent Filter="@_filter" OnSearch="FilterSearch" />
+                </div>
+            </WindowContent>
+            <WindowActions>
+                <WindowAction Name="Close" OnClick="FilterClose"/>
+            </WindowActions>
+        </TelerikWindow>
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <TelerikListView Data="@_requests" Pageable="true" PageSize="15">
+            <HeaderTemplate>
+                <div class="application-list-title-container">
+                    <div class="application-list-title-back">
+                        <TelerikButton OnClick="@BackToPreviousPage" ButtonType="ButtonType.Button" ThemeColor="Primary" Class="button-flex-end" Icon="@("fa-regular fa-arrow-left-long")"></TelerikButton>
+                    </div>
+                    <div class="font-normal application-list-title custom-color-primary">
+                        @TextProvider?.Get("BACKEND_FORM_DETAIL_APPLICATION_TITLE")
+                    </div>
+                    <div class="application-list-title-filter">
+                        <TelerikButton OnClick="@ShowFilter" ButtonType="ButtonType.Button" ThemeColor="Primary" Class="button-flex-end" Icon="@("fad fa-sliders-h")" />
+                    </div>
+                </div>
+            </HeaderTemplate>
+            <Template>
+                @{
+                    string selectedCSS = "";
+                }
+                @if (context != null)
+                {
+                    if (_currentRequest != null && context.ID == _currentRequest.ID)
+                    {
+                        selectedCSS = "card-aktive";
+                    }
+                    <div class="k-card k-card-horizontal @selectedCSS" @onclick="@(() => SelectRequest(context.ID))">
+                        <div class="k-vbox k-flex-grow">
+                            <div class="k-card-body application-card">
+                                <div class="font-bold custom-color-primary">
+                                    @context.UserEntireName
+                                </div>
+                                @if (context.Fee != null)
+                                {
+                                    <div class="font-small">
+                                        @(string.Format("{0:C}", context.Fee.Value))
+                                    </div>
+                                }
+                                <div class="extra-small-element-separator"></div>
+                                <div class="font-small">
+                                    <span>
+                                        @if (!string.IsNullOrEmpty(context.Status_Icon))
+                                        {
+                                            <TelerikFontIcon IconClass="@context.Status_Icon"></TelerikFontIcon>
+                                        }
+                                    </span>
+                                    <span>
+                                        @context.Status_Text
+                                    </span>
+                                </div>
+                                @if (context != null && context.ArchivedBool == true)
+                                {
+                                    <div class="extra-small-element-separator"></div>
+                                    <div class="icon-element">
+                                        <TelerikFontIcon IconClass="@("fa-regular fa-box-archive")"></TelerikFontIcon>
+                                        <span style="margin-left: 5px;">
+                                            @TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ARCHIVED")
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </Template>
+        </TelerikListView>
+    </div>
+    <div class="application-detail-right">
+        @if (_currentRequest != null)
+        {
+            <h2 class="application-detail-title custom-color-primary">
+                @_currentRequest.UserEntireName
+            </h2>
+        }
+        @if (!string.IsNullOrEmpty(CurrentWizardTitle))
+        {
+            <h3 class="application-detail-sub-title custom-color-primary">
+                @CurrentWizardTitle
+            </h3>
+        }
+        @if (_currentRequest != null && _currentMovement != null && _currentRequest.RequestAcceptedDate != null && DateTime.Now <= _currentRequest.RequestAcceptedDate.Value.Date.AddMonths(6))
+        {
+            <TelerikWindow Modal="true" @bind-Visible="@_showModifyMovementModalWindow" Width="700px">
+                <WindowTitle>
+                    @TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_MOVEMENT")
+                </WindowTitle>
+                <WindowContent>
+                    <div class="form-group">
+                        <label class="application-label">
+                            @TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_MOVEMENTDATE")
+                        </label>
+                        <div class="extra-small-element-separator"></div>
+                        <div class="application-value">
+                            <TelerikDatePicker Format="dd.MM.yyyy" Min="@_currentRequest.RequestAcceptedDate.Value.Date" Max="@_currentRequest.RequestAcceptedDate.Value.Date.AddMonths(6)" @bind-Value="_currentMovement.Date" class="form-control" />
+                        </div>
+                        <div class="extra-small-element-separator" />
+                        <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                                       OnClick="@(() => ModifyDateRefundBalancesMovement(_currentMovement, _currentRequest))">
+                            @TextProvider?.Get("BUTTON_SAVE")
+                        </TelerikButton>
+                    </div>
+                </WindowContent>
+                <WindowActions>
+                    <WindowAction Name="Close" OnClick="CloseModifyRefundBalanceMovementWindow" />
+                </WindowActions>
+            </TelerikWindow>
+        }
+        @if (_currentRequest != null && _statusList.Where(p => p.StatusSelectable == true).Any())
+        {
+            <TelerikWindow Modal="true" @bind-Visible="@_showModifyStatusModalWindow" Width="800px">
+                <WindowTitle>
+                    @TextProvider?.Get("POPUP_CHANGE_STATUS_TITLE")
+                </WindowTitle>
+                <WindowContent>
+                    <div class="change-status-container">
+                        <div class="application-value">
+                            <TelerikDropDownList Data="@_statusList.Where(p => p.StatusSelectable == true).OrderBy(p => p.SortOrder)" @bind-Value="@_currentRequest.CANTEEN_RequestRefundAllCharge_Status_ID"
+                                                    ValueField="ID" TextField="Name">
+                                <ItemTemplate Context="ItemContext">
+                                    <span class="application-status-item">
+                                        <span>
+                                            <i class="@ItemContext.Icon"></i>
+                                        </span>
+                                        <span>
+                                            @ItemContext.Name
+                                        </span>
+                                    </span>
+                                </ItemTemplate>
+                                <ValueTemplate Context="ValueContext">
+                                    <span class="application-status-item">
+                                        <span>
+                                            <i class="@ValueContext.Icon"></i>
+                                        </span>
+                                        <span>
+                                            @ValueContext.Name
+                                        </span>
+                                    </span>
+                                </ValueTemplate>
+                            </TelerikDropDownList>
+                        </div>
+                        <div class="change-status-container">
+                            @if (_currentRequest.CANTEEN_RequestRefundAllCharge_Status_ID == Canteen_Request_Status.Accepted)
+                            {
+                                <div class="small-element-separator"></div>
+                                <div class="application-label font-small">
+                                    @TextProvider?.Get("CANTEEN_PAYMENT_UNTIL_TITEL")
+                                </div>
+                                <div class="font-extra-small">
+                                    @TextProvider?.Get("CANTEEN_PAYMENT_UNTIL_TEXT")
+                                </div>
+                                <div class="extra-small-element-separator"></div>
+                                <div class="application-value">
+                                    <TelerikDatePicker Format="dd.MM.yyyy" Min="@DateTime.Today" Max="@DateTime.Today.AddMonths(6)" @bind-Value="_currentRequest.PaymentRefundUntil" class="form-control" />
+                                </div>
+                            }
+                            <div class="small-element-separator"></div>
+                            <div class="application-label font-small">
+                                @TextProvider?.Get("APPLICATION_STATUS_REASON")
+                            </div>
+                            <div class="font-extra-small">
+                                @TextProvider?.Get("APPLICATION_STATUS_REASON_DETAIL")
+                            </div>
+                            <div class="extra-small-element-separator"></div>
+                            <TextTemplateSelector ExternalContext="CANTEENREQUEST" ExternalID="@_currentRequest.CANTEEN_RequestRefundAllCharge_Status_ID.ToString()" TextItem="@_textItem"></TextTemplateSelector>
+                            <div class="extra-small-element-separator"></div>
+                            <div class="change-status-buttons">
+                                @{
+                                    CANTEEN_RequestRefundBalances_Status? statusLoc = _statusList.FirstOrDefault(p => p.ID == _currentRequest.CANTEEN_RequestRefundAllCharge_Status_ID);
+                                }
+                                <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.X" Class="k-standalone-button"
+                                               OnClick="@CloseChangeStatusWindow">
+                                    @TextProvider?.Get("BUTTON_CANCEL")
+                                </TelerikButton>
+                                @if (statusLoc != null)
+                                {
+                                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                                                   OnClick="@ChangeStatus">
+                                        @TextProvider?.Get("APPLICATION_STATUS_CHANGE")
+                                    </TelerikButton>
+                                }
+                                else
+                                {
+                                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Enabled="false" Class="k-standalone-button"
+                                                   OnClick="@ChangeStatus">
+                                        @TextProvider?.Get("APPLICATION_STATUS_CHANGE")
+                                    </TelerikButton>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </WindowContent>
+            </TelerikWindow>
+        }
+        <div class="small-element-separator"></div>
+        <div class="application-wizard-container">
+            <CustomLoader Visible="@(IsWizardBusy)"
+                            Text="@null" Class="initial-data-loader">
+            </CustomLoader>
+            <TelerikWizard @bind-Value="RequestTabIndex" StepperPosition="@WizardStepperPosition.Right">
+                <WizardSteps>
+                    <WizardStep Label="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_DETAILS_TAB_OVERVIEW")" OnChange="OnStepChanged" Icon="@("fa-duotone fa-id-card")">
+                        <Content>
+                            <div class="form-group application-detail-tab font-small">
+                                @if (_currentRequest != null)
+                                {
+                                    <div class="applicant-container">
+                                        <div class="applicant-group">
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICANT_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_NAME")</label>
+                                                <label class="application-value">@_currentRequest.UserEntireName</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_FISCALNUMBER")</label>
+                                                <label class="application-value">@_currentRequest.UserTaxNumber</label>
+                                            </div>
+                                            <div class="element-separator"></div>
+                                            <div class="applicant-container">
+                                                <div class="applicant-group">
+                                                    <h5 class="custom-color-primary">
+                                                        @TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_DOMICILEDATA")
+                                                    </h5>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("APPLICANT_ADDRESS")</label>
+                                                        <label class="application-value">@_currentRequest.UserDomicileStreetAdress</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("APPLICANT_POSTAL_CODE")</label>
+                                                        <label class="application-value">@_currentRequest.UserDomicilePostalCode</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("APPLICANT_MUNICIPALITY")</label>
+                                                        <label class="application-value">@_currentRequest.UserDomicileMunicipality</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("APPLICANT_PROVINCE")</label>
+                                                        <label class="application-value">@_currentRequest.UserDomicileProvince</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="element-separator"></div>
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICANT_KONTAKT_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_EMAIL")</label>
+                                                <label class="application-value">@_currentRequest.UserEmail</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_PHONE")</label>
+                                                <label class="application-value">
+                                                    @if (!string.IsNullOrEmpty(_currentRequest.UserMobilePhone))
+                                                    {
+                                                        var parsed = long.TryParse(_currentRequest.UserMobilePhone.Replace("+", "").Replace(" ", ""), out var IntPhoneNumber);
+                                                        if (parsed)
+                                                        {
+                                                            @IntPhoneNumber.ToString("+## ### ### ####")
+                                                        }
+                                                        else
+                                                        {
+                                                            @_currentRequest.UserMobilePhone
+                                                        }
+                                                    }
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="applicant-group">
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICATION_TIMES_AND_DEADLINE_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("PROGRESSIV_NUMBER")</label>
+                                                @{
+                                                    string prefix = "";
+                                                }
+                                                @if (_currentMunicipality != null)
+                                                {
+                                                    prefix = _currentMunicipality.MensaRefundPNPrefix;
+                                                }
+                                                <label class="application-value">@(prefix + "-" + _currentRequest.ProgressivYear + "-" + _currentRequest.ProgressivNumber)</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICATION_SUBMITTED_AT")</label>
+                                                @if (_currentRequest.SignedDate != null)
+                                                {
+                                                    <label class="application-value">@_currentRequest.SignedDate.Value.ToString("dd.MM.yyyy HH:mm")</label>
+                                                }
+                                            </div>
+                                            <div class="element-separator"></div>
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICATION_ARCHIVED")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <TelerikSwitch @bind-Value="@_currentRequest.ArchivedBool" OnLabel="@TextProvider?.Get("YES")" OffLabel="@TextProvider?.Get("NO")"
+                                                               Width="65px" Class="list-item-switch" OnChange="ArchivedChanged">
+                                                </TelerikSwitch>
+                                            </div>
+                                            <div class="element-separator"></div>
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICATION_STATUS")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            @{
+                                                CANTEEN_RequestRefundBalances_Status? status = _statusList.FirstOrDefault(p => p.ID == _currentRequest.CANTEEN_RequestRefundAllCharge_Status_ID);
+                                            }
+                                            @if (status != null)
+                                            {
+                                                <div class="application-row">
+                                                    <div class="application-value">
+                                                        <span class="application-status-item">
+                                                            <i class="@status.Icon"></i>
+                                                        </span>
+                                                        <span>
+                                                            @status.Name
+                                                        </span>
+                                                    </div>
+                                                    @if (status != null && status.ID != Canteen_Request_Status.Accepted && status.ID != Canteen_Request_Status.Declined && _currentRequest.ArchivedBool != true && _statusList.Where(p => p.StatusSelectable == true).Any())
+                                                    {
+                                                        <div class="application-edit-button">
+                                                            <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Class="k-standalone-button"
+                                                                           OnClick="@ShowChangeStatusWindow">
+                                                                @TextProvider?.Get("BUTTON_CHANGE_STATUS")
+                                                            </TelerikButton>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="element-separator" />
+                                    <div class="form-group">
+                                        <h4 class="custom-color-primary">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_BANCDATA")</h4>
+                                        <div class="extra-small-element-separator" />
+                                        <div class="form-group">
+                                            <div class="applicant-container">
+                                                <div class="applicant-group">
+                                                    @if (_currentRequest.Fee != null)
+                                                    {
+                                                        <div class="application-row">
+                                                            <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_FEE")</label>
+                                                            <label class="application-value">@string.Format("{0:C}", _currentRequest.Fee.Value)</label>
+                                                        </div>
+                                                        <div class="extra-small-element-separator" />
+                                                    }
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_OWNER")</label>
+                                                        <label class="application-value">@_currentRequest.Owner</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_BANK")</label>
+                                                        <label class="application-value">@_currentRequest.Bank</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_IBAN")</label>
+                                                        <label class="application-value">@_currentRequest.IBAN</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </Content>
+                    </WizardStep>
+                    <WizardStep Label="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_DETAILS_TAB_ANAGRAFIC")" OnChange="OnStepChanged" Icon="@("fa-solid fa-person")">
+                        <Content>
+                            <div class="form-group application-detail-tab font-small">
+                                @if (_currentRequest != null)
+                                {
+                                    <div class="applicant-container">
+                                        <div class="applicant-group">
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICANT_ANAGRAFIC_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_NAME")</label>
+                                                <label class="application-value">@_currentRequest.UserEntireName</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_FISCALNUMBER")</label>
+                                                <label class="application-value">@_currentRequest.UserTaxNumber</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_GENDER")</label>
+                                                <label class="application-value">
+                                                    @if (_currentRequest.UserGender.ToLower() == "m")
+                                                    {
+                                                        @TextProvider?.Get("REGISTRATION_GENDER_MALE")
+                                                    }
+                                                    else if (_currentRequest.UserGender.ToLower() == "w")
+                                                    {
+                                                        @TextProvider?.Get("REGISTRATION_GENDER_FEMALE")
+                                                    }
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="applicant-group">
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICANT_BIRTH_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_COUNTY_OF_BIRTH")</label>
+                                                <label class="application-value">@_currentRequest.UserCountryOfBirth</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_PLACE_OF_BIRTH")</label>
+                                                <label class="application-value">@_currentRequest.UserPlaceOfBirth</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_DATE_OF_BIRTH")</label>
+                                                <label class="application-value">
+                                                    @if (_currentRequest.UserDateOfBirth != null)
+                                                    {
+                                                        @_currentRequest.UserDateOfBirth.Value.ToString("dd.MM.yyyy")
+                                                    }
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="element-separator"></div>
+                                    <div class="applicant-container">
+                                        <div class="applicant-group">
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICANT_DOMICILE_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_ADDRESS")</label>
+                                                <label class="application-value">@_currentRequest.UserDomicileStreetAdress</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_POSTAL_CODE")</label>
+                                                <label class="application-value">@_currentRequest.UserDomicilePostalCode</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_MUNICIPALITY")</label>
+                                                <label class="application-value">@_currentRequest.UserDomicileMunicipality</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_PROVINCE")</label>
+                                                <label class="application-value">@_currentRequest.UserDomicileProvince</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="applicant-group">
+                                            <h5 class="custom-color-primary">
+                                                @TextProvider?.Get("APPLICANT_KONTAKT_DATA")
+                                            </h5>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_EMAIL")</label>
+                                                <label class="application-value">@_currentRequest.UserEmail</label>
+                                            </div>
+                                            <div class="extra-small-element-separator"></div>
+                                            <div class="application-row">
+                                                <label class="application-label">@TextProvider?.Get("APPLICANT_PHONE")</label>
+                                                <label class="application-value">
+                                                    @if (!string.IsNullOrEmpty(_currentRequest.UserMobilePhone))
+                                                    {
+                                                        var parsed = long.TryParse(_currentRequest.UserMobilePhone.Replace("+", "").Replace(" ", ""), out var IntPhoneNumber);
+                                                        if (parsed)
+                                                        {
+                                                            @IntPhoneNumber.ToString("+## #### ### ###")
+                                                        }
+                                                        else
+                                                        {
+                                                            @_currentRequest.UserMobilePhone
+                                                        }
+                                                    }
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </Content>
+                    </WizardStep>
+                    <WizardStep Label="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_DETAILS_TAB_PREVIEW")" OnChange="OnStepChanged" Icon="@("fa-duotone fa-file-certificate")">
+                        <Content>
+                            <div class="form-group application-detail-tab">
+                                @if (_currentRequest != null && _currentRequest.FILE_FileInfoID != null)
+                                {
+                                    <div class="preview-container">
+                                        <div class="preview-url-container">
+                                            <PDFViewer FILE_FileInfoID="@_currentRequest.FILE_FileInfoID"></PDFViewer>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </Content>
+                    </WizardStep>
+                    <WizardStep Label="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_DETAILS_TAB_MOVEMENT")" OnChange="OnStepChanged" Icon="@("fa-regular fa-euro-sign")">
+                        <Content>
+                            <div class="form-group application-detail-tab font-small">
+                                @if (_currentRequest != null)
+                                {
+                                    <div class="form-group">
+                                        <h4 class="custom-color-primary">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_BANCDATA")</h4>
+                                        <div class="extra-small-element-separator" />
+                                        <div class="form-group">
+                                            <div class="applicant-container">
+                                                <div class="applicant-group">
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_OWNER")</label>
+                                                        <label class="application-value">@_currentRequest.Owner</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_BANK")</label>
+                                                        <label class="application-value">@_currentRequest.Bank</label>
+                                                    </div>
+                                                    <div class="extra-small-element-separator"></div>
+                                                    <div class="application-row">
+                                                        <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_IBAN")</label>
+                                                        <label class="application-value">@_currentRequest.IBAN</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (_currentRequest.Fee != null)
+                                        {
+                                            <div class="element-separator" />
+                                            <h4 class="custom-color-primary">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_MOVEMENT")</h4>
+                                            <div class="extra-small-element-separator" />
+                                            <div class="form-group">
+                                                <div class="applicant-container">
+                                                    <div class="applicant-group">
+                                                        <div class="extra-small-element-separator" />
+                                                        <div class="application-row">
+                                                            <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_FEE")</label>
+                                                            <label class="application-value">@string.Format("{0:C}", _currentRequest.Fee.Value)</label>
+                                                        </div>
+                                                        @if (_currentMovement != null && _currentMovement.Date != null)
+                                                        {
+                                                            <div class="extra-small-element-separator"></div>
+                                                            <div class="application-row">
+                                                                <label class="application-label">@TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_DATETRANSFER")</label>
+                                                                <label class="application-value">@_currentMovement.Date.Value.ToString("dd.MM.yyyy")</label>
+                                                            </div>
+                                                            <div class="extra-small-element-separator"></div>
+                                                            <div class="change-status-buttons button-left">
+                                                                @if (_currentRequest.RequestAcceptedDate != null && DateTime.Now <= _currentRequest.RequestAcceptedDate.Value.Date.AddMonths(6))
+                                                                {
+                                                                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.Pencil" Class="k-standalone-button"
+                                                                                   OnClick="@(ShowModifyRefundBalanceMovementWindow)">
+                                                                        @TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_EDIT")
+                                                                    </TelerikButton>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.Pencil" Enabled="false" Class="k-standalone-button"
+                                                                                   OnClick="@(ShowModifyRefundBalanceMovementWindow)">
+                                                                        @TextProvider?.Get("CANTEEN_REQUESTREFUNDBALANCES_EDIT")
+                                                                    </TelerikButton>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </Content>
+                    </WizardStep>
+                    <WizardStep Label="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_DETAILS_TAB_STATUS_LOG")" OnChange="OnStepChanged" Icon="@("fa-duotone fa-list-dropdown")">
+                        <Content>
+                            <div class="form-group application-detail-tab">
+                                <div class="tasks-container">
+                                    <TelerikGrid Data="@_currentStatusLogList" Pageable="false" Sortable="false" Resizable="false"
+                                                 ScrollMode="@GridScrollMode.Scrollable" Groupable="false" Reorderable="false">
+                                        <GridColumns>
+                                            <GridColumn Field="@nameof(CANTEEN_RequestRefundBalances_Status_Log.User)" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_STATUSLOG_USER")"></GridColumn>
+                                            <GridColumn Field="@nameof(CANTEEN_RequestRefundBalances_Status_Log.ChangeDate)" DisplayFormat="{0:dd.MM.yyyy HH:mm}" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_STATUSLOG_CHANGEDATE")" Width="250px"></GridColumn>
+                                            <GridColumn Field="@nameof(CANTEEN_RequestRefundBalances_Status_Log.Status)" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_STATUSLOG_STATUS")">
+                                                <Template Context="ItemContext">
+                                                    @{
+                                                        CANTEEN_RequestRefundBalances_Status_Log? item = ItemContext as CANTEEN_RequestRefundBalances_Status_Log;
+                                                    }
+                                                    @if (item != null)
+                                                    {
+                                                        <span class="application-status-item">
+                                                            <TelerikFontIcon IconClass="@item.StatusIcon"></TelerikFontIcon>
+                                                            @item.Status
+                                                        </span>
+                                                    }
+                                                </Template>
+                                            </GridColumn>
+                                        </GridColumns>
+                                    </TelerikGrid>
+                                </div>
+                            </div>
+                        </Content>
+                    </WizardStep>
+                </WizardSteps>
+                <WizardButtons>
+                </WizardButtons>
+                <WizardSettings>
+                    <WizardStepperSettings Linear="false" />
+                </WizardSettings>
+            </TelerikWizard>
+        </div>
+    </div>
+</div>

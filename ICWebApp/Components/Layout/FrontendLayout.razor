@@ -1,0 +1,218 @@
+﻿@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@inherits LayoutComponentBase
+
+@*Color Switcher*@
+<link href="css/colors/@(ThemeHelper.GetCurrentColor()).css?v=@ComunixSettings.CSSVersion" rel="stylesheet" />
+<link rel="preload" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion"></noscript>
+@*********@
+<link rel="preload" href="css/bootstrap-italia/css/bootstrap-italia.min.css" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css"></noscript>
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.comuni.min.css" />
+<link rel="stylesheet" href="css/agid/Custom.min.css?v=@ComunixSettings.CSSVersion" />
+
+<Syncfusion.Blazor.Popups.SfDialogProvider />
+@if (Municipality != null)
+{
+    <PageTitle>@(TextProvider.Get("APPLICANT_MUNICIPALITY") + " " + Municipality.Name)</PageTitle>
+}
+else
+{
+    <PageTitle>Comunix</PageTitle>
+}
+
+@if (SessionWrapper != null && !SessionWrapper.Initializing)
+{
+    <ICWebApp.Components.Components.Layout.Frontend.TopRow ShowMenu="true" ShowUserData="true"></ICWebApp.Components.Components.Layout.Frontend.TopRow>
+    <main id="topelement">     
+        <BusyIndicatorSmall></BusyIndicatorSmall>
+        @if (DialogService.ShowDialogWindow)
+        {
+            <DialogWindow />
+        }
+        @if (EnviromentService.ShowDownloadPreviewWindow == true)
+        {
+            <PreviewWindow></PreviewWindow>
+        }
+        @if (SessionWrapper.ShowBreadcrumb == true && !BusyIndicatorService.StartupBusy)
+        {
+            string colCss = "col-lg-8 px-lg-4 py-lg-2";
+            string rowCss = "";
+
+            if (SessionWrapper.ShowTitleSepparation || SessionWrapper.ShowTitleSmall)
+            {
+                colCss = "col-12 col-lg-10";
+                rowCss = "justify-content-center";
+            }
+            if (SessionWrapper.ShowTitleSepparation && (ActionBarService.ShowDefaultButtons || ActionBarService.ShowShareButton))
+            {
+                colCss = "col-12 col-lg-10";
+                rowCss = "justify-content-center";
+            }
+
+            <div class="container no-print" id="main-container">
+                <div class="row @rowCss">
+                    <div class="@colCss">
+                        <ICWebApp.Components.Components.Breadcrumb.Frontend.Breadcrumb></ICWebApp.Components.Components.Breadcrumb.Frontend.Breadcrumb>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(SessionWrapper.PageTitle))
+        {
+            string colCss = "col-lg-8 px-lg-4 py-lg-2";
+            string rowCss = "";
+
+            if (SessionWrapper.ShowTitleSepparation || SessionWrapper.ShowTitleSmall)
+            {
+                colCss = "col-12 col-lg-10";
+                rowCss = "justify-content-center";
+            }
+            if (SessionWrapper.ShowTitleSepparation && (ActionBarService.ShowDefaultButtons || ActionBarService.ShowShareButton))
+            {
+                colCss = "col-12 col-lg-6";
+                rowCss = "justify-content-center";
+            }
+
+            <div class="container">
+                <div class="row @rowCss">
+                    <div class="@colCss">
+                        @if(string.IsNullOrEmpty(SessionWrapper.DataElement))
+                        {
+                            <h1 class="layout-page-title">@SessionWrapper.PageTitle</h1>
+                        }
+                        else
+                        {
+                            <h1 class="layout-page-title" data-element="@SessionWrapper.DataElement">@SessionWrapper.PageTitle</h1>
+                        }
+                        @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(SessionWrapper.PageSubTitle))
+                        {
+                            <p class="subtitle-small mb-3">@((MarkupString)SessionWrapper.PageSubTitle.Replace("<p>", "").Replace("</p>", ""))</p>
+                        }
+                        @if (!string.IsNullOrEmpty(SessionWrapper.PageChipValue))
+                        {
+                            <ul class="d-flex flex-wrap gap-1 my-3">
+                                <li>
+                                    <div class="chip chip-simple text-button" data-element="service-status">
+                                        <span class="chip-label">
+                                            @SessionWrapper.PageChipValue
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        }
+                        @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(SessionWrapper.PageDescription))
+                        {
+                            <div class="hero-text page-description">
+                                @if (string.IsNullOrEmpty(SessionWrapper.DataElement))
+                                {
+                                    <p>@((MarkupString)SessionWrapper.PageDescription.Replace("&nbsp;", "<br>"))</p>
+                                }
+                                else
+                                {
+                                    <p data-element="service-description">@((MarkupString)SessionWrapper.PageDescription.Replace("&nbsp;", "<br>"))</p>
+                                }
+                            </div>
+                        }
+                        @if (SessionWrapper.PageButtonAction != null || SessionWrapper.PageButtonSecondaryAction != null)
+                        {
+                            <div class="element-separator"></div>
+                            <div class="layout-button-container">
+                                @if(SessionWrapper.PageButtonAction != null)
+                                {
+                                    @if (!string.IsNullOrEmpty(SessionWrapper.PageButtonDataElement))
+                                    {
+                                        <button type="button" class="btn btn-primary fw-bold" data-focus-mouse="false" @onclick="SessionWrapper.PageButtonAction" data-element="@SessionWrapper.PageButtonDataElement">
+                                            <span class="">@SessionWrapper.PageButtonActionTitle</span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-primary fw-bold" data-focus-mouse="false" @onclick="SessionWrapper.PageButtonAction">
+                                            <span class="">@SessionWrapper.PageButtonActionTitle</span>
+                                        </button>
+                                    }
+                                }
+                                @if (SessionWrapper.PageButtonSecondaryAction != null)
+                                {
+                                    @if (!string.IsNullOrEmpty(SessionWrapper.PageButtonSecondaryDataElement))
+                                    {
+                                        <button type="button" class="btn btn-secondary fw-bold" data-focus-mouse="false" @onclick="SessionWrapper.PageButtonSecondaryAction" data-element="@SessionWrapper.PageButtonSecondaryDataElement">
+                                            <span class="">@SessionWrapper.PageButtonSecondaryActionTitle</span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-secondary fw-bold" data-focus-mouse="false" @onclick="SessionWrapper.PageButtonSecondaryAction">
+                                            <span class="">@SessionWrapper.PageButtonSecondaryActionTitle</span>
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                    @if (ActionBarService != null && ((ActionBarService.GetActionBarItems() != null && ActionBarService.GetActionBarItems().Count() > 0) || ActionBarService.ShowShareButton || ActionBarService.ShowDefaultButtons))
+                    {
+                        <div class="col-lg-3 offset-lg-1 mt-5 mt-lg-0 page-index-container no-print no-read">
+                            <ICWebApp.Components.Components.ActionBar.ActionBar></ICWebApp.Components.Components.ActionBar.ActionBar>
+                        </div>
+                    }
+                </div>
+                @if (SessionWrapper.ReleaseDate != null || SessionWrapper.ReadDuration != null)
+                {
+                    <div class="row mt-5 mb-4">
+                        @if (SessionWrapper.ReleaseDate != null)
+                        {
+                            <div class="col-6">
+                                <small>@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DATE")</small>
+                                <p class="fw-semibold font-monospace">
+                                    @SessionWrapper.ReleaseDate.Value.ToString("dd MMMM yyyy")
+                                </p>
+                            </div>
+                        }
+                        @if (SessionWrapper.ReadDuration != null)
+                        {
+                            <div class="col-6">
+                                <small>@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_READING_TIME")</small>
+                                <p class="fw-semibold" id="readingTime">@SessionWrapper.ReadDuration @TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_READING_TIME_MINUTES")</p>
+                            </div>
+                        }
+                    </div>
+                }
+                @if (SessionWrapper.ShowTitleSepparation == true)
+                {
+                    <hr class="d-none d-lg-block mb-0 mt-2 mt-lg-5 no-print">
+                }
+                else
+                {
+                    <div class="d-none d-lg-block mb-0 mt-2 mt-lg-5 no-print"></div>
+                }
+            </div>
+        }
+        @if (SessionWrapper != null && !SessionWrapper.Initializing)
+        {
+            @Body
+        }
+        @if (IsHomepage && !BusyIndicatorService.StartupBusy)
+        {
+            @if (SessionWrapper.ShowQuestioneer)
+            {
+                <QuestionnaireSection></QuestionnaireSection>
+            }
+
+            @if (SessionWrapper.ShowHelpSection)
+            {
+                <HelpSection></HelpSection>
+            }
+        }
+        @if (!BusyIndicatorService.StartupBusy)
+        {
+            <ICWebApp.Components.Components.Cookies.ConsentCookie />
+        }
+        <ICWebApp.Components.Components.Layout.Frontend.Footer></ICWebApp.Components.Components.Layout.Frontend.Footer>
+    </main>
+    <ICWebApp.Components.Components.Search.Frontend.Searchbar></ICWebApp.Components.Components.Search.Frontend.Searchbar>
+}

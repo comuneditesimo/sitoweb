@@ -1,0 +1,69 @@
+﻿@page "/Backend/Homepage/Authorities"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Data" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.Highlight)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_HIGHLIGHT")" Width="140px">
+                    <Template>
+                        @{
+                            V_HOME_Authority? item = context as V_HOME_Authority;
+                        }
+                        <div class="grid-checkbox-cell">
+                            <SfCheckBox Checked="item.Highlight" Disabled="true"></SfCheckBox>
+                        </div>
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.Title)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_TITLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.Address)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_ADDRESS")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.Telefon)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_TELEFON")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.EMail)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_EMAIL")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.PecEmail)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_PECEMAIL")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Authority.LastChangeDate)" Format="dd.MM.yyyy HH:mm" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_LASTCHANGEDATE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Width="170px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            V_HOME_Authority item = context as V_HOME_Authority;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(item))">
+                                            <i class="fa-regular fa-pen"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    @if (item.AllowTimeslots == true)
+                                    {
+                                        <SfTooltip Content="@TextProvider.Get("TOOLTIP_TIMESLOTS")" Position="@Position.LeftCenter">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => EditAppointments(item))">
+                                                <i class="fa-regular fa-calendar"></i>
+                                            </div>
+                                        </SfTooltip>
+                                    }
+                                    @if (item.AllowOfficeHours == true)
+                                    {
+                                        <SfTooltip Content="@TextProvider.Get("TOOLTIP_OFFICE_HOURS")" Position="@Position.LeftCenter">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => EditOfficeHours(item))">
+                                                <i class="fa-regular fa-clock"></i>
+                                            </div>
+                                        </SfTooltip>
+                                    }
+                                </div>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>

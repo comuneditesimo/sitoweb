@@ -1,0 +1,19 @@
+﻿@if(Theme != null)
+{
+    <div class="col-md-6 col-xl-4">
+        <div class="cmp-card-simple card-wrapper pb-0 rounded border border-light">
+            <div class="card shadow-sm rounded">
+                <div class="card-body">
+                    <a class="text-decoration-none" @onclick="OnItemClicked" data-element=" topic-element">
+                        <h3 class="card-title t-primary title-xlarge">
+                            @Theme.Title
+                        </h3>
+                    </a>
+                    <p class="text-paragraph mb-0 description">
+                        @((MarkupString)Theme.Description)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

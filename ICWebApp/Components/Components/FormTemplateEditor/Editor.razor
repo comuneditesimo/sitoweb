@@ -1,0 +1,36 @@
+﻿<script src="_content/Syncfusion.Blazor.PdfViewer/scripts/syncfusion-blazor-pdfviewer.min.js" type="text/javascript" defer></script>
+
+@using Syncfusion.Blazor.Popups
+
+<div class="telerik-report-toolbar">
+    <TelerikButtonGroup>
+        <ButtonGroupButton ThemeColor="secondary" Icon="SvgIcon.Fullscreen" OnClick="ShowFullScreen"></ButtonGroupButton>
+    </TelerikButtonGroup>
+</div>
+<div class="small-element-separator"></div>
+<div class="pdf-editor-container">  
+    <SfPdfViewerServer @ref="Viewer" Height="100%" Width="100%" EnableFormFields="true" EnableToolbar="true" 
+                        EnableThumbnailPanel="false" ToolbarSettings="@ToolbarSettings" EnableTextSelection="false">
+        <Syncfusion.Blazor.PdfViewer.PdfViewerEvents DocumentLoaded="OnPdfSmallLoaded" Created="OnPdfViewerCreated"></Syncfusion.Blazor.PdfViewer.PdfViewerEvents>
+    </SfPdfViewerServer>
+</div>
+<div class="element-separator"></div>
+
+<SfDialog @bind-Visible="@WindowVisible" AllowDragging="false" ShowCloseIcon="true" IsModal="true" CssClass="pdf-preview-window" CloseOnEscape="true">
+    <DialogTemplates>
+        <Header>
+            @TextProvider.Get("TELERIK_PREVIEW_TITLE")
+        </Header>
+        <Content>
+            <div class="pdf-editor-container-large">
+                <SfPdfViewerServer @ref="ViewerLarge" Height="100%" Width="100%" EnableFormFields="true" EnableToolbar="true"
+                                   EnableThumbnailPanel="false" ToolbarSettings="@ToolbarSettings" EnableTextSelection="false">
+                    <Syncfusion.Blazor.PdfViewer.PdfViewerEvents DocumentLoaded="PDFLargeLoaded" Created="OnPdfViewerLargeCreated"></Syncfusion.Blazor.PdfViewer.PdfViewerEvents>
+                </SfPdfViewerServer>
+            </div>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="@TextProvider.Get("BUTTON_CLOSE")" OnClick="@HideFullScreen" />
+    </DialogButtons>
+</SfDialog>

@@ -1,0 +1,46 @@
+﻿@using System.Globalization;
+
+<script nonce="comunix123" src="/js/Services/anchorHelper.js"></script>
+
+@if(Anchors != null && Anchors.Count() > 0)
+{
+    <div class="cmp-navscroll sticky-top" aria-labelledby="accordion-title-one">
+        <nav class="navbar it-navscroll-wrapper navbar-expand-lg" aria-label="Indice della pagina" data-bs-navscroll="">
+            <div class="navbar-custom" id="navbarNavProgress">
+                <div class="menu-wrapper">
+                    <div class="link-list-wrapper">
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <span class="accordion-header" id="accordion-title-one">
+                                    <button class="accordion-button pb-10 px-3 text-uppercase" type="button" aria-controls="collapse-one" aria-expanded="true" data-bs-toggle="collapse" data-bs-target="#collapse-one" data-focus-mouse="false">
+                                        @TextProvider.Get("AGID_FRONTEND_PAGE_INDEX")
+                                        <svg class="icon icon-sm icon-primary align-top">
+                                            <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-expand"></use>
+                                        </svg>
+                                    </button>
+                                </span>
+                                <div class="progress">
+                                    <div class="progress-bar it-navscroll-progressbar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                </div>
+                                <div id="collapse-one" class="accordion-collapse collapse show" role="region" aria-labelledby="accordion-title-one" style="">
+                                    <div class="accordion-body">
+                                        <ul class="link-list" data-element="page-index">
+                                            @foreach (var b in Anchors.OrderBy(p => p.Order))
+                                            {
+                                                <li class="nav-item">
+                                                    <a class="nav-link anchorid-@(b.Order)" onclick="anchorHelper_ScrollIntoView('@b.ID.Replace(" ", "-").Trim().ToLower()')" data-focus-mouse="false">
+                                                        <span class="title-medium">@b.Title.Replace("*", "")</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>  
+}

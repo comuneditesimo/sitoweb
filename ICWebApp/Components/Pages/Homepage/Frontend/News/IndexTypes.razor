@@ -1,0 +1,99 @@
+﻿@page "/Hp/Type/News/{TypeID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.News
+
+@if (Type != null)
+{
+    @if (News != null)
+    {
+        <div class="bg-grey-card py-5">
+            <button type="submit" class="d-none"></button>
+            <div class="container">
+                <h2 class="title-xxlarge mb-4">
+                    @Type.PageTitle
+                </h2>
+                <div class="cmp-input-search">
+                    <div class="form-group autocomplete-wrapper mb-2 mb-lg-4">
+                        <div class="input-group">
+                            <label for="autocomplete-autocomplete-three" class="visually-hidden">@TextProvider.Get("FORMS_FRONTEND_SEARCH_BY_KEYWORD")</label>
+                            <input @bind-value="SearchText" type="search" class="autocomplete form-control" placeholder="@TextProvider.Get("FORMS_FRONTEND_SEARCH_BY_KEYWORD")" id="autocomplete-autocomplete-three" name="autocomplete-three">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" id="button-3">@TextProvider.Get("FORMS_FRONTEND_SEARCH_BUTTON")</button>
+                            </div>
+
+                            <span class="autocomplete-icon" aria-hidden="true">
+                                <svg class="icon icon-sm icon-primary">
+                                    <use href="css/bootstrap-italia/svg/sprites.svg#it-search"></use>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4 row-overflow" id="load-more">
+                    @foreach (var n in News.Where(p => (SearchText == null || 
+                                                        (p.Subject != null && p.Subject.ToLower().Contains(SearchText.ToLower())) || 
+                                                        (p.ShortText != null && p.ShortText.ToLower().Contains(SearchText.ToLower())))
+                                                  ).OrderByDescending(p => p.ReleaseDate).ThenByDescending(p => p.CreationDate).Take(MaxCounter).ToList())
+                    {
+                        <NewsItemLarge News="n" OnClick="@(() => OnNewsItemClicked(n.ID))" TypeClickable="false"></NewsItemLarge>
+                    }
+                </div>
+
+                @if (MaxCounter < News.Where(p => (SearchText == null || 
+                                                        (p.Subject != null && p.Subject.ToLower().Contains(SearchText.ToLower())) || 
+                                                        (p.ShortText != null && p.ShortText.ToLower().Contains(SearchText.ToLower())))
+                                                  ).Count())
+                {
+                    <div class="d-flex justify-content-center mt-4" id="load-more-btn">
+                        <button type="button" class="btn btn-outline-primary pt-15 pb-15 pl-90 pr-90 mb-30 mb-lg-50 full-mb text-button" @onclick="@ShowMore">
+                            <span class="">@TextProvider.Get("HOMEPAGE_NEWS_SEARCH_MORE")</span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center text-paragraph-regular-medium mt-4 mb-0">
+                        @TextProvider.Get("HOMEPAGE_NEWS_NOTHING_MORE")
+                    </p>
+                }
+            </div>
+        </div>
+    }
+    @if (Types != null)
+    {
+        <div class="container py-5" id="argomento">
+            <h2 class="title-xxlarge mb-4">@TextProvider.Get("HOMEPAGE_NEWS_SEARCH_BY_TYPE")</h2>
+            <div class="row g-4">
+                @foreach (var t in Types.OrderBy(p => p.Type).ToList())
+                {
+                    <div class="col-md-6 col-xl-4">
+                        <div class="cmp-card-simple card-wrapper pb-0 rounded border border-light">
+                            <div class="card shadow-sm rounded">
+                                <div class="card-body">
+                                    @if (Type != null && t.ID != Type.ID)
+                                    {
+                                        <a class="text-decoration-none" href="@(NavManager.BaseUri.TrimEnd('/') + "/hp/Type/News/" + t.ID)" @onclick="@(() => OnNewsTypeClicked(t.ID))" @onclick:stopPropagation="true" data-element="news-category-link">
+                                            <h3 class="card-title t-primary title-xlarge">@t.Type</h3>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-decoration-none" data-element="news-category-link">
+                                            <h3 class="card-title t-disabled title-xlarge">@t.Type</h3>
+                                        </span>
+                                    }
+                                    <p class="text-secondary mb-0">
+                                        @((MarkupString)t.Description)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,23 @@
+﻿@inherits LayoutComponentBase
+
+@*Color Switcher*@
+<link href="css/colors/@(ThemeHelper.GetCurrentColor()).css?v=@ComunixSettings.CSSVersion" rel="stylesheet" />
+<link rel="preload" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion"></noscript>
+@*********@
+<link rel="preload" href="css/bootstrap-italia/css/bootstrap-italia.min.css" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css" media="print" onload="this.media='all'"
+<noscript><link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css"></noscript>
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.comuni.min.css" />
+<link rel="stylesheet" href="css/agid/Custom.min.css?v=@ComunixSettings.CSSVersion" />
+<base href="~/" />
+
+<ICWebApp.Components.Components.Layout.Frontend.TopRow ShowSearchButton="@false"></ICWebApp.Components.Components.Layout.Frontend.TopRow>
+<div class="main-page" id="topelement">
+    <BusyIndicator></BusyIndicator>
+    <DialogWindow/>
+    <main class="main-container">
+        @Body
+    </main>
+</div>

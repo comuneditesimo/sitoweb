@@ -1,0 +1,19 @@
+﻿@if(Theme != null)
+{
+    @if (HasDataElement)
+    {
+        <li>
+            <a class="chip chip-simple" href="@("/Hp/Theme/" + Theme.ID)" @onclick="@(() => GoToTheme(Theme.ID))" @onclick:stopPropagation="true" data-element="service-topic">
+                <span class="chip-label">@Theme.Title</span>
+            </a>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a class="chip chip-simple" href="@("/Hp/Theme/" + Theme.ID)" @onclick="@(() => GoToTheme(Theme.ID))" @onclick:stopPropagation="true">
+                <span class="chip-label">@Theme.Title</span>
+            </a>
+        </li>
+    }
+}

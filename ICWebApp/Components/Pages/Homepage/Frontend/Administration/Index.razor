@@ -1,0 +1,30 @@
+﻿@page "/Hp/Administration"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Amministration
+
+@* <div class="bg-grey-card py-5">
+    <div class="container">
+        <h2 class="title-xxlarge mb-4">
+            @TextProvider.Get("FRONTEND_HOMEPAGE_HIGHLIGHT")
+        </h2>
+        <div class="row g-4">
+            @foreach (var item in ItemList.Where(p => p.Highlight == true).OrderBy(p => p.Title).Take(3).ToList())
+            {
+                <AmministrationItemSmall Item="@item"></AmministrationItemSmall>
+            }
+        </div>
+    </div>
+</div> *@
+<div class="container py-5">
+    <h2 class="title-xxlarge mb-4">
+        @TextProvider.Get("FRONTEND_HOMEPAGE_AMMINISTRATION_ESPLORE")
+    </h2>
+    <div class="row g-4">
+        @foreach (var item in ItemList.Where(p => p.Highlight == false).OrderBy(p => p.Title).ToList())
+        {
+            <AmministrationItemSmall Item="@item" ShowDataElement="true"></AmministrationItemSmall>
+        }
+    </div>
+</div>

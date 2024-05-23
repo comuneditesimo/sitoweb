@@ -1,0 +1,102 @@
+@page "/External/Canteen/CheckInListExternal/{AccessToken}"
+
+@using ICWebApp.Components.Components.Canteen.External;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.Grids;
+
+@layout OpenLayout
+
+@if (Canteen != null && CanteenMovements != null && CanteenMovements.Any())
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="filter-container p-0 col-12 col-lg-4 col-xl-6">
+                <div class="filter-text font-normal">@TextProvider?.Get("EXTERNALACCESSLINK_SCHOOLFILTER")</div>
+                <SingleSelectFilterComponent ItemList="SchoolList" @bind-SelectedItem="SelectedSchool" OnFilterChange="@OnFilterChanged" />
+                <div class="small-element-separator"></div>
+                <div class="filter-text font-normal">@TextProvider?.Get("EXTERNALACCESSLINK_CLASSFILTER")</div>
+                <MultiSelectFilterComponent ItemList="ClassList" @bind-SelectedItemList="SelectedClassList" OnFilterChange="@OnFilterChanged" />
+                <div class="small-element-separator"></div>
+                <div class="filter-text font-normal">@TextProvider?.Get("EXTERNALACCESSLINK_FILTER")</div>
+                <div class="searchTerm-filter-container">
+                    <SfTextBox CssClass="Filter-ExternalAccess" Placeholder="@TextProvider?.Get("EXTERNALACCESSLINK_FILTERENTRY")" @bind-Value="SearchTerm" OnChange="@OnFilterChanged" />
+                    @if (!string.IsNullOrEmpty(SearchTerm))
+                    {
+                        <button class="filter-button" type="button" @onclick="() => ClearSearchTermFilter()">
+                            <span>
+                                <i class="fa-solid fa-filter-slash"></i>
+                            </span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="filter-button disabled" type="button">
+                            <span>
+                                <i class="fa-solid fa-filter-slash"></i>
+                            </span>
+                        </button>
+                    }
+                </div>
+                <div class="small-element-separator"></div>
+            </div>
+            <div class="list-container hide-header col-12 col-lg-8 col-xl-6">
+                <SfGrid DataSource="@_canteenMovementsFiltered"
+                        Height="100%"
+                        AllowPaging="true"
+                        EnableVirtualization="true"
+                        EnablePersistence="true">
+                    <GridPageSettings PageSize="5" />
+                    <GridColumns>
+                        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.LastNameFirstName)" HeaderText="@TextProvider?.Get("EXTERNALACCESSLINK_SUBSCRIBERDATA")">
+                            <Template>
+                                @{
+                                    V_CANTEEN_Subscriber_Movements? movement = context as V_CANTEEN_Subscriber_Movements;
+                                }
+                                @if (movement != null)
+                                {
+                                    <div class="subscriber-data-container">
+                                        <h6 class="name-text font-normal">@movement.LastName @movement.FirstName</h6>
+                                        @if (movement.Child_DateOfBirth != null)
+                                        {
+                                            <div class="birthday-text font-normal">* @movement.Child_DateOfBirth.Value.ToString("d")</div>
+                                        }
+                                        <div class="school-informations font-normal">@movement.SchoolName - @movement.SchoolClass</div>
+                                    </div>
+                                }
+                            </Template>
+                        </Syncfusion.Blazor.Grids.GridColumn>
+                        <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Movements.Used)" HeaderText="@TextProvider?.Get("EXTERNALACCESSLINK_CHECKED_IN")" Width="100px">
+                            <Template>
+                                @{
+                                    V_CANTEEN_Subscriber_Movements? movement = context as V_CANTEEN_Subscriber_Movements;
+                                }
+                                @if (movement != null && movement.Used && !movement.UsedWhileCanceled)
+                                {
+                                    <span><i class="fa-regular fa-square-check fa-xl" style="color: green;"></i></span>
+                                    <button class="checkout-button" type="button" @onclick="() => CheckOut(movement.ID)">
+                                        <span>
+                                            <i class="fa-solid fa-user-xmark" style="color: #0b5ed7"></i>
+                                        </span>
+                                    </button>
+                                }
+                                else if (movement != null && movement.Used)
+                                {
+                                    <span><i class="fa-regular fa-check-to-slot fa-xl" style="color: orange;"></i></span>
+                                }
+                                else if (movement != null)
+                                {
+                                    <span><i class="fa-regular fa-square fa-xl" style="color: grey"></i></span>
+                                    <button class="checkin-button" type="button" @onclick="() => CheckIn(movement.ID)">
+                                        <span>
+                                            <i class="fa-regular fa-user-check" style="color: #0b5ed7"></i>
+                                        </span>
+                                    </button>
+                                }
+                            </Template>
+                        </Syncfusion.Blazor.Grids.GridColumn>
+                    </GridColumns>
+                </SfGrid>
+            </div>
+        </div>
+    </div>
+}

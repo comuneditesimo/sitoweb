@@ -1,0 +1,113 @@
+﻿@page "/Hp/Services"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Services
+
+@layout FrontendLayout
+
+@if (Items != null)
+{
+    <div class="bg-grey-card">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="title-xxlarge mb-4 mt-5 mb-lg-10">
+                            @TextProvider.Get("FRONTEND_HOMEPAGE_ALL_SERVICES")
+                        </h2>
+                    </div>
+                    <div class="col-12 col-lg-8 pt-lg-50 pb-lg-50">
+                        <div class="cmp-input-search">
+                            <div class="form-group autocomplete-wrapper mb-2 mb-lg-4">
+                                <div class="input-group">
+                                    <label for="autocomplete-autocomplete-three" class="visually-hidden">@TextProvider.Get("FORMS_FRONTEND_SEARCH_BY_KEYWORD")</label>
+                                    <input @bind-value="SearchText" type="search" class="autocomplete form-control" placeholder="@TextProvider.Get("FORMS_FRONTEND_SEARCH_BY_KEYWORD")" id="autocomplete-autocomplete-three" name="autocomplete-three">
+
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="button-3">@TextProvider.Get("FORMS_FRONTEND_SEARCH_BUTTON")</button>
+                                    </div>
+
+                                    <span class="autocomplete-icon" aria-hidden="true">
+                                        <svg class="icon icon-sm icon-primary">
+                                            <use href="css/bootstrap-italia/svg/sprites.svg#it-search"></use>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="load-more">
+                            @foreach (var n in Items.Where(p => (SearchText == null || 
+                                                        (p.Title != null && p.Title.ToLower().Contains(SearchText.ToLower())) || 
+                                                        (p.ShortText != null && p.ShortText.ToLower().Contains(SearchText.ToLower())))
+                                                  ).OrderBy(p => p.Title).Take(MaxCounter).ToList())
+                            {
+                                <ServiceItemLarge Item="n"></ServiceItemLarge>
+                            }
+                        </div>
+                        @if (MaxCounter < Items.Where(p => (SearchText == null || 
+                                                        (p.Title != null && p.Title.ToLower().Contains(SearchText.ToLower())) || 
+                                                        (p.ShortText != null && p.ShortText.ToLower().Contains(SearchText.ToLower())))
+                                                  ).Count())
+                        {
+                            <div class="d-flex justify-content-center mt-4" id="load-more-btn">
+                                <button type="button" class="btn btn-outline-primary pt-15 pb-15 pl-90 pr-90 mb-30 mb-lg-50 full-mb text-button" @onclick="@ShowMore" @onclick:stopPropagation="true" data-element="load-other-cards">
+                                    <span class="">@TextProvider.Get("HOMEPAGE_NEWS_SEARCH_MORE")</span>
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-center text-paragraph-regular-medium mt-4 mb-0">
+                                @TextProvider.Get("HOMEPAGE_NEWS_NOTHING_MORE")
+                            </p>
+                        }
+                    </div>
+                    <div class="col-12 col-lg-4 pt-30 pt-lg-5 ps-lg-5 order-first order-md-last">
+                        <div class="link-list-wrap">
+                            <h2 class="title-xsmall-semi-bold">
+                                <span>@TextProvider.Get("HOMEPAGE_FRONTEND_SERVICES_HIGHLIGHTED")</span>
+                            </h2>
+                            <ul class="link-list t-primary">
+                                @foreach(var item in Items.Where(p => p.Highlight == true).OrderBy(p => p.Title).Take(5).ToList())
+                                {
+                                    <li class="mb-3 mt-3">
+                                        <a class="list-item ps-0 title-medium underline" @onclick="@(() => OnItemClicked(item.Url))">
+                                            <span>@item.Title</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+}
+@if (Kategories != null)
+{
+    <div class="container py-5" id="argomento">
+        <h2 class="title-xxlarge mb-4">@TextProvider.Get("HOMEPAGE_SEARCH_BY_TYPE")</h2>
+        <div class="row g-4">
+            @foreach (var t in Kategories.OrderBy(p => p.Title).ToList())
+            {
+                <div class="col-md-6 col-xl-4">
+                    <div class="cmp-card-simple card-wrapper pb-0 rounded border border-light">
+                        <div class="card shadow-sm rounded">
+                            <div class="card-body">
+                                <a class="text-decoration-none" @onclick="@(() => OnKategorieClicked(t.Url))" @onclick:stopPropagation="true" href="@(NavManager.BaseUri.TrimEnd('/') + t.Url)" data-element="service-category-link">
+                                    <h3 class="card-title t-primary title-xlarge">@t.Title</h3>
+                                </a>
+                                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(t.ShortText))
+                                {
+                                    <p class="text-secondary mb-0">
+                                        @((MarkupString)t.ShortText)
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

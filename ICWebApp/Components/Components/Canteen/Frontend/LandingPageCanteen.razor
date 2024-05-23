@@ -1,0 +1,238 @@
+﻿@using HtmlAgilityPack
+@using ICWebApp.Components.Components.InfoPage
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Theme
+
+@{
+    int orderID = 0;
+}
+
+@if (Data != null)
+{
+    <div class="container">
+        <div class="row mt-lg-80 mt-3 mb-4">
+            <div class="col-lg-3 mb-4 border-col hide-max-576">
+                <AnchorList></AnchorList>
+            </div>
+            <div class="col-lg-8 offset-lg-1">
+                <div class="form-detail-container it-page-sections-container">
+                    @if (!string.IsNullOrEmpty(Data.ForWhom))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.ForWhom);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.ForWhom);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_FOR_WHOM"))" ID="for-whom" Order="orderID">
+                                <div class="styled-list-container" data-element="service-addressed">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+
+                            orderID++;
+                        }
+                    }
+                    @if (!string.IsNullOrEmpty(Data.HowTo))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.HowTo);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.HowTo);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_HOW_TO"))" ID="how-to" Order="orderID">
+                                <div class="styled-list-container" data-element="service-how-to">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+
+                            orderID++;
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Data.WhatFor))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.WhatFor);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.WhatFor);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_WHATFOR"))" ID="what-for" Order="orderID" CSS="mb-30 has-bg-grey p-4">
+                                <div class="styled-list-container" data-element="service-needed">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+
+                            orderID++;
+                        }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Data.Result))
+                    {
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(Data.Result);
+                        string stripped = doc.DocumentNode.InnerText;
+                        @if (!string.IsNullOrEmpty(stripped.Trim()))
+                        {
+                            var markupDescription = new MarkupString(Data.Result);
+
+                            <Anchor Title="@(TextProvider.Get("HOMEPAGE_SERVICE_RESULT"))" ID="result" Order="orderID">
+                                <div class="styled-list-container" data-element="service-achieved">
+                                    @markupDescription
+                                </div>
+                            </Anchor>
+
+                            orderID++;
+                        }
+                    }
+                    @if (DataProperties != null)
+                    {
+                        @foreach (var p in DataProperties.OrderBy(p => p.SortOrder))
+                        {
+                            if (!string.IsNullOrEmpty(p.Description))
+                            {
+                                var markupDescription = new MarkupString(p.Description);
+
+                                <Anchor Title="@p.Title" ID="@p.Title" Order="orderID">
+                                    @markupDescription
+                                </Anchor>
+
+                                orderID++;
+                            }
+                        }
+                    }
+                    @if (DataRessources != null && DataRessources.Count() > 0)
+                    {
+                        <Anchor Title="@(TextProvider.Get("CANTEEN_DETAIL_RESSOURCES"))" ID="@(TextProvider.Get("CANTEEN_DETAIL_RESSOURCES"))" Order="@orderID">
+                            @foreach (var r in DataRessources.OrderBy(p => p.SortOrder))
+                            {
+                                var res = DataResourceExtendeds.FirstOrDefault(e => e.CANTEEN_Ressources_ID == r.ID);
+
+                                if (res != null && res.FILE_FileInfo_ID != null)
+                                {
+                                    var fileSize = FileProvider.GetFileSize(res.FILE_FileInfo_ID.Value);
+
+                                    <a class="document-detail-download" @onclick="@(() => DownloadRessource(res.FILE_FileInfo_ID.Value, res.Description))" data-element="service-file">
+                                        <div class="document-detail-download-icon">
+                                            <svg class="icon icon-primary icon-sm me-1" aria-hidden="true">
+                                                <use href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="document-detail-download-description font-normal">
+                                            @res.Description (@(fileSize / 1024) kb)
+                                        </div>
+                                    </a>
+                                }
+                                else if (r.FILE_FileInfo_ID != null)
+                                {
+                                    var fileSize = FileProvider.GetFileSize(r.FILE_FileInfo_ID.Value);
+
+                                    <a class="document-detail-download" @onclick="@(() => DownloadRessource(r.FILE_FileInfo_ID.Value, r.Description))" data-element="service-file">
+                                        <div class="document-detail-download-icon">
+                                            <svg class="icon icon-primary icon-sm me-1" aria-hidden="true">
+                                                <use href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                                            </svg>
+                                        </div>
+                                        <div class="document-detail-download-description font-normal">
+                                            @r.Description (@(fileSize / 1024) kb)
+                                        </div>
+                                    </a>
+                                }
+                            }
+                        </Anchor>
+
+                        orderID++;
+                    }
+                    <Anchor Title="@TextProvider.Get("HOMEPAGE_FORM_SERVICE_ACCESS")" ID="access" Order="@orderID" CSS="mb-30 has-bg-grey p-4">                        
+                        <p class="text-paragraph lora mb-4" data-element="service-generic-access">@TextProvider.Get("HOMEPAGE_FORM_SERVICE_ACCESS_DESCRIPTION")</p>
+                        <button type="button" class="btn btn-primary mobile-full" href="@(NavManager.BaseUri.TrimEnd('/') + "/Login")" @onclick="ContinueToService" @onclick:stopPropagation="true" data-element="service-online-access">
+                            <span class="">@TextProvider.Get("FORM_DETAIL_SUBMIT_BUTTON")</span>                        </button>
+                        <p class="text-paragraph lora mt-4" data-element="service-generic-access">@TextProvider.Get("HOMEPAGE_FORM_SERVICE_ACCESS_OFFLINE_DESCRIPTION")</p>
+                        
+                        <button type="button" class="btn btn-outline-primary t-primary bg-white mobile-full" href="@(NavManager.BaseUri.TrimEnd('/') + "/Hp/Request")" @onclick="GoToReservations" @onclick:stopPropagation="true" data-element="service-booking-access">
+                            <span class="">@TextProvider.Get("HOMEPAGE_ASSISTANCE_RESERVATION")</span>
+                        </button>
+                        @{
+                            orderID++;
+                        }
+                    </Anchor>
+                    <Anchor Title="@TextProvider.Get("HOMEPAGE_FORM_CONTACT")" ID="contact" Order="@orderID">
+                        @if (Authority != null)
+                        {
+                            <div class="col-sm-6 col-lg-6 mb-3">
+                                <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+                                    <div class="card-body pe-3">
+                                        <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                                            <a class="text-decoration-none" data-element="service-area">
+                                                @TextProvider.Get(Authority.TEXT_SystemText_Code)
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-12 mb-30">
+                            @if (DataThemes != null && DataThemes.Any())
+                            {
+                                <span class="text-paragraph-small">@TextProvider.Get("HOMEPAGE_FORM_CONTACT_THEMES"):</span>
+                                <ul class="d-flex flex-wrap gap-2 mt-10 mb-30">
+                                    @foreach (var t in DataThemes)
+                                    {
+                                        <ThemeChip Theme="@t" HasDataElement="true"></ThemeChip>
+                                    }
+                                </ul>
+
+                            }
+                            @if (Conf != null)
+                            {
+                                <p class="text-paragraph-small mb-0">@TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION") @Conf.LastModificationDate.ToString("dd/MM/yyyy, HH:mm")</p>
+                            }
+                        </div>
+                    </Anchor>
+                    <AuthorizeView Policy="Citizen">
+                        <NotAuthorized>
+                            <div class="element-separator"></div>
+                            <div class="login-element custom-login-element">
+                                <div class="login-container">
+                                    <div class="text-left">
+                                        <button class="btn btn-primary" name="next_to_service" @onclick="RedirectToLogin">
+                                            @TextProvider.Get("CANTEEN_LOGIN")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </NotAuthorized>
+                        <Authorized>
+                            @if (SessionWrapper != null && SessionWrapper.CurrentSubstituteUser == null)
+                            {
+                                <div class="element-separator"></div>
+                                <div class="login-element custom-login-element">
+                                    <div class="login-container">
+                                        <div class="text-left">
+                                            <button class="btn btn-primary" name="next_to_service" @onclick="ContinueToService">
+                                                @TextProvider.Get("CANTEEN_DASHBOARD_ONLINE_SERVICE")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="element-separator"></div>
+                                <div class="service-not-aviable">
+                                    @TextProvider.Get("ORG_SERVICE_NOT_AVIABLE")
+                                </div>
+                            }
+                        </Authorized>
+                    </AuthorizeView>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+}

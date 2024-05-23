@@ -1,0 +1,50 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/syncfusion/green.css",
+    "inputFile": "wwwroot/css/syncfusion/green.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusionFrontend/green.css",
+    "inputFile": "wwwroot/css/syncfusionFrontend/green.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusionFrontend/orange.css",
+    "inputFile": "wwwroot/css/syncfusionFrontend/orange.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusion/orange.css",
+    "inputFile": "wwwroot/css/syncfusion/orange.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusionFrontend/blue.css",
+    "inputFile": "wwwroot/css/syncfusionFrontend/blue.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusion/blue.css",
+    "inputFile": "wwwroot/css/syncfusion/blue.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusion/lightblue.css",
+    "inputFile": "wwwroot/css/syncfusion/lightblue.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusion/red.css",
+    "inputFile": "wwwroot/css/syncfusion/red.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusionFrontend/lightblue.css",
+    "inputFile": "wwwroot/css/syncfusionFrontend/lightblue.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusionFrontend/red.css",
+    "inputFile": "wwwroot/css/syncfusionFrontend/red.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusion/yellow.css",
+    "inputFile": "wwwroot/css/syncfusion/yellow.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/syncfusionFrontend/yellow.css",
+    "inputFile": "wwwroot/css/syncfusionFrontend/yellow.scss"
+  }
+]

@@ -1,0 +1,38 @@
+﻿@page "/Hp/Sites/{ID}"
+
+@if(Data != null)
+{  
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Data.Description) && Data.Description.Replace("<p>", "").Replace("</p>", "") != "")
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_THEMATIC_SITES_CONTENT")" ShowTitle="false" ID="descrizione" Order="0">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)Data.Description)
+                        </div>
+                    </Anchor>
+                }
+                @if (Documents != null && Documents.Where(p => p.LANG_Language_ID == LangProvider.GetCurrentLanguageID()).Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_THEMATIC_SITES_DOCUMENTS")" ID="documenti" Order="1">
+                        <div class="row">
+                            @foreach (var doc in Documents.Where(p => p.LANG_Language_ID == LangProvider.GetCurrentLanguageID()).ToList())
+                            {
+                                if(doc.FILE_FileInfo_ID != null)
+                                {
+                                    <div class="col-sm-6 col-lg-6 mb-3">
+                                        <DownloadCardComponent FILE_FileInfoID="@doc.FILE_FileInfo_ID.Value" />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </Anchor>
+                }
+            </section>
+        </div>
+    </div>
+}

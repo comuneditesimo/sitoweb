@@ -1,0 +1,33 @@
+﻿<div class="container">
+    <div class="row mb-4 relative-container">
+        @if(!IsBusy)
+        {
+            @if (ServiceListe != null && ServiceListe.Count() > 0)
+            {
+                <div class="col-lg-3 mb-4 border-col hide-max-576">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-lg-8 offset-lg-1">
+                    <div class="user-service-container it-page-sections-container">
+                        @if (ServiceListe != null && ServiceListe.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("PERSONAL_AREA_SERVICES")" ID="service-apps" Order="1">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="@ServiceListe"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }                       
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    @TextProvider.Get("FRONTEND_USER_SERVICE_NO_SERVICE")
+                </div>
+            }
+        }
+        else
+        {
+            <CustomLoader IgnoreGlobalLoader="true"></CustomLoader>            
+        }
+    </div>
+</div>

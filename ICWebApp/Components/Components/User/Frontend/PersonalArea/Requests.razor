@@ -1,0 +1,110 @@
+﻿@using Syncfusion.Blazor.Popups
+
+<div class="container">
+    <div class="row mb-4 relative-container">
+        @if(!IsBusy)
+        {
+            @if ((ApplicationList != null && ApplicationList.Count() > 0) ||
+            (ManteinanceList != null && ManteinanceList.Count() > 0) ||
+            (BookingList != null && BookingList.Count() > 0) ||
+            (OrganisationList != null && OrganisationList.Count() > 0))
+            {
+                <div class="col-lg-3 mb-4 border-col hide-max-576">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-lg-8 offset-lg-1">
+                    <div class="user-service-container it-page-sections-container">
+                        @if (ApplicationList != null && ApplicationList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_APPLICATIONS")" ID="form-apps" Order="1">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="ApplicationList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                        @if (ManteinanceList != null && ManteinanceList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_MANTEINANCE")" ID="maintenances" Order="2">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="ManteinanceList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                        @if (MensaList != null && MensaList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_MENSA")" ID="mensa" Order="3">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="MensaList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                        @if (BookingList != null && BookingList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_BOOKINGS")" ID="bookings" Order="4">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="BookingList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                        @if (OrganisationList != null && OrganisationList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_ORGANISATIONS")" ID="org-requests" Order="5">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="OrganisationList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                        @if (PersonRequestList != null && PersonRequestList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_PERSON_REQUEST")" ID="person-requests" Order="6">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="PersonRequestList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                        @if (RequestList != null && RequestList.Any())
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_REQUEST")" ID="office-requests" Order="6">
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="RequestList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    @TextProvider.Get("FRONTEND_USER_SERVICE_NO_SERVICE")
+                </div>
+            }
+        }
+        else
+        {
+            <CustomLoader IgnoreGlobalLoader="true"></CustomLoader>            
+        }
+    </div>
+    <SfDialog @bind-Visible="@ShowBankDataWindow" AllowDragging="false" ShowCloseIcon="true" IsModal="true" Width="800px">
+        <DialogTemplates>
+            <Header>
+                @TextProvider.Get("CANCEL_BOOKING_WINDOW_TITLE")
+            </Header>
+            <Content>
+                    <EditForm Model="@CurrentBooking" OnValidSubmit="SaveCancelBooking" Context="cancelContext">
+                        <DataAnnotationsValidator></DataAnnotationsValidator>
+                        <div class="user-creation-container">
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("ORG_KONTOINHABER")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="CurrentBooking.Cancellation_OwnerReq" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => CurrentBooking.Cancellation_OwnerReq)" TextCode="ORG_KONTOINHABER" />
+                            </div>
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("ORG_BANKNAME")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="CurrentBooking.Cancellation_BancReq" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => CurrentBooking.Cancellation_BancReq)" TextCode="ORG_BANKNAME" />
+                            </div>
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("ORG_IBAN")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="CurrentBooking.Cancellation_IBANReq" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => CurrentBooking.Cancellation_IBANReq)" TextCode="ORG_IBAN" />
+                            </div>
+                            <div class="element-separator"></div>
+                            <div class="form-button-container">
+                                <button class="btn btn-secondary" type="button" @onclick="HideCancelBooking">@(TextProvider.Get("BUTTON_CANCEL"))</button>
+                                <button class="btn btn-primary" type="submit">@(TextProvider.Get("BUTTON_BOOKING_CANCEL"))</button>
+                            </div>
+                        </div>
+                    </EditForm>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+</div>

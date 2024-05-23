@@ -1,0 +1,34 @@
+﻿<div class="container">
+    <div class="row mb-4 relative-container">
+        @if(!IsBusy)
+        {
+            @if (MessageList != null && MessageList.Count() > 0)
+            {
+                <div class="col-lg-3 mb-4 border-col hide-max-576">
+                    <AnchorList></AnchorList>
+                </div>
+                <div class="col-lg-8 offset-lg-1">
+                    <div class="user-service-container it-page-sections-container">
+                        @if (MessageList != null && MessageList.Count() > 0)
+                        {
+                            <Anchor Title="@TextProvider.Get("FRONTEND_SERVICES_MESSAGES")" ID="messages" Order="1">
+                                <div class="small-element-separator"></div>
+                                <ICWebApp.Components.Components.User.Frontend.ServicesContainer Data="MessageList"></ICWebApp.Components.Components.User.Frontend.ServicesContainer>
+                            </Anchor>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    @TextProvider.Get("FRONTEND_SERVICES_NO_MESSAGES")
+                </div>
+            }
+        }
+        else
+        {
+            <CustomLoader IgnoreGlobalLoader="true"></CustomLoader>
+        }
+    </div>
+</div>

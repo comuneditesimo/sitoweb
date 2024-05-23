@@ -1,0 +1,11 @@
+.checkin-button {
+    margin-left: 10px;
+    appearance: none;
+    border: 1px solid grey;
+    background: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+.checkin-button:hover {
+    background: rgba(0,0,0,0.1);
+}

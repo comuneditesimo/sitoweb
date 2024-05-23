@@ -1,0 +1,187 @@
+﻿@page "/Backend/Homepage/Settings"
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Domain.Models.Homepage.Settings
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+@layout MainLayout
+
+@if(Data != null)
+{
+    <div class="element-separator"></div>
+    <div class="custom-background-default">
+        <EditForm Model="Data" Context="editContext">
+            <DataAnnotationsValidator />
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_THEMECOLOR")</label>
+                <div class="mun-theme-color-picker">
+                    <SfDropDownList DataSource="@Themes" @bind-Value="Data.ThemeColor"
+                                    TValue="string" TItem="@ThemeColor">
+                        <DropDownListFieldSettings Text="Color" Value="Name"></DropDownListFieldSettings>
+                        <DropDownListTemplates TItem="ThemeColor" Context="templateContext">
+                            <ItemTemplate>
+                                @if ((templateContext as ThemeColor).Name == Data.ThemeColor)
+                                {
+                                    <div class="mun-theme-color-container mun-theme-color-container-item mun-theme-color-container-item-selected" style="background-color: @((templateContext as ThemeColor).Color); color: @((templateContext as ThemeColor).Color);">
+                                        @((templateContext as ThemeColor).Name)
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="mun-theme-color-container mun-theme-color-container-item" style="background-color: @((templateContext as ThemeColor).Color); color: @((templateContext as ThemeColor).Color);">
+                                        @((templateContext as ThemeColor).Name)
+                                    </div>
+                                }
+                            </ItemTemplate>
+                            <ValueTemplate>
+                                <div class="mun-theme-color-container" style="background-color: @((templateContext as ThemeColor).Color); color: @((templateContext as ThemeColor).Color);">
+                                    @((templateContext as ThemeColor).Name)
+                                </div>
+                            </ValueTemplate>
+                        </DropDownListTemplates>
+                    </SfDropDownList>
+                </div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_FACEBOOK")</label>
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.Soc_Facebook" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_INSTAGRAM")</label>
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.Soc_Instagram" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_TELEGRAM")</label>
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.Soc_Telegramm" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_TWITTER")</label>
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.Soc_Twitter" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_WHATSAPP")</label>
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.Soc_Whatsapp" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_YOUTUBE")</label>
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.Soc_Youtube" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PAGESUBTITLES")</label>
+                  <div class="grid-data-container segment-loader-container">
+                    <SfGrid DataSource="@SubtitleTypes" AllowFiltering="true" Height="100%">
+                        <Syncfusion.Blazor.Grids.GridColumns>
+                            <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(PageSubtitleTypeItem.TEXT_SystemText_Code)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_SETTINGS_SUBTITILE_TYPE")" Width="400px">
+                                <Template>
+                                    @{
+                                        PageSubtitleTypeItem item = context as PageSubtitleTypeItem;
+
+                                        if (item != null)
+                                        {
+                                            <div class="page-sub-desc-container">
+                                                @TextProvider.Get(item.TEXT_SystemText_Code)
+                                            </div>
+                                        }
+                                    }
+                                </Template>
+                            </Syncfusion.Blazor.Grids.GridColumn>
+                            <Syncfusion.Blazor.Grids.GridColumn Width="40px" HeaderText="@TextProvider.Get("ACTIONS")">
+                                <Template>
+                                    @{
+                                        PageSubtitleTypeItem item = context as PageSubtitleTypeItem;
+
+                                        if (item != null)
+                                        {
+                                            <div class="action-button-container">
+                                                <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                                    <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(item))">
+                                                        <i class="fa-regular fa-pen"></i>
+                                                    </div>
+                                                </SfTooltip>
+                                            </div>
+                                        }
+                                    }
+                                </Template>
+                            </Syncfusion.Blazor.Grids.GridColumn>
+                        </Syncfusion.Blazor.Grids.GridColumns>
+                    </SfGrid>
+                </div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-button-container form-group-small">
+                @if (!string.IsNullOrEmpty(SaveMessage))
+                {
+                    <div class="extra-small-element-separator"></div>
+                    <div class="form-group form-group-small form-success">
+                        @SaveMessage
+                    </div>
+                }
+                    <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+
+
+    <SfDialog AllowDragging="false"
+              IsModal="true"
+              Width="500px"
+              ShowCloseIcon="@false"
+              @bind-Visible="@ShowTypeEditWindow">
+        <DialogTemplates>
+            <Header>@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_SETTINGS_SUBTITILE_EDIT")</Header>
+            <Content>
+                @if (TypeItems != null)
+                {
+                    <div class="container-fluid">
+                        <div class="dialog-row-item">
+                            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                @if (TypeItems.Count() > 0 && CurrentLanguage != null)
+                                {
+                                    @if (string.IsNullOrEmpty(TypeItems.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                                    {
+                                        TypeItems.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = TypeItems.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                                    }
+
+                                    <TelerikEditor @bind-Value="TypeItems.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                                   Tools="@Tools"
+                                                   EditMode="@EditorEditMode.Div"
+                                                   Class="font-normal"
+                                                   Height="250px">
+                                        <EditorSettings>
+                                            <EditorPasteSettings ConvertMsLists="true"
+                                                                 RemoveMsClasses="true"
+                                                                 RemoveMsStyles="true"
+                                                                 RemoveHtmlComments="true"
+                                                                 RemoveAllAttributes="true"
+                                                                 StripTags="@StripTags"
+                                                                 RemoveAttributes="@RemoveAttributes">
+                                            </EditorPasteSettings>
+                                        </EditorSettings>
+                                    </TelerikEditor>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </Content>
+        </DialogTemplates>
+        <DialogEvents Closed="@CancelEditType" />
+        <DialogButtons>
+            <DialogButton IsPrimary="false" Content="@TextProvider.Get("BUTTON_CANCEL")" OnClick="@CancelEditType" />
+            <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" OnClick="@SaveType" />
+        </DialogButtons>
+    </SfDialog>
+}

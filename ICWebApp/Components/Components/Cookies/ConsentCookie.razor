@@ -1,0 +1,26 @@
+﻿@if (showBanner)
+{
+    <div id="cookieConsent">
+        <div class="cookie-container">
+            <div class="cookie-header pb-2 mb-3">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-locked"></use>
+                </svg>
+                <h5>
+                    @TextProvider.Get("HOMEPAGE_CONSENT_TO_COOKIES_TITLE")
+                </h5>
+            </div>
+            <div class="cookie-content">
+                @((MarkupString)TextProvider.Get("HOMEPAGE_CONSENT_TO_COOKIES_DESCRIPTION"))
+            </div>
+            <div class="cookie-buttons mt-4">
+                <a class="cookie-link" @onclick="ShowCookiePage">
+                    @TextProvider.Get("HOMEPAGE_GO_TO_COOKIE_PAGE")
+                </a>
+                <button type="button" class="btn btn-primary" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString" @onclick="AcceptMessage">
+                    @TextProvider.Get("HOMEPAGE_CONSENT_TO_COOKIES")
+                </button>
+            </div>
+        </div>
+    </div>
+}

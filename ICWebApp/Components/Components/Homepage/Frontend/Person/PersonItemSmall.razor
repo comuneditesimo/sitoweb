@@ -1,0 +1,50 @@
+﻿@if (Item != null)
+{
+    <div class="col-sm-6 col-lg-6 mb-3">
+        <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+            <div class="card-body pe-3">
+                <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                    <a class="text-decoration-none" @onclick="OnClick" data-element="service-area" data-focus-mouse="false">
+                        @if (!string.IsNullOrEmpty(Item.EMail) || !string.IsNullOrEmpty(Item.EMail2) || !string.IsNullOrEmpty(Item.PECEmail) ||
+                       !string.IsNullOrEmpty(Item.PhoneNr) || !string.IsNullOrEmpty(Item.PhoneNrPrivat) || !string.IsNullOrEmpty(Item.PhoneNrMobile))
+                        {
+                            <a class="text-decoration-none" @onclick="OnClick" data-element="service-area" data-focus-mouse="false">
+                                @Item.Fullname
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-decoration-none" data-focus-mouse="false">
+                                @Item.Fullname
+                            </span>
+                        }
+                    </a>
+                </p>
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(SubTitle))
+                {                    
+                    <div class="card-text">
+                        <p class="u-main-black">@((MarkupString)SubTitle.Replace("<p>", "").Replace("</p>", ""))</p>
+                    </div>
+                }
+                else if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.DescriptionShort))
+                {
+                    <div class="card-text">
+                        <p class="u-main-black">@((MarkupString)Item.DescriptionShort.Replace("<p>", "").Replace("</p>", ""))</p>
+                    </div>
+                }
+                else if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.AreaOfWork))
+                {
+                    <div class="card-text">
+                        <p class="u-main-black">@((MarkupString)Item.AreaOfWork.Replace("<p>", "").Replace("</p>", ""))</p>
+                    </div>
+                }
+                else if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.Tasks))
+                {
+                    <div class="card-text">
+                        <p class="u-main-black">@((MarkupString)Item.Tasks.Replace("<p>", "").Replace("</p>", ""))</p>
+                    </div>                    
+                }
+            </div>
+        </div>
+    </div>
+}

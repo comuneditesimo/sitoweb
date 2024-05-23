@@ -1,0 +1,55 @@
+﻿@page "/Backend/Homepage/Thematicsites"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Data" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+            <GridPageSettings PageSize="25"></GridPageSettings>
+            <SfToolbar>
+                <ToolbarItems>
+                    <ToolbarItem Type="ItemType.Button">
+                        <Template>
+                            <div class="btn btn-secondary" @onclick="New">@TextProvider.Get("ADD")</div>
+                        </Template>
+                    </ToolbarItem>
+                </ToolbarItems>
+            </SfToolbar>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Thematic_Sites.Title)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_THEMATIC_SITES_TITLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Thematic_Sites.Type)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_THEMATIC_SITES_TYPE")" Width="300px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Thematic_Sites.Url)" HeaderText="@TextProvider.Get("MAINMENU_BACKEND_HOMEPAGE_THEMATIC_SITES_URL")" Width="400px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Width="120px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            V_HOME_Thematic_Sites item = context as V_HOME_Thematic_Sites;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Delete(item))">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(item))">
+                                            <i class="fa-regular fa-pen"></i>
+                                        </div>
+                                    </SfTooltip>
+                                </div>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>

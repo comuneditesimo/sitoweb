@@ -1,0 +1,25 @@
+﻿.app-template-title {
+    width: 100%;
+    overflow: unset;
+}
+
+    .app-template-title .appointment-template-container {
+        width: 100%;
+        display: flex;
+        flex-flow: nowrap;
+        justify-content: space-between;
+        gap: unset;
+    }
+
+        .app-template-title .appointment-template-container .appointment-template-text {
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .app-template-title .appointment-template-container .appointment-template-remove-item {
+            cursor: pointer;
+            width: fit-content;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }

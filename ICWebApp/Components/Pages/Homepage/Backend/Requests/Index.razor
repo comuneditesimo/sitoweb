@@ -1,0 +1,212 @@
+﻿@page "/Backend/Appointments"
+
+@layout MainLayout
+
+@using ICWebApp.Domain.Models.Homepage.Request
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Schedule
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+@using ICWebApp.Components.Components.Homepage.Backend.Documents
+@using ICWebApp.Components.Components.Homepage.Backend.Appointments
+
+<div class="element-separator"></div>
+<div class="rooms-calender-tag-container">
+    @if (Authorities != null && Authorities.Count() > 0)
+    {
+        <div class="filter-element filter-authorities">
+            @if (SelectedAuthorities != null && SelectedAuthorities.Count() > 0)
+            {
+                <div class="btn btn-secondary authority-tag" @onclick="@(() => ClearTagFilter())" @onclick:stopPropagation="true">
+                    <span>
+                        <TelerikFontIcon IconClass="@("fa-duotone fa-filter-slash")"></TelerikFontIcon>
+                        @TextProvider.Get("AUTHORITY_TAG_FILTER_ALL")
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="btn btn-primary authority-tag" @onclick:stopPropagation="true">
+                    <span>
+                        <TelerikFontIcon IconClass="@("fa-duotone fa-filter-slash")"></TelerikFontIcon>
+                        @TextProvider.Get("AUTHORITY_TAG_FILTER_ALL")
+                    </span>
+                </div>
+            }
+
+            @foreach (var room in Authorities.OrderBy(p => p.Title).ToList())
+            {
+                string buttonCSS = "btn-secondary";
+
+                if (SelectedAuthorities != null && SelectedAuthorities.Contains(room.ID))
+                {
+                    buttonCSS = "btn-primary authority-tag-selected";
+                }
+
+                <div class="btn @buttonCSS authority-tag" style="border-color: @room.Color !important;" @onclick="@(() => AddFilter(room.ID))" @onclick:stopPropagation="true">
+                    <span>
+                        @room.Title
+                    </span>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div class="small-element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfSchedule TValue="V_HOME_Request" AllowDragAndDrop="false" CurrentView="View.Month" EnableAutoRowHeight="true"
+                    AllowResizing="false" Height="76vh" MinDate="DateTime.Today">
+            <ScheduleResources>
+                <ScheduleResource TItem="V_HOME_Authority" TValue="Guid" DataSource="@Authorities" Field="AUTH_Authority_ID" Title="Type"
+                                  Name="Title" IdField="ID" TextField="Title" ColorField="Color" AllowMultiple="false">
+                </ScheduleResource>
+            </ScheduleResources>
+            <ScheduleEventSettings DataSource="@Data">
+                <Template>
+                    @{
+                        var item = (context as V_HOME_Request);
+                    }
+                    <div class="app-template-title">
+                        @(item.DateFrom.Value.ToString("HH:mm") + " - " + item.DateTo.Value.ToString("HH:mm") + "  " + item.Reason)
+                    </div>
+                </Template>       
+            </ScheduleEventSettings>
+            <ScheduleEvents TValue="V_HOME_Request" OnActionBegin="ActionBegin" OnEventClick="EventClick"
+                            OnCellClick="CellClick" OnCellDoubleClick="CellDoubleClick" OnEventDoubleClick="EventDoubleClick">
+            </ScheduleEvents>
+            <ScheduleViews>
+                <ScheduleView Option="View.Month" FirstDayOfWeek="1" MaxEventsPerRow="12"></ScheduleView>
+            </ScheduleViews>
+        </SfSchedule>
+    </div>
+</div>
+<SfDialog CssClass="syncfusion-modal-window"
+          AllowDragging="false"
+          IsModal="true"
+          Width="1080px"
+          Height="90vh"
+          @bind-Visible="@EditWindowVisible">
+    <DialogTemplates>
+        <Header>@TextProvider.Get("BACKEND_HOMEPAGE_REQUEST_EDIT_TITLE")</Header>
+        <Content>
+            @if (CurrentRequest != null)
+            {
+                <div class="custom-background-default">
+                    <EditForm Model="@CurrentRequest">
+                        <div class="form-group">
+                            <div class="segment-title custom-color-primary">@TextProvider.Get("HOME_REQUEST_LOCATION")</div>
+                        </div>
+                        <div class="small-element-separator"></div>
+                         <div class="form-group">
+                            <SfDropDownList DataSource="Authorities" @bind-Value="@CurrentRequest.AUTH_Authority_ID" TValue="Guid?" TItem="@V_HOME_Authority">
+                                <DropDownListFieldSettings Text="Title" Value="ID"></DropDownListFieldSettings>
+                                <DropDownListEvents TItem="V_HOME_Authority" TValue="Guid?" ValueChange="AuthorityChanged"></DropDownListEvents>
+                            </SfDropDownList>
+                        </div>
+                        <div class="element-separator"></div>
+                        <div class="form-group">
+                            <div class="segment-title custom-color-primary">@TextProvider.Get("HOME_REQUEST_DATES")</div>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_MONTH")</label>
+                            <SfDropDownList DataSource="MonthItems.OrderBy(p => p.YearMonth).ToList()" @bind-Value="@Month" TValue="int" TItem="@MonthItem" Placeholder="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_MONTH")">
+                                <DropDownListFieldSettings Text="Month" Value="MonthInt"></DropDownListFieldSettings>
+                                <DropDownListEvents TItem="MonthItem" TValue="int" ValueChange="ValueChanged"></DropDownListEvents>
+                            </SfDropDownList>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_DAY")</label>
+                            <SfDropDownList DataSource="OpenSlots.Where(p => p.MonthInt == Month && p.DateFrom != null).Select(p => p.DateFrom.Value.Day).Distinct().OrderBy(p => p).ToList()" @bind-Value="@Day" TValue="int?" TItem="@int" Placeholder="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_DAY")">
+                                <DropDownListFieldSettings Text="Day" Value="DayInt"></DropDownListFieldSettings>
+                                <DropDownListEvents TItem="int" TValue="int?" ValueChange="ValueChanged"></DropDownListEvents>
+                            </SfDropDownList>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            @foreach (var slot in OpenSlots.Where(p => p.DateFrom != null && p.MonthInt == Month && p.DateFrom.Value.Day == Day).OrderBy(p => p.DateFrom).ToList())
+                            {
+                                @if (slot.DateFrom != null && slot.DateTo != null)
+                                {
+                                    <div class="checkbox-container">
+                                        <SfCheckBox Checked="@slot.Selected" @onchange="@(() => SlotChanged(true, slot))" Name="slots"></SfCheckBox>
+                                        <label class="text-capitalize">@slot.DateFrom.Value.ToString("dd MMMM yyyy    HH:mm") - @slot.DateTo.Value.ToString("HH:mm")</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="element-separator"></div>
+                        <div class="form-group">
+                            <div class="segment-title custom-color-primary">@TextProvider.Get("HOME_REQUEST_DETAILS")</div>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_REASONS").Replace("*","")</label>
+                            <SfDropDownList DataSource="Reasons.OrderBy(p => p.Title).ToList()" @bind-Value="@CurrentRequest.AUTH_Authority_Reason_ID" TValue="Guid?" TItem="@V_AUTH_Authority_Reason" Placeholder="@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_SELECT_REASON")">
+                                <DropDownListFieldSettings Text="Title" Value="ID"></DropDownListFieldSettings>
+                                <DropDownListEvents TItem="V_AUTH_Authority_Reason" TValue="Guid?" ValueChange="ValueChanged"></DropDownListEvents>
+                            </SfDropDownList>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_DETAILS").Replace("*", "")</label>
+                            <InputText name="@Guid.NewGuid()" @bind-Value="@CurrentRequest.Details" class="form-control" maxlength="200"></InputText>
+                            <span class="label">
+                                @TextProvider.Get("HOMEPAGE_FRONTEND_REQUEST_DETAILS_MAX_CHARS")
+                            </span>
+                        </div>
+                        <div class="element-separator"></div>
+                        <div class="form-group">
+                            <div class="segment-title custom-color-primary">@TextProvider.Get("HOME_REQUEST_REQUESTEE")</div>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_FIRSTNAME")</label>
+                            <InputText name="@Guid.NewGuid()" @bind-Value="@CurrentRequest.Firstname" class="form-control"></InputText>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_LASTNAME")</label>
+                            <InputText name="@Guid.NewGuid()" @bind-Value="@CurrentRequest.Lastname" class="form-control"></InputText>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_FISCALNUMBER")</label>
+                            <InputText name="@Guid.NewGuid()" @bind-Value="@CurrentRequest.Fiscalnumber" class="form-control"></InputText>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_PHONE")</label>
+                            <CustomPhone @bind-Value="@CurrentRequest.Phone"></CustomPhone>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("HOMEPAGE_FRONTEND_REQUESTEE_EMAIL")</label>
+                            <InputText name="@Guid.NewGuid()" type="email" @bind-Value="@CurrentRequest.EMail" class="form-control"></InputText>
+                        </div>
+                    </EditForm>
+                </div>
+            }
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@CloseEditWindow" />
+    <DialogButtons>
+        <DialogButton IsPrimary="false" Content="@TextProvider.Get("BUTTON_CANCEL")" OnClick="@CloseEditWindow" />
+        @if (CurrentRequest != null)
+        {
+            <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" OnClick="@EventSave" />
+        }
+        else
+        {
+            <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" Disabled="true" />
+        }
+    </DialogButtons>
+</SfDialog>

@@ -1,0 +1,13 @@
+﻿@page "/Backend/Homepage/Documents/Edit/{ID}"
+
+@layout MainLayout
+
+@using ICWebApp.Components.Components.Homepage.Backend.Documents
+
+@if (!string.IsNullOrEmpty(ID))
+{
+    <div class="element-separator"></div>
+    <div class="custom-background-default form-group-small">
+        <DocumentEdit DocumentID="@ID" OnCancel="Cancel" OnSave="Save"></DocumentEdit>
+    </div>
+}

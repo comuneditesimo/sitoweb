@@ -1,0 +1,42 @@
+﻿<div class="slideshow-container">
+    @foreach (var img in FileImageList)
+    {
+        <div class="mySlides">
+            <img src="@ImageHelper.GetFilePath(img)" style="width:100%">
+        </div>
+    }
+</div>
+<br>
+
+<script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() 
+    {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+
+        if (slides != null && slides.length > 0) {
+            for (i = 0; i < slides.length; i++) {
+                if (slides[i] != null) {
+                    slides[i].style.display = "none";
+                }
+            }
+
+            slideIndex++;
+
+            if (slideIndex > slides.length) { slideIndex = 1 }
+
+            if (slides[slideIndex - 1] != null) {
+                slides[slideIndex - 1].style.display = "block";
+            }
+
+            setTimeout(showSlides, 5000);
+        }
+        else 
+        {
+            setTimeout(showSlides, 50);
+        }
+    }
+</script>

@@ -1,0 +1,33 @@
+﻿@if (BreadCrumbService.GetBreadCrumb() != null && BreadCrumbService.GetBreadCrumb().Any() && BreadCrumbService.ShowBreadCrumb)
+{
+	<div class="cmp-breadcrumbs" role="navigation">
+		<div class="breadcrumb-container no-read">
+			<nav class="breadcrumb-container" aria-label="breadcrumb">
+				<ol class="breadcrumb p-0" data-element="breadcrumb" itemscope="" >	
+					@foreach(var item in BreadCrumbService.GetBreadCrumb())
+					{
+						<li itemprop="itemListElement" itemscope="" class="breadcrumb-item">
+							@if (item.ID != 0)
+							{
+								<span class="separator">/</span>
+							}
+							@if(!item.Disabled)
+							{
+								<a href="@(NavManager.BaseUri.TrimEnd('/') + item.Url)" @onclick="@(() => NavigateTo(item.Url))" @onclick:stopPropagation="true" itemprop="item">
+									<span itemprop="name">@item.Text</span>
+								</a>
+							}
+							else
+							{
+								<span itemprop="item">
+									<span itemprop="name">@item.Text</span>
+								</span>
+							}
+							<meta itemprop="position" content="@(item.ID)" />
+						</li>
+					}
+				</ol>
+			</nav>
+		</div>
+	</div>
+}

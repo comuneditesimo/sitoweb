@@ -1,0 +1,19 @@
+﻿.name-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+    .name-container .red-circle-container {
+        width: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+        .name-container .red-circle-container .red-circle {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+        }

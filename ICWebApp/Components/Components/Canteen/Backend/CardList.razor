@@ -1,0 +1,131 @@
+﻿@using Syncfusion.Blazor.Popups
+
+@if(Data != null)
+{
+    @* <div class="row">
+        <div class="col-12 text-start">
+            <button class="btn btn-secondary" @onclick="NewCard">@TextProvider.Get("MENSA_POS_REQUEST_CARD")</button>
+        </div>
+    </div>  *@   
+    
+    <div class="row pt-3">
+        <div class=col-12>
+            <TelerikGrid Data="@Data" Pageable="true" Sortable="true" Resizable="false" PageSize="10"
+                     ScrollMode="@GridScrollMode.Scrollable" Groupable="false" Reorderable="false" Height="70vh">
+                <GridColumns>
+                    <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card.CreationDate)" DisplayFormat="{0:dd MMM yyyy HH:mm}" Title="@TextProvider.Get("MENSA_POS_CREATION_DATE")" />
+                    <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card.Firstname)" Title="@TextProvider.Get("MENSA_POS_FIRSTNAME")" />
+                    <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card.Lastname)" Title="@TextProvider.Get("MENSA_POS_LASTNAME")" />
+                    <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card.DateOfBirth)" DisplayFormat="{0:dd MMM yyyy}" Title="@TextProvider.Get("MENSA_POS_DATE_OF_BIRTH")" />
+                    <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card.CardID)" Title="@TextProvider.Get("MENSA_POS_CARD_ID")" />
+                    <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card.Status)" Title="@TextProvider.Get("MENSA_POS_STATUS")" />
+                    <GridColumn Title="@TextProvider.Get("EVENT_ACTIONS")" Width="170px">
+                        <Template>
+                            @{
+                                V_CANTEEN_Subscriber_Card? item = context as V_CANTEEN_Subscriber_Card;
+                            }
+
+                            <div class="action-button-container">
+                                @if (item != null)
+                                {
+                                    @if (item != null && item.CANTEEN_Subscriber_Card_Status_ID == CanteenCardStatus.Disabled && CanteenProvider.SubscriberCardCanBeActivated(item.ID))
+                                    {
+                                        <SfTooltip Content="@TextProvider.Get("EVENT_BUTTONS_ACTIVATE")" Position="@Position.TopCenter" CloseDelay="1" OpenDelay="100">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => Activate(item.ID))">
+                                                <i class="fa-regular fa-check"></i>
+                                            </div>
+                                        </SfTooltip>
+                                    }
+                                    @if (item != null && item.CANTEEN_Subscriber_Card_Status_ID == CanteenCardStatus.Finished)
+                                    {
+                                        <SfTooltip Content="@TextProvider.Get("EVENT_BUTTONS_DISABLE")" Position="@Position.TopCenter" CloseDelay="1" OpenDelay="100">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => Disable(item.ID))">
+                                                <i class="fa-regular fa-xmark"></i>
+                                            </div>
+                                        </SfTooltip>
+                                        <SfTooltip Content="@TextProvider.Get("EVENT_BUTTONS_CARD_LOG")" Position="@Position.TopCenter" CloseDelay="1" OpenDelay="100">
+                                            <div class="btn btn-secondary btn-icon" @onclick="@(() => ShowLog(item.ID))">
+                                                <i class="fa-regular fa-list"></i>
+                                            </div>
+                                        </SfTooltip>
+                                    }
+                                }
+                            </div>
+                        </Template>
+                    </GridColumn>
+                </GridColumns>
+            </TelerikGrid>
+        </div>
+    </div>
+    <TelerikWindow Modal="true" @bind-Visible="@LogVisible">
+        <WindowTitle>
+            @TextProvider.Get("MENSA_POS_LOG_POPUP_TITLE")
+        </WindowTitle>
+        <WindowContent>
+            @if (LogData != null)
+            {
+                <TelerikGrid Data="LogData"
+                             FilterMode="@GridFilterMode.FilterRow"
+                             Pageable="true"
+                             PageSize="10"
+                             ScrollMode="@GridScrollMode.Scrollable"
+                             Height="100%">
+                    <GridColumns>
+                        <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Log.CreatedAt)" DisplayFormat="{0:dd MMM yyyy HH:mm}" Title="@TextProvider.Get("MENSA_POS_LOG_CREATION_DATE")" />
+                        <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Log.Title)" Title="@TextProvider.Get("MENSA_POS_LOG_TITLE")" />
+                        <GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Log.Message)" Title="@TextProvider.Get("MENSA_POS_LOG_MESSAGE")" />
+                    </GridColumns>
+                </TelerikGrid>
+            }
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" OnClick="@HideLog" />
+        </WindowActions>
+    </TelerikWindow> 
+    <TelerikWindow Modal="true" @bind-Visible="@RequestNewVisible">
+        <WindowTitle>
+            @TextProvider.Get("MENSA_POS_REQUEST_NEW_TITLE")
+        </WindowTitle>
+        <WindowContent>
+            @if (Address != null)
+            {
+                <EditForm Model="@Address">
+                    <div class="element-container">
+                        <div class="edit-element">
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("MENSA_POS_REQUEST_NEW_NAME")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="Address.Name" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => Address.Name)" TextCode="MENSA_POS_REQUEST_NEW_NAME" />
+                            </div>
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("MENSA_POS_REQUEST_NEW_STREET")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="Address.Street" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => Address.Street)" TextCode="MENSA_POS_REQUEST_NEW_STREET" />
+                            </div>
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("MENSA_POS_REQUEST_NEW_PLZ")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="Address.PLZ" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => Address.PLZ)" TextCode="MENSA_POS_REQUEST_NEW_PLZ" />
+                            </div>
+                            <div class="small-element-separator"></div>
+                            <div class="form-group">
+                                <label class="form-label">@TextProvider.Get("MENSA_POS_REQUEST_NEW_MUNICIPALITY")</label>
+                                <InputText name="@Guid.NewGuid()" @bind-Value="Address.Municipality" class="form-control"></InputText>
+                                <CustomValidationMessage For="@(() => Address.Municipality)" TextCode="MENSA_POS_REQUEST_NEW_MUNICIPALITY" />
+                            </div>
+                        </div>
+                        <div class="segment-button-toolbar">
+                            <button class="btn btn-secondary" @onclick="HideRequestNew">@TextProvider.Get("BUTTON_CANCEL")</button>
+                            <button class="btn btn-primary" @onclick="SaveRequestNew">@TextProvider.Get("BUTTON_SAVE")</button>
+                        </div>
+                    </div>
+                </EditForm>
+            }
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" OnClick="HideRequestNew" />
+        </WindowActions>
+    </TelerikWindow>
+}

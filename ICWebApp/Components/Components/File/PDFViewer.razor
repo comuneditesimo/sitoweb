@@ -1,0 +1,153 @@
+﻿@using Syncfusion.Blazor.PdfViewerServer
+@using Syncfusion.Blazor.PdfViewer
+@using Syncfusion.Blazor.Popups
+
+@using File = System.IO.File
+
+<script src="_content/Syncfusion.Blazor.PdfViewer/scripts/syncfusion-blazor-pdfviewer.min.js" type="text/javascript" defer></script>
+
+@if (!EnviromentService.IsMobile || DisplayPreviewAnySize)
+{
+
+    @if (FileInfo != null && FileStorage != null && FileStorage.FileImage != null)
+    {
+        var base64 = Convert.ToBase64String(FileStorage.FileImage);
+
+        <div class="telerik-report-container">
+
+            @if (FileInfo.FileExtension.ToLower() == ".pdf")
+            {
+                <div class="telerik-report-toolbar">
+                    <div class="btn btn-secondary" @onclick="ShowFullScreen">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+                <div class="telerik-report-viewer">
+                    @if (RerenderViewer)
+                    {
+                        PdfViewerToolbarSettings _toolbarSettings = new PdfViewerToolbarSettings();
+                        _toolbarSettings.ToolbarItems.Clear();
+                        if (_toolbarSettings != null && EnviromentService.IsMobile)
+                        {
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.DownloadOption);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.MagnificationTool);
+                        }
+                        else if (_toolbarSettings != null)
+                        {
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PageNavigationTool);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.MagnificationTool);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.SelectionTool);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PanTool);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.SearchOption);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.DownloadOption);
+                            _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PrintOption);
+                        }
+                        <SfPdfViewerServer @ref="PDFViewerEmbedded"
+                                           Height="100%" Width="100%"
+                                           EnableToolbar="true"
+                                           EnableFormFields="false"
+                                           EnableThumbnailPanel="false"
+                                           EnableNavigationToolbar="false"
+                                           EnableAnnotationToolbar="false"
+                                           ToolbarSettings="@_toolbarSettings">
+                            <PdfViewerEvents Created="OnPDFViewerEmbeddedCreated" DocumentLoaded="@PDFViewerEmbeddedResetZoom" />
+                        </SfPdfViewerServer>
+                    }
+                </div>
+            }
+            else if (AllowedImageExtensions.Contains(FileInfo.FileExtension.ToLower()))
+            {
+                <div class="telerik-report-toolbar">
+                    <div class="btn btn-secondary" @onclick="ShowFullScreen">
+                        <i class="fa-solid fa-expand"></i>
+                    </div>
+                </div>
+                <div class="telerik-image-viewer">
+                    <img src="data:image/png;base64,@base64" class="internal viewerobject" />
+                </div>
+            }
+            else
+            {
+                <div class="form-detail-download" @onclick="@(() => DownloadFile(FileInfo.ID,true))">
+                    <div class="form-detail-download-icon">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <div class="form-detail-download-description font-normal">
+                        @(FileInfo.FileName + FileInfo.FileExtension)
+                    </div>
+                </div>
+            }
+        </div>
+        <SfDialog @bind-Visible="@WindowVisible" AllowDragging="false" ShowCloseIcon="true" IsModal="true" Height="100vh" Width="100vw" CssClass="telerik-preview-window" CloseOnEscape="true">
+            <DialogTemplates>
+                <Header>
+                    @TextProvider.Get("TELERIK_PREVIEW_TITLE")
+                </Header>
+                <Content>
+                    <div class="telerik-report-container">
+                        @if (FileInfo.FileExtension == ".pdf")
+                        {
+                            <div class="telerik-report-viewer">
+                                @{
+                                    PdfViewerToolbarSettings _toolbarSettings = new PdfViewerToolbarSettings();
+                                    _toolbarSettings.ToolbarItems.Clear();
+                                    if (_toolbarSettings != null && EnviromentService.IsMobile)
+                                    {
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.DownloadOption);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.MagnificationTool);
+                                    }
+                                    else if (_toolbarSettings != null)
+                                    {
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PageNavigationTool);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.MagnificationTool);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.SelectionTool);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PanTool);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.SearchOption);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.DownloadOption);
+                                        _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PrintOption);
+                                    }
+                                }
+                                <SfPdfViewerServer @ref="PDFViewerExpand"
+                                                   Height="100%" Width="100%"
+                                                   EnableToolbar="true"
+                                                   EnableFormFields="false"
+                                                   EnableThumbnailPanel="false"
+                                                   EnableNavigationToolbar="false"
+                                                   EnableAnnotationToolbar="false"
+                                                   ToolbarSettings="@_toolbarSettings">
+                                    <PdfViewerEvents Created="OnPDFViewerExpandCreated" DocumentLoaded="@PDFViewerExpandResetZoom" />
+                                </SfPdfViewerServer>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="telerik-image-viewer">
+                                <img src="data:image/png;base64,@base64" class="internal viewerobject" />
+                            </div>
+                        }
+                    </div>
+                </Content>
+            </DialogTemplates>
+            <DialogButtons>
+                <DialogButton Content="@TextProvider.Get("BUTTON_CLOSE")" OnClick="@HideFullScreen" />
+            </DialogButtons>
+        </SfDialog>
+    }
+}
+else
+{
+    @if (FileInfo != null)
+    {
+        var fileSize = FileProvider.GetFileSize(FileInfo.ID);
+
+        <div class="form-detail-download" @onclick="@(() => DownloadFile(FileInfo.ID))">
+            <div class="form-detail-download-icon">
+                <i class="fa-solid fa-download"></i>
+            </div>
+            <div class="form-detail-download-description font-normal">
+                @TextProvider.Get("MOBILE_PDF_PREVIEW") (@(fileSize / 1024) kb)
+            </div>
+        </div>
+        <div class="extra-small-element-separator"></div>
+    }
+}

@@ -1,0 +1,268 @@
+﻿@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+@using ICWebApp.Components.Components.Homepage.Backend.Documents
+
+@if(Data != null && CurrentLanguage != null)
+{
+    <EditForm Model="Data">
+        <DataAnnotationsValidator />
+        @if (IsPopUp)
+        {
+            <div class="form-button-container-separated">
+                <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.X" Class="k-standalone-button"
+                               OnClick="@Cancel">@TextProvider.Get("BUTTON_CANCEL")</TelerikButton>
+                <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            <div class="element-separator"></div>
+        }
+        <div class="form-group">
+            <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_GENERAL")</div>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_NAME")</label>
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.Name" class="form-control"></InputText>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_LASTNAME")</label>
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.Lastname" class="form-control"></InputText>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_GENDER")</label>
+            <div class="form-group-multicolumn form-group-left">
+                <div class="weekday-switch-item">
+                    <div class="switch-item-container">
+                        <SfSwitch @bind-Checked="MaleSelected"></SfSwitch>
+                    </div>
+                    <div class="switch-label-container">
+                        <label>@TextProvider.Get("REGISTRATION_GENDER_MALE")</label>
+                    </div>
+                </div>
+                <div class="weekday-switch-item">
+                    <div class="switch-item-container">
+                        <SfSwitch @bind-Checked="FemaleSelected"></SfSwitch>
+                    </div>
+                    <div class="switch-label-container">
+                        <label>@TextProvider.Get("REGISTRATION_GENDER_FEMALE")</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_TYPE")</label>
+            <SfDropDownList TValue="Guid?" TItem="V_HOME_Person_Type" PopupHeight="230px"
+                            @bind-Value="@Data.HOME_Person_Type_ID" DataSource="@Types" Placeholder="@TextProvider.Get("BACKEND_HOMEPAGE_PLACEHOLDER_SELECT")">
+                <DropDownListFieldSettings Value="ID" Text="Type_M"></DropDownListFieldSettings>
+            </SfDropDownList>
+        </div>
+        <div class="small-element-separator"></div>
+        <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_TASKS")</label>
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                <label class="font-detail">@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Tasks</label>
+            }
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Tasks" class="form-control"></InputText>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_AREAOFWORK")</label>
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                <label class="font-detail">@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).AreaOfWork</label>
+            }
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).AreaOfWork" class="form-control"></InputText>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_AUTHORITIES")</label>
+            <AuthorityMultipleSelection @bind-SelectedAuthorities="@SelectedAuthorities"></AuthorityMultipleSelection>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_DESCRIPTION_SHORT")</label>
+        </div>
+        <div class="form-group">
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                @if (string.IsNullOrEmpty(Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort))
+                {
+                    Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort = Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).DescriptionShort;
+                }
+
+                <TelerikEditor @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort"
+                                Tools="@Tools"
+                                EditMode="@EditorEditMode.Div"
+                                Class="font-normal"
+                                Height="150px">
+                    <EditorSettings>
+                        <EditorPasteSettings ConvertMsLists="true"
+                                                RemoveMsClasses="true"
+                                                RemoveMsStyles="true"
+                                                RemoveHtmlComments="true"
+                                                RemoveAllAttributes="true"
+                                                StripTags="@StripTags"
+                                                RemoveAttributes="@RemoveAttributes">
+                        </EditorPasteSettings>
+                    </EditorSettings>
+                </TelerikEditor>
+            }
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_DESCRIPTION")</label>
+        </div>
+        <div class="form-group">
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+
+                @if (string.IsNullOrEmpty(Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description))
+                {
+                    Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description = Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Description;
+                }
+
+                <TelerikEditor @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Description"
+                                Tools="@Tools"
+                                EditMode="@EditorEditMode.Div"
+                                Class="font-normal"
+                                Height="250px">
+                    <EditorSettings>
+                        <EditorPasteSettings ConvertMsLists="true"
+                                                RemoveMsClasses="true"
+                                                RemoveMsStyles="true"
+                                                RemoveHtmlComments="true"
+                                                RemoveAllAttributes="true"
+                                                StripTags="@StripTags"
+                                                RemoveAttributes="@RemoveAttributes">
+                        </EditorPasteSettings>
+                    </EditorSettings>
+                </TelerikEditor>
+            }
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_HIGHLIGHT")</label>
+            <SfSwitch @bind-Checked="Data.Highlight"></SfSwitch>
+        </div>
+        <div class="element-separator"></div>
+        <div class="form-group">
+            <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_KONTAKTDATA")</div>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_PHONENR")</label>
+            <CustomPhone @bind-Value="@Data.PhoneNr"></CustomPhone>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_PHONENR_PRIVATE")</label>
+            <CustomPhone @bind-Value="@Data.PhoneNrPrivat"></CustomPhone>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_PHONENR_MOBILE")</label>
+            <CustomPhone @bind-Value="@Data.PhoneNrMobile"></CustomPhone>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_EMAIL")</label>
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                <label class="font-detail">@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).EMail</label>
+            }
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).EMail" type="email" class="form-control"></InputText>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_EMAIL_SECONDARY")</label>
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                <label class="font-detail">@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).EMail2</label>
+            }
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).EMail2" type="email" class="form-control"></InputText>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PERSON_PECEMAIL")</label>
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                <label class="font-detail">@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).PECEmail</label>
+            }
+            <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).PECEmail" type="email" class="form-control"></InputText>
+        </div>           
+        <div class="element-separator"></div>
+        <div class="form-group">
+            <div class="segment-title">@TextProvider.Get("BACKEND_HOMEPAGE_IMAGES")</div>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <ImageUpload @bind-FileInfo="ExistingFile"></ImageUpload>
+        </div>
+        <div class="element-separator"></div>
+        <div class="form-group">
+            <div class="segment-title">@TextProvider.Get("BACKEND_HOMEPAGE_DOKUMENTS")</div>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            <DocumentMultipleSelection @bind-SelectedDocuments="SelectedDocuments"></DocumentMultipleSelection>
+        </div>
+        <div class="element-separator"></div>
+        <div class="form-group">
+            <div class="segment-title">@TextProvider.Get("BACKEND_HOMEPAGE_LOCATION")</div>
+        </div>
+        <div class="small-element-separator"></div>
+        <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+        <div class="small-element-separator"></div>
+        <div class="form-group">
+            @if (Data.HOME_Person_Extended != null && Data.HOME_Person_Extended.Count() > 0 && CurrentLanguage != null)
+            {
+                <Map Language="CurrentLanguage"
+                     @bind-Address="@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Address"
+                     @bind-Room="@Data.HOME_Person_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Room"
+                     @bind-Latitude="@Data.Lat"
+                     @bind-Longitude="@Data.Lang"
+                     EnableRoom="true"
+                     AllowDefault="false" />
+            }
+        </div>
+        <div class="element-separator"></div>
+        <div class="form-group form-group-small">
+            <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_TIMESLOT_SETTINGS")</div>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group form-group-small">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_TIMESLOT_ALLOW")</label>
+            <SfSwitch @bind-Checked="Data.AllowTimeslots"></SfSwitch>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group form-group-small">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_OFFICE_HOURS_ALLOW")</label>
+            <SfSwitch @bind-Checked="Data.AllowOfficeHours"></SfSwitch>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group form-group-small">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_TIMESLOT_MIN_DAYS")</label>
+            <InputNumber name="@Guid.NewGuid()" @bind-Value="@Data.MinDaysAheadOfBooking" min="0" class="form-control"></InputNumber>
+        </div>
+        <div class="small-element-separator"></div>
+        <div class="form-group form-group-small">
+            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_TIMESLOT_MAX_DAYS")</label>
+            <InputNumber name="@Guid.NewGuid()" @bind-Value="@Data.MaxDaysBookable" min="7" max="90" class="form-control"></InputNumber>
+        </div>
+        <div class="element-separator"></div>
+        <div class="form-button-container-separated">
+            <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.X" Class="k-standalone-button"
+                            OnClick="@Cancel">@TextProvider.Get("BUTTON_CANCEL")</TelerikButton>
+            <TelerikButton ButtonType="ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                            OnClick="@Save">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+        </div>
+        </EditForm>
+}

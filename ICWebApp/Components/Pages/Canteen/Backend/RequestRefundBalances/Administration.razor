@@ -1,0 +1,78 @@
+﻿@page "/Backend/Canteen/RequestRefundBalances/Administration"
+
+@layout MainLayout
+
+<div class="segment-container custom-background-default">
+    <div class="filter-container">
+        <ICWebApp.Components.Components.Canteen.CanteenRequestRefundBalancesFilterComponent Filter="@_filter" OnSearch="FilterSearch" />
+    </div>
+
+    <div class="element-separator"></div>
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(_isDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <div class="administration-grid">
+            <TelerikGrid Data="@_requests.OrderByDescending(p => p.SignedDate).ToList()"
+                         Pageable="true" PageSize="15"
+                         Sortable="false"
+                         Resizable="true"
+                         Groupable="false"
+                         Reorderable="true"
+                         ShowColumnMenu="true"
+                         ScrollMode="@GridScrollMode.Scrollable"
+                         OnStateChanged="@((GridStateEventArgs<V_CANTEEN_RequestRefundBalances> args) => OnStateChangedHandler(args))"
+                         OnStateInit="@((GridStateEventArgs<V_CANTEEN_RequestRefundBalances> args) => OnStateInitHandler(args))"
+                         OnRowClick="@OnRowClick">
+                <GridSettings>
+                    <GridColumnMenuSettings Sortable="false" Lockable="false" FilterMode="ColumnMenuFilterMode.None">
+                        <GridColumnMenuChooser />
+                    </GridColumnMenuSettings>
+                </GridSettings>
+                <GridToolBarTemplate>
+                    <div class="custom-grid-toolbar">
+                        <div class="custom-grid-toolbar-left">
+                        </div>
+                        <div class="custom-grid-toolbar-right">
+                            <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">@TextProvider?.Get("BUTTON_EXPORT")</GridCommandButton>
+                        </div>
+                    </div>
+                </GridToolBarTemplate>
+                <GridColumns>
+                    <GridColumn ShowColumnMenu="false" Field="@nameof(V_CANTEEN_RequestRefundBalances.ProgressivNumberCombined)" Title="@TextProvider?.Get("PROGRESSIV_NUMBER")" />
+                    <GridColumn ShowColumnMenu="false" Field="@nameof(V_CANTEEN_RequestRefundBalances.SignedDate)" DisplayFormat="{0:dd.MM.yyyy HH:mm}" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ADIMINISTRATION_SUBMITTED")" />
+                    <GridColumn ShowColumnMenu="false" Field="@nameof(V_CANTEEN_RequestRefundBalances.UserEntireName)" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ADIMINISTRATION_APPLICANTUSER")" />
+                    <GridColumn Visible="false" ShowColumnMenu="false" Field="@nameof(V_CANTEEN_RequestRefundBalances.UserDomicileEntireAdress)" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ADIMINISTRATION_DOMICILEADRESS")" />
+                    <GridColumn ShowColumnMenu="false" Field="@nameof(V_CANTEEN_RequestRefundBalances.Status_Text)" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ADIMINISTRATION_STATUS")">
+                        <Template Context="statusContext">
+                            @{
+                                V_CANTEEN_RequestRefundBalances? item = statusContext as V_CANTEEN_RequestRefundBalances;
+
+                                if (item != null)
+                                {
+                                    <span class="icon-element">
+                                        <TelerikFontIcon IconClass="@item.Status_Icon"></TelerikFontIcon>
+                                        <span style="margin-left: 5px;">
+                                            @item.Status_Text
+                                        </span>
+                                    </span>
+                                }
+                            }
+                        </Template>
+                    </GridColumn>
+                    <GridColumn ShowColumnMenu="false" Field="@nameof(V_CANTEEN_RequestRefundBalances.Fee)" DisplayFormat="{0:C}" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ADIMINISTRATION_FEE")" />
+                    <GridCommandColumn ShowColumnMenu="true" VisibleInColumnChooser="false" Width="120px" Title="@TextProvider?.Get("BACKEND_CANTEEN_REQUESTREFUNDBALANCES_ADIMINISTRATION_ACTIONS")">
+                        @{
+                            V_CANTEEN_RequestRefundBalances? item = context as V_CANTEEN_RequestRefundBalances;
+
+                            if (item != null)
+                            {
+                                <GridCommandButton Command="MyEditCommand" Class="btn btn-secondary" OnClick="@(() => ShowDetailPage(item.ID))" Icon="@("fa-duotone fa-memo-circle-info")" title="@TextProvider?.Get("TOOLTIP_DETAIL")"></GridCommandButton>
+                            }
+                        }
+                    </GridCommandColumn>
+                </GridColumns>
+            </TelerikGrid>
+        </div>
+    </div>
+</div>

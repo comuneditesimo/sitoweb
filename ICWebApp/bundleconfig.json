@@ -1,0 +1,80 @@
+[
+  {
+    "outputFileName": "wwwroot/css/spid.min.css",
+    "inputFiles": [
+      "wwwroot/css/spid.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/critical.min.css",
+    "inputFiles": [
+      "wwwroot/css/critical.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/backend.min.css",
+    "inputFiles": [
+      "wwwroot/css/backend.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/connectionLost.min.css",
+    "inputFiles": [
+      "wwwroot/css/connectionLost.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/reader.min.js",
+    "inputFiles": [
+      "wwwroot/js/reader.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/frontend.min.js",
+    "inputFiles": [
+      "wwwroot/js/frontend.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Utility/Frontend/utility.min.js",
+    "inputFiles": [
+      "wwwroot/js/Utility/Frontend/utility.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Services/enviromentHelper.min.js",
+    "inputFiles": [
+      "wwwroot/js/Services/enviromentHelper.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/jquery/jquery_3_3_1.min.js",
+    "inputFiles": [
+      "wwwroot/js/jquery/jquery_3_3_1.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/bootstrap-italia/css/bootstrap-italia.comuni.min.css",
+    "inputFiles": [
+      "wwwroot/css/bootstrap-italia/css/bootstrap-italia.comuni.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/AGID/Custom.min.css",
+    "inputFiles": [
+      "wwwroot/css/AGID/Custom.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/critical.min.js",
+    "inputFiles": [
+      "wwwroot/js/critical.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  }
+]

@@ -1,0 +1,83 @@
+﻿@using ICWebApp.Components.Components.Homepage.Backend.Documents
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Lists
+
+@if (DocumentList != null && SelectedDocuments != null)
+{
+    <div class="person-add-container">
+        <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" ThemeColor="Secondary" Class="k-standalone-button"
+                       OnClick="@AddVisible">@TextProvider.Get("ADD")</TelerikButton>
+    </div>
+    <div class="small-element-separator"></div>
+    <div class="document-selected-container">
+        @foreach (var doc in DocumentList.Where(p => SelectedDocuments.Contains(p.ID)).OrderBy(p => p.Title).ToList())
+        {
+            <div class="document-selected-avatar-container">
+                <DocumentIcon Document="doc" EnableClicking="false"></DocumentIcon>
+                <div class="document-selected-cancel" @onclick="@(() => Remove(doc))" @onclick:stopPropagation="true">
+                    <i class="fa-light fa-xmark"></i>
+                </div>
+            </div>
+        }        
+    </div>
+
+    <SfDialog Width="550px" IsModal="true" @bind-Visible="@AddDocumentVisible">
+        <div class="row-container">
+            <h5 class="primary-color text-center">@TextProvider.Get("BACKEND_HOME_ADD_DOCUMENT")</h5>
+            <div class="small-element-separator"></div>
+            <div class="person-add-container">
+                <div class="btn btn-secondary" @onclick="New">
+                    @TextProvider.Get("ADD")
+                </div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                <InputText name="@Guid.NewGuid()" @bind-Value="@SearchText" class="form-control"></InputText>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="row-separator"></div>
+            <div class="document-selection-container">
+                <SfListView DataSource="@DocumentList.Where(p => !SelectedDocuments.Contains(p.ID) && (string.IsNullOrEmpty(SearchText) || (p.Title != null && p.Title.ToLower().Contains(SearchText.ToLower())))).OrderBy(p => p.Title).ToList()" Height="400px"
+                            ShowHeader="false" SortOrder="Syncfusion.Blazor.Lists.SortOrder.Ascending">
+                    <ListViewFieldSettings TValue="V_HOME_Document" Text="Title"></ListViewFieldSettings>
+                    <ListViewTemplates TValue="V_HOME_Document">
+                        <Template>
+                            <div class="document-selection-item" @onclick="@(() => Select(context))" @onclick:stopPropagation="true">                              
+                                <div class="document-icon">
+                                    <i class="fa-light fa-paperclip-vertical"></i>
+                                </div>
+                                <span class="list-language">@context.Format</span>
+                                <span class="list-text">@context.Title</span>
+                                <div class="list-action">
+                                    <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(context.ID))" @onclick:stopPropagation="true">
+                                        <i class="fa-regular fa-pen"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </Template>
+                    </ListViewTemplates>
+                </SfListView>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-button-container">
+                <div class="btn btn-secondary" @onclick="@HideAdd">
+                    @TextProvider.Get("BUTTON_CANCEL")
+                </div>
+            </div>
+        </div>
+    </SfDialog>
+    <SfDialog @bind-Visible="@ShowDocumentEdit" AllowDragging="false" ShowCloseIcon="false" IsModal="true" CloseOnEscape="false" Width="1080px" Height="80vh">
+        <DialogTemplates>
+            <Header>
+                @DocumentEditTitle
+            </Header>
+            <Content>
+                <div class="document-edit-container">
+                    <DocumentEdit DocumentID="@DocumentEditID" OnCancel="Cancel" OnSave="Save"></DocumentEdit>
+                </div>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+}

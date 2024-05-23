@@ -1,0 +1,52 @@
+﻿@inherits LayoutComponentBase
+
+
+@*Color Switcher*@
+<link href="css/colors/@(ThemeHelper.GetCurrentColor()).css?v=@ComunixSettings.CSSVersion" rel="stylesheet" />
+<link rel="preload" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion"></noscript>
+@*********@
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css" />
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.comuni.min.css" />
+<link rel="stylesheet" href="css/agid/Custom.min.css?v=@ComunixSettings.CSSVersion" />
+
+<Syncfusion.Blazor.Popups.SfDialogProvider />
+<PageTitle>Comunix</PageTitle>
+
+@if (Municipality != null)
+{
+    @if (SessionWrapper != null && !SessionWrapper.Initializing)
+    {
+        <ICWebApp.Components.Components.Layout.Frontend.TopRow ShowSearchButton="@false"></ICWebApp.Components.Components.Layout.Frontend.TopRow>
+        <main id="topelement">
+            <BusyIndicator></BusyIndicator>
+            <DialogWindow />
+            <PreviewWindow></PreviewWindow>
+            <div class="container">
+                <div class="row justify-content-center pb-3 pt-5">
+                    <div class="col-12 col-lg-10">
+                        <div class="col-lg-8">
+                            <h1>@SessionWrapper.PageTitle</h1>
+                        </div>
+                        <div class="col-lg-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row py-5 login-page-efre-container">
+                    <div class="col-12">
+                        <ICWebApp.Components.Components.Authorization.FesrEfreComponent />
+                    </div>
+                </div>
+            </div>
+            @Body
+            @if (!BusyIndicatorService.StartupBusy)
+            {
+                <ICWebApp.Components.Components.Cookies.ConsentCookie />
+            }
+            <ICWebApp.Components.Components.Layout.Frontend.Footer></ICWebApp.Components.Components.Layout.Frontend.Footer>
+        </main>
+    }
+}

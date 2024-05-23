@@ -1,0 +1,213 @@
+﻿@{
+    string timeInformation = string.Empty;
+}
+@if (FromDate != null && ToDate != null && FromDate.Value.Date == ToDate.Value.Date && FromDate.Value < DateTime.Now)
+{
+    if (FromDate.Value.TimeOfDay < ToDate.Value.TimeOfDay &&  FromDate.Value.TimeOfDay != ToDate.Value.TimeOfDay)
+    {
+        timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm") + " - " + ToDate.Value.ToString("HH:mm")) ?? "";
+    }
+    else
+    {
+        timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm")) ?? "";
+    }
+    <div class="point-list point-disabled">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@FromDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@FromDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @timeInformation
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (FromDate != null && ToDate != null && FromDate.Value.Date == ToDate.Value.Date)
+{
+    if (FromDate.Value.TimeOfDay < ToDate.Value.TimeOfDay && FromDate.Value.TimeOfDay != ToDate.Value.TimeOfDay)
+    {
+        timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm") + " - " + ToDate.Value.ToString("HH:mm")) ?? "";
+    }
+    else
+    {
+        timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm")) ?? "";
+    }
+    <div class="point-list">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@FromDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@FromDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @timeInformation
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (FromDate != null && ToDate != null && FromDate.Value < DateTime.Now)
+{
+    timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR_BEGIN") ?? "";
+    if (FromDate.Value.TimeOfDay != DateTime.Today.TimeOfDay)
+    {
+        timeInformation += " " + @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm")) ?? "";
+    }
+    <div class="point-list point-disabled">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@FromDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@FromDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @timeInformation
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR_END") ?? "";
+    if (ToDate.Value.TimeOfDay != DateTime.Today.TimeOfDay)
+    {
+        timeInformation += " " + @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", ToDate.Value.ToString("HH:mm")) ?? "";
+    }
+    <div class="point-list point-disabled">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@ToDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@ToDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @timeInformation
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (FromDate != null && ToDate != null)
+{
+    timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR_BEGIN") ?? "";
+    if (FromDate.Value.TimeOfDay != DateTime.Today.TimeOfDay)
+    {
+        timeInformation += " " + @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm")) ?? "";
+    }
+    <div class="point-list">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@FromDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@FromDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @timeInformation
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    timeInformation = TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR_END") ?? "";
+    if (ToDate.Value.TimeOfDay != DateTime.Today.TimeOfDay)
+    {
+        timeInformation += " " + @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", ToDate.Value.ToString("HH:mm")) ?? "";
+    }
+    <div class="point-list">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@ToDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@ToDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @timeInformation
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (FromDate != null && FromDate.Value < DateTime.Now)
+{
+    <div class="point-list point-disabled">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@FromDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@FromDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm"))
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (FromDate != null)
+{
+    <div class="point-list">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@FromDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@FromDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", FromDate.Value.ToString("HH:mm"))
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ToDate != null && ToDate.Value < DateTime.Now)
+{
+    <div class="point-list point-disabled">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@ToDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@ToDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", ToDate.Value.ToString("HH:mm"))
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ToDate != null)
+{
+    <div class="point-list">
+        <h3 class="point-list-aside point-list-primary fw-normal">
+            <span class="point-date font-monospace">@ToDate.Value.ToString("dd")</span>
+            <span class="point-month font-monospace">@ToDate.Value.ToString("MMM").Replace(".", "")</span>
+        </h3>
+        <div class="point-list-content">
+            <div class="card card-teaser shadow rounded">
+                <div class="card-body">
+                    <h3 class="card-title h5 m-0">
+                        @TextProvider?.Get("FRONTEND_HOMEPAGE_HOUR").Replace("{0}", ToDate.Value.ToString("HH:mm"))
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}

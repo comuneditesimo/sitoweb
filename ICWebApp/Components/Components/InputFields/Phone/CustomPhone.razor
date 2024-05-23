@@ -1,0 +1,29 @@
+﻿<div class="custom-phone-container">
+    <SfDropDownList @bind-Value="Prefix" DataSource="Countries" CssClass="no-border-dd" Width="120px">
+        <DropDownListTemplates TItem="META_PhonePrefix">
+            <ItemTemplate>
+                @{
+                    var option = (context as META_PhonePrefix);
+                }
+                <div class="flag-dd-item">
+                    <img src="/Images/CustomPhone/@(option.Code).png" />
+                    <div class="flag-dd-text">
+                        @option.Value
+                    </div>
+                </div>
+            </ItemTemplate>
+            <ValueTemplate>
+                @{
+                    var option = (context as META_PhonePrefix);
+                }
+                <div class="flag-dd-item">
+                    <img src="/Images/CustomPhone/@(option.Code).png" />
+                    <div class="flag-dd-text">
+                        @option.Value
+                    </div>
+                </div>
+            </ValueTemplate>
+        </DropDownListTemplates>
+    </SfDropDownList>
+    <input type="text" class="no-border-input" @bind-value="@Phone" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57) || event.charCode==43 || event.charCode==32)" />
+</div>

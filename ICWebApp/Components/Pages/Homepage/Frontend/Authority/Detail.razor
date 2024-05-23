@@ -1,0 +1,184 @@
+﻿@page "/Hp/Authority/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+@using ICWebApp.Components.Components.Homepage.Frontend.Address
+
+@if (Item != null)
+{
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.Description))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DESCRIPTION")" ID="descrizione" Order="0">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)Item.Description)
+                        </div>
+                    </Anchor>
+                }
+                @if (!string.IsNullOrEmpty(Item.Address))
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_ADDRESS_CONTAINER")" ID="indirizzo" Order="1">
+                        <Map Address="@Item.Address"
+                             Room="@Item.Room"
+                             Latitude="@Item.Lat"
+                             Longitude="@Item.Lang" />
+                    </Anchor>
+                }
+                @if (Item.HOME_Person_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_RESPONSIBLE")" ID="responsabile" Order="2">
+                        <PersonItemSmall ItemID="@Item.HOME_Person_ID"></PersonItemSmall>
+                    </Anchor>
+                }
+                @if (People != null && People.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_EMPLOYEES")" ID="dipendenti" Order="3">
+                        <div class="row">
+                            @foreach (var p in People)
+                            {
+                                <PersonItemSmall Item="@p"></PersonItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Documents != null && Documents.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOCUMENTS")" ID="documenti" Order="4">
+                        <div class="row">
+                            @foreach (var d in Documents)
+                            {
+                                <DocumentsItemSmall Document="@d"></DocumentsItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item != null && Item.AllowOfficeHours == true && OfficeHours != null)
+                {
+                    <Anchor Title="@TextProvider.Get("HOMEPAGE_AUTHORITY_OFFICE_HOURS")" ID="officehours" Order="21">
+                        @foreach (var weekday in OfficeHours.Select(p => p.Weekday).Distinct().OrderBy(p => p).ToList())
+                        {
+                            @if (OfficeHours.Where(p => p.Weekday == weekday).Any())
+                            {
+                                <div class="frontend-office-hours-item">
+                                    <div class="frontend-weekday">
+                                        @if (weekday == 0)
+                                        {
+                                            @TextProvider.Get("MONDAY")
+                                        }
+                                        else if (weekday == 1)
+                                        {
+                                            @TextProvider.Get("TUESDAY")
+                                        }
+                                        else if (weekday == 2)
+                                        {
+                                            @TextProvider.Get("WEDNESDAY")
+                                        }
+                                        else if (weekday == 3)
+                                        {
+                                            @TextProvider.Get("THURSDAY")
+                                        }
+                                        else if (weekday == 4)
+                                        {
+                                            @TextProvider.Get("FRIDAY")
+                                        }
+                                        else if (weekday == 5)
+                                        {
+                                            @TextProvider.Get("SATURDAY")
+                                        }
+                                    </div>
+                                    <div class="frontend-office-hours-time-container">
+                                        @foreach (var hours in OfficeHours.Where(p => p.Weekday == weekday).ToList())
+                                        {
+                                            @if (hours.TimeFrom != null && hours.TimeTo != null)
+                                            {
+                                                <div class="frontend-office-hours-time">
+                                                    @hours.TimeFrom.Value.ToString("HH:mm") - @hours.TimeTo.Value.ToString("HH:mm") @TextProvider.Get("TIME")
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </Anchor>
+                }
+                @if (!string.IsNullOrEmpty(Item.Telefon) || 
+                     !string.IsNullOrEmpty(Item.EMail) || 
+                     !string.IsNullOrEmpty(Item.PecEmail)
+                    )
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT")" ID="contatto" Order="5">
+                        @if (!string.IsNullOrEmpty(Item.Telefon))
+                        {
+                            <div class="cmp-icon-link contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_PHONE")</strong>
+                                <a class="list-item icon-left" href="tel:@Item.Telefon" aria-label="Telefono">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.Telefon</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.EMail))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL")</strong>
+                                <a class="list-item icon-left" href="mailto:@Item.EMail" aria-label="E-Mail">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.EMail</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Item.PecEmail))
+                        {
+                            <div class="cmp-icon-link mt-2 contact-title">
+                                <strong>@TextProvider.Get("FRONTEND_HOMEPAGE_CONTACT_EMAIL_PEC")</strong>
+                                <a class="list-item icon-left" href="mailto:@Item.PecEmail" aria-label="PEC E-Mail">
+                                    <span class="list-item-title-icon-wrapper">
+                                        <span class="list-item t-primary">@Item.PecEmail</span>
+                                    </span>
+                                </a>
+                            </div>
+                        }
+                    </Anchor>
+                }
+                @if (Item.Managed_HOME_Person_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_MANAGED_BY")" ID="a-cura-di" Order="10">
+                        <div class="row">
+                            @if (Item.Managed_HOME_Person_ID != null)
+                            {
+                                <div class="col-12 col-sm-4">
+                                    <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_PERSONS")</small></h6>
+                                    <ul class="d-flex flex-wrap gap-1 mt-2">
+                                        <li>
+                                            <PersonChip HOME_Person_ID="@Item.Managed_HOME_Person_ID.Value"></PersonChip>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.LastChangeDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                            <span class="h6 fw-normal">@Item.LastChangeDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

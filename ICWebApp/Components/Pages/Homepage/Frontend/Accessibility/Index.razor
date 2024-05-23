@@ -1,0 +1,12 @@
+﻿@page "/Hp/Accessibility"
+
+@if (Data != null && !StringHelper.MarkupStringIsNullOrWhiteSpace(Data.Description))
+{
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                @((MarkupString)Data.Description)
+            </div>
+        </div>
+    </div>
+}

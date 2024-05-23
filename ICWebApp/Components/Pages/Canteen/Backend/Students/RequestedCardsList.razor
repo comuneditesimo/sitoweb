@@ -1,0 +1,59 @@
+@page "/Backend/Canteen/RequestedCardsList"
+@using Syncfusion.Blazor.Grids
+@layout MainLayout
+
+<div class="segment-container custom-background-default">
+    <div class="filter-container">
+        <ICWebApp.Components.Components.Canteen.Backend.CanteenRequestCardsListFilterComponent Filter="@_filter" OnSearch="FilterSearch" />
+    </div>
+
+    <div class="element-separator"></div>
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(_isDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <div class="administration-grid">
+            <SfGrid DataSource="@_cardRequests" AllowFiltering="true" AllowPaging="true" AllowSorting="true">
+                <GridPageSettings PageSize="25"></GridPageSettings>
+                <GridFilterSettings ShowFilterBarStatus="false" ImmediateModeDelay="250" Mode="FilterBarMode.Immediate"/>
+                <GridColumns>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.Firstname)" HeaderText="@TextProvider.Get("CANTEEN_STUDENT_FIRSTNAME")"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.Lastname)" HeaderText="@TextProvider.Get("CANTEEN_STUDENT_NAME")"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.SubscriberName)" HeaderText="@TextProvider.Get("CANTEEN_CREATE_SUBSCRIPTION_Student")"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.SubscriberTaxNumber)" HeaderText="@TextProvider.Get("CANTEEN_STUDENT_TAXNUMBER")"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.SchoolName)" HeaderText="@TextProvider.Get("CANTEEN_SCHOOL")"></Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.TotalAmount)" HeaderText="@TextProvider.Get("CANTEEN_DASHBOARD_AMOUNT")">
+                        <Template>
+                            @{
+                                var element = context as V_CANTEEN_Subscriber_Card_Request;
+                            }
+                            @($"{element.TotalAmount:C2}")
+                        </Template>
+                    </Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.PayedAt)" HeaderText="@TextProvider.Get("PAY_TABLE_PAYMENT_DATE")" AllowFiltering="false">
+                        <FilterTemplate></FilterTemplate>
+                        <Template>
+                            @{
+                                var element = context as V_CANTEEN_Subscriber_Card_Request;
+                                if (element.PayedAt != null)
+                                {
+                                    <div>@element.PayedAt.Value.ToShortDateString() @element.PayedAt.Value.ToShortTimeString()</div>
+                                }
+                            }
+                
+                        </Template>
+                    </Syncfusion.Blazor.Grids.GridColumn>
+                    <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_CANTEEN_Subscriber_Card_Request.CardStatusTextCode)" HeaderText="@TextProvider.Get("CANTEEN_CARD_STATUS")" AllowFiltering="false">
+                        <FilterTemplate></FilterTemplate>
+                        <Template>
+                            @{
+                                var element = context as V_CANTEEN_Subscriber_Card_Request;
+                            }
+                            @TextProvider.Get(element.CardStatusTextCode)
+                        </Template>
+                    </Syncfusion.Blazor.Grids.GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
+    </div>
+</div>

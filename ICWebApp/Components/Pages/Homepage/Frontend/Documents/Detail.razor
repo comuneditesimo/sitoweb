@@ -1,0 +1,165 @@
+﻿@page "/Hp/Document/{ID}"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Components.Components.Homepage.Frontend.Help
+@using ICWebApp.Components.Components.Homepage.Frontend.Authority
+@using ICWebApp.Components.Components.Homepage.Frontend.Person
+@using ICWebApp.Components.Components.Homepage.Frontend.Documents
+@using ICWebApp.Components.Components.Homepage.Frontend.Address
+@using ICWebApp.Components.Components.Homepage.Frontend.Organisation
+
+@if (Item != null)
+{
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_DESCRIPTION")" ID="descrizione" Order="0">
+                    <div class="richtext-wrapper lora">
+                        @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(Item.Description))
+                        {
+                            @((MarkupString)Item.Description)
+                        }
+                        @if ((Types != null && Types.Any()) || Item.ReleaseDate != null || Item.Format != null)
+                        {
+                            <div class="table">
+                                <table>
+                                    <tbody>
+                                        @if (Types != null && Types.Any())
+                                        {
+                                            <tr>
+                                                <td><b>@TextProvider.Get("FRONTEND_HOMEPAGE_DOCUMENTS_TYPE")</b></td>
+                                                <td>
+                                                    @foreach (var t in Types.OrderBy(p => p.Type).ToList())
+                                                    {
+                                                        @if (t == Types.OrderBy(p => p.Type).ToList().Last())
+                                                        {
+                                                            <a class="text-decoration-none" @onclick="@(() => OnTypeClicked(t.ID))" aria-label="@t.Type" title="@t.Type">
+                                                                @(t.Type)
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="text-decoration-none" @onclick="@(() => OnTypeClicked(t.ID))" aria-label="@t.Type" title="@t.Type">
+                                                                @(t.Type)
+                                                            </a>
+                                                            <span class="text-decoration-none">, </span>
+                                                        }
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (Item.ReleaseDate != null)
+                                        {
+                                            <tr>
+                                                <td><b>@TextProvider.Get("FRONTEND_HOMEPAGE_RELEASE_DATE")</b></td>
+                                                <td>@Item.ReleaseDate.Value.ToString("dd MMMM yyyy")</td>
+                                            </tr>
+                                        }
+                                        @if (Item.Format != null)
+                                        {
+                                            <tr>
+                                                <td><b>@TextProvider.Get("FRONTEND_HOMEPAGE_FORMATI")</b></td>
+                                                <td>
+                                                    @Item.Format
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </Anchor>
+                @if (ItemData != null && ItemData.Data != null && ItemData.Data.Count() > 0)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD")" ID="download" Order="1">
+                        <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+                            <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                                </svg>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a class="text-decoration-none" @onclick="Download" aria-label="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" title="@TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")" data-focus-mouse="false">
+                                            @TextProvider.Get("FRONTEND_HOMEPAGE_DOWNLOAD_BUTTON")
+                                        </a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </Anchor>
+                }
+                @if (Organisation != null && Organisation.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_ORGANISATION")" ID="organi" Order="2">
+                        <div class="row">
+                            @foreach (var p in Organisation.OrderBy(p => p.Title).ToList())
+                            {
+                                <OrganisationItemSmall Organisation="@p"></OrganisationItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (People != null && People.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_PEOPLE")" ID="persone" Order="3">
+                        <div class="row">
+                            @foreach (var p in People)
+                            {
+                                <ICWebApp.Components.Components.Homepage.Frontend.Person.PersonItemSmall Item="@p"></ICWebApp.Components.Components.Homepage.Frontend.Person.PersonItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Authorities != null && Authorities.Any())
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_AUTHORITIES")" ID="uffici" Order="4">
+                        <div class="row">
+                            @foreach (var p in Authorities.OrderBy(p => p.Title).ToList())
+                            {
+                                <AuthorityItemSmall Authority="@p"></AuthorityItemSmall>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.Managed_HOME_Person_ID != null || Item.Managed_AUTH_Authority_ID != null)
+                {
+                    <Anchor Title="@TextProvider.Get("FRONTEND_HOMEPAGE_NEWS_MANAGED_BY")" ID="a-cura-di" Order="10">
+                        <div class="row">
+                            @if (Item.Managed_AUTH_Authority_ID != null)
+                            {
+                                <div class="col-12 col-sm-8">
+                                    <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_AUTHORITY")</small></h6>
+                                    <AuthorityItemSmall HOME_Authority_ID="@Item.Managed_AUTH_Authority_ID.Value" CssColumn="false"></AuthorityItemSmall>
+                                </div>
+                            }
+                            @if (Item.Managed_HOME_Person_ID != null)
+                            {
+                                <div class="col-12 col-sm-4">
+                                    <h6><small>@TextProvider.Get("FRONTEND_CONTENT_MANAGED_PERSONS")</small></h6>
+                                    <ul class="d-flex flex-wrap gap-1 mt-2">
+                                        <li>
+                                            <PersonChip HOME_Person_ID="@Item.Managed_HOME_Person_ID.Value"></PersonChip>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </Anchor>
+                }
+                @if (Item.LastChangeDate != null)
+                {
+                    <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                        <h4 class="h6">
+                            @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                            <span class="h6 fw-normal">@Item.LastChangeDate.Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                        </h4>
+                    </article>
+                }
+            </section>
+        </div>
+    </div>
+}

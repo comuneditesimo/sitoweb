@@ -1,0 +1,177 @@
+﻿@page "/Hp/Assistance"
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Questionnaire
+@using ICWebApp.Domain.Models.Homepage.Services
+
+<div class="container">
+    <div class="row mt-lg-80 mt-3 mb-4">
+        <div class="col-lg-3 mb-4 border-col hide-max-576">
+            <AnchorList></AnchorList>
+        </div>
+        <div class="col-lg-8 offset-lg-1">
+            @if (Data != null)
+            {
+                <EditForm Model="Data">
+                    <div class="form-application-container it-page-sections-container">
+                        <Anchor Title="@TextProvider.Get("HOME_ASSISTANCE_REQUESTEE")" IsCard="true" ID="richiedente" Order="0">
+                            <div class="form-wrapper bg-white p-4">
+                                <div class="form-group cmp-input">
+                                    @{
+                                        string? cssFirstname = null;
+
+                                        @if (string.IsNullOrEmpty(Data.Firstname) && IsValid == false)
+                                            cssFirstname = "is-invalid";
+                                        else if(IsValid == false)
+                                                cssFirstname = "is-valid";
+                                    }
+
+                                    <label class="form-label" for="Firstname">@TextProvider.Get("HOME_ASSISTANCE_FIRSTNAME")*</label>
+                                    <input @bind-value="Data.Firstname" @oninput="@(() => StateHasChanged())" required="required" class="form-control @cssFirstname" id="Firstname" name="Firstname"></input>
+                                    @if (cssFirstname == "is-invalid")
+                                    {
+                                        <div class="form-feedback just-validate-error-label">@TextProvider.Get("HOME_FORM_GROUP_REQUIRED_ERROR")</div>
+                                    }
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group cmp-input mb-0">
+                                    @{
+                                        string? cssLastname = null;
+
+                                        @if (string.IsNullOrEmpty(Data.Lastname) && IsValid == false)
+                                            cssLastname = "is-invalid";
+                                        else if (IsValid == false)
+                                            cssLastname = "is-valid";
+                                    }
+
+                                    <label class="form-label" for="Lastname">@TextProvider.Get("HOME_ASSISTANCE_LASTNAME")*</label>
+                                    <input @bind-value="Data.Lastname" @oninput="@(() => StateHasChanged())" required="required" class="form-control @cssLastname" id="Lastname" name="Lastname"></input>
+                                    @if (cssLastname == "is-invalid")
+                                    {
+                                        <div class="form-feedback just-validate-error-label">@TextProvider.Get("HOME_FORM_GROUP_REQUIRED_ERROR")</div>
+                                    }
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group cmp-input mb-0">
+                                    @{
+                                        string? cssEmail = null;
+
+                                        @if (string.IsNullOrEmpty(Data.EMail) && IsValid == false)
+                                            cssEmail = "is-invalid";
+                                        else if (IsValid == false)
+                                            cssEmail = "is-valid";
+                                    }
+                                    <label class="form-label" for="EMail">@TextProvider.Get("HOME_ASSISTANCE_EMAIL")*</label>
+                                    <input @bind-value="Data.EMail" @oninput="@(() => StateHasChanged())" type="email" required="required" class="form-control @cssEmail" id="EMail" name="EMail"></input>
+                                    @if (cssEmail == "is-invalid")
+                                    {
+                                        <div class="form-feedback just-validate-error-label">@TextProvider.Get("HOME_FORM_GROUP_REQUIRED_ERROR")</div>
+                                    }
+                                </div>
+                            </div>
+                        </Anchor>
+                        <Anchor Title="@TextProvider.Get("HOME_ASSISTANCE_REQUEST")" IsCard="true" ID="richiesta" Order="1">
+                            <div class="form-wrapper bg-white p-4">
+                                <div class="form-group cmp-input">
+                                    @{
+                                        string? cssCategoryID = null;
+
+                                        @if (Data.CategoryID == null && IsValid == false)
+                                            cssCategoryID = "is-invalid";
+                                        else if (IsValid == false)
+                                            cssCategoryID = "is-valid";
+                                    }
+
+                                    <label class="form-label" for="Firstname">@TextProvider.Get("HOME_ASSISTANCE_CATEGORY")*</label>
+                                    <SfDropDownList DataSource="Categories" @bind-Value="@Data.CategoryID" CssClass="@cssCategoryID" TValue="Guid?" TItem="@ServiceKategorieItems">
+                                        <DropDownListFieldSettings Text="Title" Value="ID"></DropDownListFieldSettings>
+                                    </SfDropDownList>
+                                    @if (cssCategoryID == "is-invalid")
+                                    {
+                                        <div class="form-feedback just-validate-error-label">@TextProvider.Get("HOME_FORM_GROUP_REQUIRED_ERROR")</div>
+                                    }
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group cmp-input mb-0">
+                                    @{
+                                        string? cssServiceID = null;
+
+                                        @if (Data.ServiceID == null && IsValid == false)
+                                            cssServiceID = "is-invalid";
+                                        else if (IsValid == false)
+                                            cssServiceID = "is-valid";
+                                    }
+
+                                    <label class="form-label" for="Lastname">@TextProvider.Get("HOME_ASSISTANCE_SERVICE")*</label>
+                                    <SfDropDownList DataSource="Services.Where(p => p.KategorieID == Data.CategoryID).ToList()" CssClass="@cssServiceID" @bind-Value="@Data.ServiceID" TValue="Guid?" TItem="@ServiceItem">
+                                        <DropDownListFieldSettings Text="Title" Value="ID"></DropDownListFieldSettings>                                 
+                                    </SfDropDownList>
+                                    @if (cssServiceID == "is-invalid")
+                                    {
+                                        <div class="form-feedback just-validate-error-label">@TextProvider.Get("HOME_FORM_GROUP_REQUIRED_ERROR")</div>
+                                    }
+                                </div>
+                                <div class="small-element-separator"></div>
+                                <div class="form-group cmp-input mb-0">
+                                    @{
+                                        string? css = null;
+
+                                        @if (string.IsNullOrEmpty(Data.Description) && IsValid == false)
+                                            css = "is-invalid";
+                                        else if (IsValid == false)
+                                            css = "is-valid";
+                                    }
+                                    <label class="form-label">@TextProvider.Get("HOME_ASSISTANCE_DETAILS")*</label>
+                                    <input @bind-value="Data.Description" @oninput="@(() => StateHasChanged())" required="required" class="form-control @css"></input>
+                                    @if (css == "is-invalid")
+                                    {
+                                        <div class="form-feedback just-validate-error-label">@TextProvider.Get("HOME_FORM_GROUP_REQUIRED_ERROR")</div>
+                                    }
+                                </div>
+                            </div>
+                        </Anchor>
+
+                        @if (Privacy != null)
+                        {
+                            <Anchor Title="@Privacy.Title" IsCard="true" SubTitle="@Privacy.Description" ID="privacy" Order="99">
+                                @TextProvider.Get("PRIVACY_RED_AND_UNDERSTOOD")
+                                <div class="extra-small-element-separator"></div>
+                                <div class="privacy-switch">
+                                    <SfSwitch @bind-Checked="@Data.Privacy" CssClass="list-item-switch">
+                                    </SfSwitch>
+                                </div>
+                                @if (PrivacyError)
+                                {
+                                    <div class="element-separator"></div>
+                                    <div class="container-error">
+                                        @TextProvider.Get("PRIVACY_BOOL_ERROR")
+                                    </div>
+                                }
+                            </Anchor>
+                        }
+
+                        @if (IsValid == false)
+                        {
+                            <div class="element-separator"></div>
+                            <div class="container-error">
+                                @TextProvider.Get("FORM_APPLICATION_ERROR")
+                            </div>
+                            <div class="element-separator"></div>
+                        }
+                        <div class="cmp-nav-steps">
+                            <nav class="steppers-nav" aria-label="Step">
+                                <div class="steppers-spacer">
+                                </div>
+                                <button @onclick="Commit" class="btn btn-primary btn-sm steppers-btn-confirm send" data-bs-validate="validate">
+                                    <span class="text-button-sm">@TextProvider.Get("FORM_APPLICATION_COMMIT_BUTTON")</span>
+                                    <svg class="icon icon-white icon-sm">
+                                        <use href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                                    </svg>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>       

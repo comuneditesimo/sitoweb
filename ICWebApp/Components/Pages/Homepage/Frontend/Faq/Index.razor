@@ -1,0 +1,74 @@
+﻿@page "/Hp/faq"
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 px-sm-3 mt-2">
+            <div class="cmp-input-search white-background-search">
+                <div class="form-group autocomplete-wrapper">
+                    <div class="input-group">
+                        <input @bind-value="SearchText" class="autocomplete form-control" placeholder="@TextProvider.Get("FORMS_FRONTEND_PLACEHOLDER_SEARCH")" id="autocomplete-three" name="search">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit" id="button-3">
+                                @TextProvider.Get("FORMS_FRONTEND_SEARCH_BUTTON")
+                            </button>
+                        </div>
+                        <span class="autocomplete-icon" aria-hidden="true">
+                            <svg class="icon icon-sm"><use href="css/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 px-0 px-sm-3">
+            <div class="cmp-accordion faq">
+                <div class="accordion" id="accordion-faq">
+                    @foreach (var q in Data.Where(p => (SearchText == null || (p.Question != null && p.Question.ToLower().Contains(SearchText.ToLower())))).OrderBy(p => p.Question).Take(MaxCounter).ToList())
+                    {
+                        <div class="accordion-item">
+                            <div class="accordion-header" id="@q.ID">
+                                <button class="accordion-button title-snall-semi-bold py-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefaq-@q.ID" aria-expanded="false" aria-controls="collapsefaq-1" data-focus-mouse="false">
+                                    @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(q.Question))
+                                    {
+                                        <div class="button-wrapper">
+                                            @((MarkupString)q.Question.Replace("<p>", "").Replace("</p>", ""))
+                                        </div>
+                                    }
+                                </button>
+                            </div>
+                            <div id="collapsefaq-@q.ID" class="accordion-collapse p-0 collapse" data-bs-parent="#accordionExamplefaq-1" role="region" aria-labelledby="headingfaq-1" style="">
+                                <div class="accordion-body">
+                                    <p class="mb-3">
+                                        @((MarkupString)q.Answer.Replace("<p>", "").Replace("</p>", ""))
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (MaxCounter < Data.Where(p => (SearchText == null || (p.Question != null && p.Question.ToLower().Contains(SearchText.ToLower())))).Count())
+        {
+            <div class="col-12 col-lg-8 offset-lg-2 px-4 mt-40 mb-40">
+                <button type="button" class="btn btn-outline-primary pt-15 pb-15 pl-90 pr-90 mb-30 mb-lg-50 full-mb text-button" @onclick="@ShowMore">
+                    <span class="">@TextProvider.Get("HOMEPAGE_FRONTEND_SEARCH_MORE")</span>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="col-12 col-lg-8 offset-lg-2 px-4 mt-40 mb-40">
+                <p class="text-center text-paragraph-regular-medium mt-4 mb-0" id="no-more-results">
+                    @TextProvider.Get("HOMEPAGE_FRONTEND_NO_MORE_QUESTIONS")
+                </p>
+            </div>
+        }
+    </div>
+</div>

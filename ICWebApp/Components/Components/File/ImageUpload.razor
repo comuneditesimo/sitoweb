@@ -1,0 +1,32 @@
+﻿@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.ImageEditor
+
+<div class="imageupload-container">
+    @if(!Rerender)
+    {
+        <UploadComponent @bind-FileInfo="OriginalFileInfo" OnUpload="OnUpload" OnRemove="OnRemove" Accept=".png, .jpg, .jpeg, .webpg" Multiple="false" 
+                         Image="true" MinImageWidth="1920" MinImageHeight="1080"></UploadComponent>
+    }
+</div>
+
+<SfDialog @bind-Visible="@ShowImageCrop" AllowDragging="false" AllowPrerender="true" 
+          ShowCloseIcon="false" IsModal="true" CloseOnEscape="false" Width="80vw" Height="80vh">
+          <DialogEvents OnOpen="OpenAsync"></DialogEvents>
+    <DialogTemplates>
+        <Header>
+            @TextProvider.Get("HOMEPAGE_BACKEND_CROP_IMAGE_TITLE")
+        </Header>
+        <Content>
+            <div class="imagecrop-container">
+                <SfImageEditor @ref="ImageEditor" Toolbar="customToolbarItem" Height="100%">
+                    <ImageEditorEvents FileOpened="FileOpenAsync">
+                    </ImageEditorEvents>
+                </SfImageEditor>
+            </div>            
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="false" Content="@TextProvider.Get("BUTTON_CANCEL")" OnClick="@Cancel" />
+        <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" OnClick="@SaveImage" />
+    </DialogButtons>
+</SfDialog>

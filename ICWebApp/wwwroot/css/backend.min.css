@@ -1,0 +1,10 @@
+@font-face{font-family:'Ubuntu';src:url('../fonts/Ubuntu.woff') format('woff')}
+/*!
+Theme Name: Comunix
+Author: Innovation Consulting Srl
+Description: Design Comunix a base dell Design Comuni Italia Wordpress
+Version: 2.5.1
+License: CC-BY 3.0
+Text Domain: comunix
+*/
+.btn{min-width:auto}html,body{font-family:'Ubuntu',Ubuntu-Bold,Ubuntu-Light,Ubuntu-Medium!important}html,body,.frontend-touch-container,.backend-touch-container{font-family:'Ubuntu',Ubuntu-Bold,Ubuntu-Light,Ubuntu-Medium!important;height:100%}.e-control,.e-css,.e-input-group,.e-input,.e-label{font-family:'Ubuntu',Ubuntu-Bold,Ubuntu-Light,Ubuntu-Medium!important}.mun-theme-color-container{height:24px;width:100%;margin-top:3px;margin-left:3px;margin-right:3px;border:1px solid #808080;line-height:24px}.mun-theme-color-container-item{margin-top:2px;margin-left:0;margin-right:0}.mun-theme-color-container-item-selected{border-color:#fff!important}.mun-theme-color-picker{width:100px}.btn-small{height:18px!important;padding-top:0!important;padding-bottom:0!important;line-height:16px!important}.up-down-container{height:38px;display:flex;justify-content:space-between;flex-direction:column}.media-image-thumbnail img{height:120px}.k-table-td svg{height:20px!important;width:20px!important}

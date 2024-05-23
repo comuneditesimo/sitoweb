@@ -1,0 +1,36 @@
+﻿.document-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 5px;
+    cursor: pointer;
+    height: 38px;
+    line-height: 36px;
+}
+.document-image {
+    height: 24px;
+    width: 32px;
+    font-size: 26px;
+    color: var(--primary);
+    text-align: center;
+    margin-top: auto;
+    padding-left: 5px;
+}
+.document-content {
+    border-left: 1px solid lightgray;
+    padding-left: 10px;
+    line-height: 22px;
+    height: 44px;
+}
+.person-avatar-name{
+    font-weight: bold;
+    text-overflow: clip;
+    width: 200px;
+}
+.document-language {
+    font-size: 16px;
+    color: #808080;
+}
+.document-container:hover{
+    color: var(--primary);
+}

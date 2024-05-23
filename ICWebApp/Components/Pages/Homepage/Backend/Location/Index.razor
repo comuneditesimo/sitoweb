@@ -1,0 +1,197 @@
+﻿@page "/Backend/Homepage/Locations"
+
+@layout MainLayout
+
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+<div class="element-separator"></div>
+<div class="segment-container custom-background-default">
+    <div class="grid-data-container segment-loader-container">
+        <CustomLoader Visible="@(IsDataBusy)"
+                      Text="@null" Class="initial-data-loader">
+        </CustomLoader>
+        <SfGrid DataSource="@Data" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="100%">
+            <GridPageSettings PageSize="25"></GridPageSettings>
+            <SfToolbar>
+                <ToolbarItems>
+                    <ToolbarItem Type="ItemType.Button">
+                        <Template>
+                            <div class="btn btn-secondary" @onclick="New">@TextProvider.Get("ADD")</div>
+                        </Template>
+                    </ToolbarItem>
+                    <ToolbarItem Type="ItemType.Button">
+                        <Template>
+                            <div class="btn btn-secondary" @onclick="ManageTypes">@TextProvider.Get("BACKEND_HOMEPAGE_VENUE_MANAGE_TYPES")</div>
+                        </Template>
+                    </ToolbarItem>
+                </ToolbarItems>
+            </SfToolbar>
+            <Syncfusion.Blazor.Grids.GridColumns>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Location.Highlight)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_HIGHLIGHT")" Width="200px">
+                    <Template>
+                        @{
+                            V_HOME_Location? item = context as V_HOME_Location;
+                        }
+                        <div class="grid-checkbox-cell">
+                            <SfCheckBox Checked="item.Highlight" Disabled="true"></SfCheckBox>
+                        </div>
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Location.Title)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_LOC_TITLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Location.Type)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_LOC_TYPE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Location.Address)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_LOC_ADDRESS")" Width="300px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Location.LastChangeDate)" Format="dd.MM.yyyy HH:mm" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_AUTHORITY_LASTCHANGEDATE")" Width="200px"></Syncfusion.Blazor.Grids.GridColumn>
+                <Syncfusion.Blazor.Grids.GridColumn Width="120px" HeaderText="@TextProvider.Get("ACTIONS")">
+                    <Template>
+                        @{
+                            V_HOME_Location item = context as V_HOME_Location;
+
+                            if (item != null)
+                            {
+                                <div class="action-button-container">
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Delete(item))">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </div>
+                                    </SfTooltip>
+                                    <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                        <div class="btn btn-secondary btn-icon" @onclick="@(() => Edit(item))">
+                                            <i class="fa-regular fa-pen"></i>
+                                        </div>
+                                    </SfTooltip>
+                                </div>
+                            }
+                        }
+                    </Template>
+                </Syncfusion.Blazor.Grids.GridColumn>
+            </Syncfusion.Blazor.Grids.GridColumns>
+        </SfGrid>
+    </div>
+</div>
+
+<SfDialog CssClass="syncfusion-modal-window"
+          AllowDragging="false"
+          IsModal="true"
+          Width="800px"
+          Height="800px"
+          @bind-Visible="@ShowTypeWindow">
+    <DialogTemplates>
+        <Header>@TextProvider.Get("BACKEND_HOMEPAGE_LOCATION_MANAGE_TYPES")</Header>
+        <Content>
+            <div class="segment-container custom-background-default">
+                <div class="grid-data-container segment-loader-container">
+                    <CustomLoader Visible="@(IsDataBusy)"
+                                  Text="@null" Class="initial-data-loader">
+                    </CustomLoader>
+                    <SfGrid DataSource="@TypeData" AllowPaging="true" AllowSorting="true" AllowResizing="true" AllowFiltering="true" Height="490px">
+                        <GridPageSettings PageSize="25"></GridPageSettings>
+                        <SfToolbar>
+                            <ToolbarItems>
+                                <ToolbarItem Type="ItemType.Button">
+                                    <Template>
+                                        <div class="btn btn-secondary" @onclick="NewType">@TextProvider.Get("ADD")</div>
+                                    </Template>
+                                </ToolbarItem>
+                            </ToolbarItems>
+                        </SfToolbar>
+                        <Syncfusion.Blazor.Grids.GridColumns>
+                            <Syncfusion.Blazor.Grids.GridColumn Field="@nameof(V_HOME_Location_Type.Type)" HeaderText="@TextProvider.Get("BACKEND_HOMEPAGE_VENUE_TYPE_TITLE")" Width="auto"></Syncfusion.Blazor.Grids.GridColumn>
+                            <Syncfusion.Blazor.Grids.GridColumn Width="120px" HeaderText="@TextProvider.Get("ACTIONS")">
+                                <Template>
+                                    @{
+                                        V_HOME_Location_Type item = context as V_HOME_Location_Type;
+
+                                        if (item != null)
+                                        {
+                                            <div class="action-button-container">
+                                                <SfTooltip Content="@TextProvider.Get("TOOLTIP_DELETE")" Position="@Position.LeftCenter">
+                                                    <div class="btn btn-secondary btn-icon" @onclick="@(() => DeleteType(item))">
+                                                        <i class="fa-regular fa-trash-can"></i>
+                                                    </div>
+                                                </SfTooltip>
+                                                <SfTooltip Content="@TextProvider.Get("TOOLTIP_EDIT")" Position="@Position.LeftCenter">
+                                                    <div class="btn btn-secondary btn-icon" @onclick="@(() => EditType(item))">
+                                                        <i class="fa-regular fa-pen"></i>
+                                                    </div>
+                                                </SfTooltip>
+                                            </div>
+                                        }
+                                    }
+                                </Template>
+                            </Syncfusion.Blazor.Grids.GridColumn>
+                        </Syncfusion.Blazor.Grids.GridColumns>
+                    </SfGrid>
+                </div>
+            </div>
+
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@CloseManageTypes" />
+    <DialogButtons>
+        <DialogButton IsPrimary="false" Content="@TextProvider.Get("BUTTON_CANCEL")" OnClick="@CloseManageTypes" />
+    </DialogButtons>
+</SfDialog>
+
+<SfDialog AllowDragging="false"
+          IsModal="true"
+          Width="500px"
+          ShowCloseIcon="@false"
+          @bind-Visible="@ShowTypeEditWindow">
+    <DialogTemplates>
+        <Header>@TypeEditWindowTitle</Header>
+        <Content>
+            @if (TypeItem != null)
+            {
+                <div class="container-fluid">
+                    <div class="dialog-row-item">
+                        <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+                        <div class="small-element-separator"></div>
+                        @if (TypeItem.HOME_Location_Type_Extended != null && TypeItem.HOME_Location_Type_Extended.Count() > 0 && CurrentLanguage != null)
+                        {
+                            <label class="font-detail">@TypeItem.HOME_Location_Type_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Title</label>
+                        }
+                        <div class="dialog-row-value">
+                            <InputText name="@Guid.NewGuid()" @bind-Value="TypeItem.HOME_Location_Type_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Title" class="form-control"></InputText>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group">
+                            <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_VENUE_DESCRIPTION_SHORT")</label>
+                        </div>
+                        <div class="form-group">
+                            @if (TypeItem.HOME_Location_Type_Extended != null && TypeItem.HOME_Location_Type_Extended.Count() > 0 && CurrentLanguage != null)
+                            {
+                                @if (string.IsNullOrEmpty(TypeItem.HOME_Location_Type_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort))
+                                {
+                                    TypeItem.HOME_Location_Type_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort = TypeItem.HOME_Location_Type_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).DescriptionShort;
+                                }
+
+                                <TelerikEditor @bind-Value="TypeItem.HOME_Location_Type_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).DescriptionShort"
+                                               Tools="@Tools"
+                                               EditMode="@EditorEditMode.Div"
+                                               Class="font-normal"
+                                               Height="200px">
+                                    <EditorSettings>
+                                        <EditorPasteSettings ConvertMsLists="true"
+                                                             RemoveMsClasses="true"
+                                                             RemoveMsStyles="true"
+                                                             RemoveHtmlComments="true"
+                                                             RemoveAllAttributes="true"
+                                                             StripTags="@StripTags"
+                                                             RemoveAttributes="@RemoveAttributes">
+                                        </EditorPasteSettings>
+                                    </EditorSettings>
+                                </TelerikEditor>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </Content>
+    </DialogTemplates>
+    <DialogEvents Closed="@CancelEditType" />
+    <DialogButtons>
+        <DialogButton IsPrimary="false" Content="@TextProvider.Get("BUTTON_CANCEL")" OnClick="@CancelEditType" />
+        <DialogButton IsPrimary="true" Content="@TextProvider.Get("BUTTON_SAVE")" OnClick="@SaveType" />
+    </DialogButtons>
+</SfDialog>

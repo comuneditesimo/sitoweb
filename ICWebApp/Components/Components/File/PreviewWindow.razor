@@ -1,0 +1,46 @@
+﻿@using Syncfusion.Blazor.PdfViewerServer
+@using Syncfusion.Blazor.PdfViewer
+@using Syncfusion.Blazor.Popups
+
+<script src="_content/Syncfusion.Blazor.PdfViewer/scripts/syncfusion-blazor-pdfviewer.min.js" type="text/javascript" defer></script>
+
+<SfDialog @bind-Visible="@EnviromentService.ShowDownloadPreviewWindow" AllowDragging="false" ShowCloseIcon="true" IsModal="true" Height="100vh" Width="100vw">
+    <DialogTemplates>
+        <Header>
+            @TextProvider.Get("TELERIK_PREVIEW_TITLE")
+        </Header>
+        <Content>
+            <div class="telerik-report-container" style="height: 100%">
+                <div class="telerik-report-viewer" style="height: 100%">
+                    <div style="height: 100%; width: 100%;">
+                        @{
+                            PdfViewerToolbarSettings _toolbarSettings = new PdfViewerToolbarSettings();
+                            _toolbarSettings.ToolbarItems.Clear();
+                            if (_toolbarSettings != null)
+                            {
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PageNavigationTool);
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.MagnificationTool);
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.SelectionTool);
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PanTool);
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.SearchOption);
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.DownloadOption);
+                                _toolbarSettings.ToolbarItems.Add(Syncfusion.Blazor.PdfViewer.ToolbarItem.PrintOption);
+                            }
+                        }
+                        <SfPdfViewerServer @ref="PDFViewer"
+                                            Height="100%" Width="100%"
+                                            EnableToolbar="true"
+                                            EnableFormFields="false"
+                                            EnableThumbnailPanel="false"
+                                            EnableNavigationToolbar="false"
+                                            EnableAnnotationToolbar="false"
+                                            ToolbarSettings="@_toolbarSettings">
+                            <PdfViewerEvents Created="OnPDFViewerCreated" DocumentLoaded="@PDFViewerResetZoom" />
+                        </SfPdfViewerServer>
+                    </div>
+                </div>
+            </div>
+        </Content>
+    </DialogTemplates>
+    <DialogEvents OnClose="@HidePreview" />
+</SfDialog>

@@ -1,0 +1,38 @@
+﻿@inherits LayoutComponentBase
+
+
+@*Color Switcher*@
+<link href="css/colors/@(ThemeHelper.GetCurrentColor()).css?v=@ComunixSettings.CSSVersion" rel="stylesheet" />
+<link rel="preload" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="css/syncfusionfrontend/@(ThemeHelper.GetCurrentColor()).min.css?v=@ComunixSettings.CSSVersion"></noscript>
+@*********@
+<link rel="preload" href="css/bootstrap-italia/css/bootstrap-italia.min.css" as="style" onload="this.rel='stylesheet'">
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css" media="print" onload="this.media='all'"
+<noscript><link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.min.css"></noscript>
+<link rel="stylesheet" href="css/bootstrap-italia/css/bootstrap-italia.comuni.min.css" />
+<link rel="stylesheet" href="css/agid/Custom.min.css?v=@ComunixSettings.CSSVersion" />
+<base href="~/" />
+
+<Syncfusion.Blazor.Popups.SfDialogProvider />
+
+@if (SessionWrapper != null && (!string.IsNullOrEmpty(@SessionWrapper.PageTitle) || !string.IsNullOrEmpty(@SessionWrapper.PageSubTitle)))
+{
+    <div class="page-header">
+        @if (!string.IsNullOrEmpty(@SessionWrapper.PageTitle))
+        {
+            <h1 style="color: var(--primary-text-color);margin-bottom: 0">@SessionWrapper.PageTitle</h1>
+        }
+        @if (!string.IsNullOrEmpty(@SessionWrapper.PageSubTitle))
+        {
+            <h3 style="color: var(--primary-text-color);margin-bottom: 0">@SessionWrapper.PageSubTitle</h3>
+        }
+    </div>
+}
+<div class="main-page">
+    <BusyIndicator></BusyIndicator>
+    <DialogWindow />
+    <main class="main-container">
+        @Body
+    </main>
+</div>

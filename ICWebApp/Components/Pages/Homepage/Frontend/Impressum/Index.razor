@@ -1,0 +1,31 @@
+﻿@page "/Hp/Impressum"
+
+@if (Data != null)
+{
+    <div class="container">
+        <div class="row border-top border-light row-column-border row-column-menu-left">
+            <aside class="col-lg-4">
+                <AnchorList></AnchorList>
+            </aside>
+            <section class="col-lg-8 it-page-sections-container border-light">
+                @foreach(var d in Data.OrderBy(p => p.SortOrder).ToList())
+                {
+                    <Anchor Title="@d.Title" ID="@d.Title" Order="@d.SortOrder">
+                        <div class="richtext-wrapper lora">
+                            @((MarkupString)d.Description)
+                        </div>
+                    </Anchor>
+                }
+            </section>
+            @if (Data.Any() && Data.Max(p => p.LastModificationDate).Value != null)
+            {
+                <article id="ultimo-aggiornamento" class="it-page-section mt-5">
+                    <h4 class="h6">
+                        @TextProvider.Get("FRONTEND_CONTENT_LAST_MODIFICATION")
+                        <span class="h6 fw-normal">@Data.Max(p => p.LastModificationDate).Value.ToString("dd/MM/yyyy, HH:mm")</span>
+                    </h4>
+                </article>
+            }
+        </div>
+    </div>
+}

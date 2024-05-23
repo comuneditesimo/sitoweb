@@ -1,0 +1,35 @@
+﻿@if (FileInfo != null)
+{
+    <div class="card card-teaser card-teaser-info rounded shadow-sm p-3">
+        <div class="card-body pe-3">
+            @if (!string.IsNullOrEmpty(FileName))
+            {
+                <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                    <a class="text-decoration-none" @onclick="@(() => Download(FileInfo))" data-element="service-area">
+                        @FileName
+                    </a>
+                </p>
+            }
+            else
+            {
+                <p class="card-title text-paragraph-regular-medium-semi mb-3">
+                    <a class="text-decoration-none" @onclick="@(() => Download(FileInfo))" data-element="service-area">
+                        @FileInfo.FileName
+                    </a>
+                </p>
+            }
+            <div class="d-flex flex-nowrap">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-clip"></use>
+                </svg>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a class="text-decoration-none" @onclick="@(() => Download(FileInfo, true))" aria-label="@TextProvider?.Get("FILE_DOWNLOAD_BUTTON")" title="@TextProvider?.Get("FILE_DOWNLOAD_BUTTON")" data-focus-mouse="false">
+                            @TextProvider?.Get("FILE_DOWNLOAD_BUTTON")
+                        </a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+}

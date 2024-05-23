@@ -1,0 +1,65 @@
+﻿@page "/Backend/Homepage/PNRR/Chapter/Document/Edit/{ProjectID}/{ChapterID}/{ID}"
+
+@layout MainLayout
+
+@using ICWebApp.Components.Components.Homepage.Backend.Person
+@using ICWebApp.Components.Components.Homepage.Backend.Authority
+@using ICWebApp.Components.Components.Homepage.Backend.Address
+@using ICWebApp.Components.Components.Homepage.Backend.Theme
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+
+@if(Data != null && Languages != null)
+{
+    <div class="element-separator"></div>
+    <div class="custom-background-default">
+        <EditForm Model="Data">
+            <DataAnnotationsValidator />
+            <div class="form-group form-group-small">
+                <div class="segment-title custom-color-primary">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_CHAPTER_DOCUMENT_GENERAL")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <LanguageInputSelector @bind-CurrentLanguage="@CurrentLanguage"></LanguageInputSelector>
+            <div class="small-element-separator"></div>
+            <div class="form-group form-group-small">
+                <label class="form-label">@TextProvider.Get("BACKEND_HOMEPAGE_PNRR_CHAPTER_DOCUMENT_FILENAME")</label>
+                @if (Data.HOME_PNRR_Chapter_Document_Extended != null && Data.HOME_PNRR_Chapter_Document_Extended.Count() > 0 && CurrentLanguage != null)
+                {
+                    <label class="font-detail">@Data.HOME_PNRR_Chapter_Document_Extended.FirstOrDefault(p => p.LANG_Language_ID != CurrentLanguage).Filename</label>
+                }
+                <InputText name="@Guid.NewGuid()" @bind-Value="Data.HOME_PNRR_Chapter_Document_Extended.FirstOrDefault(p => p.LANG_Language_ID == CurrentLanguage).Filename" class="form-control"></InputText>
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-group">
+                <div class="segment-title">@TextProvider.Get("BACKEND_HOMEPAGE_DOKUMENTS")</div>
+            </div>
+            <div class="small-element-separator"></div>
+            <div class="form-group">
+                @if (Languages != null)
+                {
+                    @foreach (var l in Languages)
+                    {
+                        <div class="form-group form-group-small">
+                            <label class="form-label custom-color-primary">@TextProvider.Get(l.TEXT_SystemsText_Code)</label>
+                        </div>
+                        <div class="small-element-separator"></div>
+                        <div class="form-group form-group-small">
+                            @if (Data.HOME_PNRR_Chapter_Document_Extended != null && Data.HOME_PNRR_Chapter_Document_Extended.Count() > 0)
+                            {
+                                <UploadComponent ID="@l.ID.ToString()" Accept=".pdf, .docx, .doc" @bind-FileInfo="Data.HOME_PNRR_Chapter_Document_Extended.FirstOrDefault(p => p.LANG_Language_ID == l.ID).File" Multiple="false"></UploadComponent>
+                            }
+                        </div>
+                        <div class="element-separator"></div>
+                    }
+                }
+            </div>
+            <div class="element-separator"></div>
+            <div class="form-button-container-separated form-group-small">
+                <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" ThemeColor="Secondary" Icon="SvgIcon.X" Class="k-standalone-button"
+                               OnClick="@Cancel">@TextProvider.Get("BUTTON_CANCEL")</TelerikButton>
+                <TelerikButton ButtonType="Telerik.Blazor.ButtonType.Button" ThemeColor="Primary" Icon="SvgIcon.ArrowRight" Class="k-standalone-button"
+                               OnClick="@(() => Save(true))">@TextProvider.Get("BUTTON_SAVE")</TelerikButton>
+            </div>
+            </EditForm>
+        </div>
+}

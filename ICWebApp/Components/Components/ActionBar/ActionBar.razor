@@ -1,0 +1,126 @@
+﻿<script nonce="comunix123" src="/js/utility/frontend/utility.js"></script>
+<script nonce="comunix123" src="/js/reader.js" defer></script>
+
+@using ICWebApp.Components.Components.Homepage.Frontend.Theme
+
+@if (ActionBarService != null && ((ActionBarService.GetActionBarItems() != null && ActionBarService.GetActionBarItems().Count() > 0) || ActionBarService.ShowShareButton || ActionBarService.ShowDefaultButtons))
+{
+    @if (ActionBarService.ShowShareButton)
+    {
+        <div class="dropdown d-inline no-read">
+            <button class="btn btn-dropdown dropdown-toggle text-decoration-underline d-inline-flex align-items-center fs-0" type="button" id="shareActions" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="condividi sui social" data-focus-mouse="false">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-share"></use>
+                </svg>
+                <small>@TEXTProvider.Get("DEFAULT_ACTIONBAR_SHARE")</small>
+            </button>
+            <div class="dropdown-menu shadow-lg" aria-labelledby="shareActions" style="">
+                <div class="link-list-wrapper">
+                    <ul class="link-list" role="menu">
+                        <li role="none">
+                            <a class="list-item" href="https://www.facebook.com/sharer/sharer.php?u=@NavManager.Uri" target="_blank" role="menuitem">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-facebook"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_FACEBOOK")</span>
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a class="list-item" href="https://twitter.com/intent/tweet?text=@NavManager.Uri" target="_blank" role="menuitem">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-twitter"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_TWITTER")</span>
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a class="list-item" href="https://www.linkedin.com/shareArticle?url=@NavManager.Uri" target="_blank" role="menuitem">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-linkedin"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_LINKEDIN")</span>
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a class="list-item" href="https://api.whatsapp.com/send?text=@NavManager.Uri" target="_blank" role="menuitem">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-whatsapp"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_WHATSAPP")</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="dropdown d-inline no-read">
+        <button aria-label="@TEXTProvider.Get("AGID_FRONTEND_ACTIONBAR_VIEW_ACTIONS_ARIAL")" class="btn btn-dropdown dropdown-toggle text-decoration-underline d-inline-flex align-items-center fs-0" type="button" id="viewActions" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-focus-mouse="false">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-more-items"></use>
+            </svg>
+            <small>@TEXTProvider.Get("AGID_FRONTEND_ACTIONBAR_VIEW_ACTIONS")</small>
+        </button>
+        <div class="dropdown-menu shadow-lg" aria-labelledby="viewActions" style="">
+            <div class="link-list-wrapper">
+                <ul class="link-list" role="menu">
+                    @if (ActionBarService.ShowDefaultButtons)
+                    {
+                        <li role="none">
+                            <a class="list-item" onclick="utility_printPage()" role="menuitem" data-focus-mouse="false">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-print"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_PRINT")</span>
+                            </a>
+                        </li>
+                        <li role="none" id="listen-node">
+                            <a class="list-item" onclick="utility_readPage()" role="menuitem" data-focus-mouse="false">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-hearing"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_LISTEN")</span>
+                            </a>
+                        </li>
+                        <li role="none" id="stop-listening-node" style="display: none;">
+                            <a class="list-item" onclick="utility_readPage()" role="menuitem" data-focus-mouse="false">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-hearing"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_STOP_LISTEN")</span>
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a class="list-item" onclick="utility_sendPage('@SessionWrapper.PageTitle');" role="menuitem" data-focus-mouse="false">
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-mail"></use>
+                                </svg>
+                                <span>@TEXTProvider.Get("DEFAULT_ACTIONBAR_SEND")</span>
+                            </a>
+                        </li>
+                    }
+                    @foreach (var item in ActionBarService.GetActionBarItems())
+                    {
+                        <li role="none">
+                            <a class="list-item" href="#" @onclick="item.Action" role="menuitem" data-focus-mouse="false">
+                                <span>@item.Title</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    @if (ActionBarService.ThemeList != null && ActionBarService.ThemeList.Any())
+    {
+        <div class="mt-4 mb-4">
+            <span class="subtitle-small">@TEXTProvider.Get("ACTIONBAR_THEMES")</span>
+            <ul class="d-flex flex-wrap gap-1">
+                @foreach (var t in ActionBarService.ThemeList.OrderBy(p => p.Title).ToList())
+                {
+                    <ThemeChip Theme="@t"></ThemeChip>
+                }
+            </ul>
+        </div>
+    }
+}

@@ -1,0 +1,56 @@
+﻿.custom-loader-container {
+    position: absolute;
+    background-color: #FFFFFFAA;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    top: 0;
+}
+
+.logo-icon {
+    height: 80px !important;
+    width: 80px !important;
+    margin: auto;
+    padding-top: 80px;
+}
+
+    .logo-icon img {
+        height: 80px !important;
+        width: 80px !important;
+    }
+.logo-text{
+    margin: auto;
+    text-align: center;
+}
+
+.logo-icon i{
+    font-size: 28px;
+}
+.loader {
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 100px;
+}
+
+    .loader:before, .loader:after {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        inset: 0;
+    }
+
+    .loader:after {
+        box-shadow: 0 4px 0 var(--primary) inset;
+        animation: rotate 2s linear infinite;
+    }
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}

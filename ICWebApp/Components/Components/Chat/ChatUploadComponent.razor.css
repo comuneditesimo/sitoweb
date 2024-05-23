@@ -1,0 +1,128 @@
+.rchat-file-drop {
+    width: 100%;
+    min-height: 70px;
+    border: 2px dotted var(--primary);
+    border-radius: 10px;
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    flex-wrap: wrap;
+}
+.rchat-upload-component {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+.rchat-input-file {
+    display: none;
+}
+.rchat-file-upload-btn {
+    background-color: var(--primary);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--primary-text-color);
+    transition: color 200ms;
+    border: none;
+}
+.rchat-file-upload-btn:hover {
+    background-color: var(--primary)dd;
+}
+
+.rchat-upload-doc {
+    border-radius: 10px;
+    border: 2px solid #cccccc;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 15px;
+    position: relative;
+}
+
+.rchat-upload-doc-download-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.rchat-upload-doc-download-section:hover .rchat-upload-doc-download-btn {
+    display: flex;
+}
+
+.rchat-upload-doc-download-btn {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: #E8EBFA99;
+    display: none;
+    cursor:pointer;
+    z-index: 1;
+}
+
+.rchat-upload-doc-name {
+    text-align: center;
+    overflow: hidden;
+    font-size: .9rem;
+    color: black;
+    text-overflow: ellipsis;
+    max-width: 70px;
+    white-space: nowrap;
+}
+
+.rchat-upload-doc-icon {
+    
+}
+.rchat-upload-doc-x {
+    cursor: pointer;
+    padding: 0 5px;
+    border-radius: 5px;
+    z-index: 2;
+}
+.rchat-upload-doc-x:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.rchat-summary-doc {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    font-size: .85rem;
+    max-width: 80px;
+    border-radius: 3px;
+    padding: 2px 5px;
+    gap: 5px;
+    
+}
+.rchat-summary-doc-name {
+    white-space: nowrap;
+    font-size: .85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rchat-summary-doc:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+.rchat-current-docs-preview {
+    display: flex;
+    gap: 15px;
+    padding: 5px 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #cccccc;
+}
+.rchat-upload-empty-msg {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-self: center;
+}

@@ -1,0 +1,18 @@
+﻿@page "/Flipbook/{Url}/{Title}"
+
+@layout EmptyLayout
+
+<script nonce="comunix123" src="~/lib/jquery/dist/jquery.min.js"></script>
+<script nonce="comunix123" src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script nonce="comunix123" src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="/flipbook/js/default-book-view.js"></script>
+<script src="/flipbook/js/html2canvas.min.js"></script>
+<script src="/flipbook/js/pdf.min.js"></script>
+<script src="/flipbook/js/pdf.worker.js"></script>
+<script src="/flipbook/js/three.min.js"></script>
+<script src="/flipbook/3dflipbook.min.js"></script>
+<script src="/js/viewer/flipbookviewer.js" defer></script>
+
+<div class="flipbook-container">
+    <FlipbookComponent PDFDocumentUrl="@Url" PDFDocumentTitle="@Title"/>
+</div>

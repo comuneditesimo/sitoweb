@@ -1,0 +1,7 @@
+﻿.custom-phone-container {
+    width: 100%;
+    box-shadow: none !important;
+    outline: none !important;
+    display: flex;
+    justify-content: flex-start;
+}

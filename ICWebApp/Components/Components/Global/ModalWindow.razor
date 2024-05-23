@@ -1,0 +1,18 @@
+﻿@using Syncfusion.Blazor.Popups
+
+@if (Content != null && Parameters != null)
+{
+    <SfDialog @bind-Visible="@IsVisible" AllowDragging="@Parameters.Draggable" ShowCloseIcon="@Parameters.ShowClose" IsModal="@Parameters.Modal"
+              CssClass="telerik-preview-window" CloseOnEscape="true" Width="@Parameters.Width" Height="@Parameters.Height">
+        <DialogTemplates>
+            <Header>
+                @Parameters.Title
+            </Header>
+            <Content>
+                <div>
+                    @Content
+                </div>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+}

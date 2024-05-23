@@ -1,0 +1,72 @@
+﻿@page "/attuazione-misure-pnrr"
+
+@if (Data != null)
+{
+    <div class="bg-grey-dsk py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="it-page-sections-container">
+                        <section class="it-page-section">
+                            <div class="anchor-title-container">
+                                <h2 class="mb-3">@TextProvider.Get("FRONTEND_HOMEPAGE_PNRR_WHAT_IS_IT")</h2>
+                            </div>
+                            <p class="text-paragraph mb-0">
+                                @((MarkupString)TextProvider.Get("FRONTEND_HOMEPAGE_PNRR_WHAT_IS_IT_DESCRIPTION"))
+                                <br />
+                            </p>
+                        </section>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ue-pnrr-logo">
+                        <img src="images/frontend/logo-eu.webp" alt="logo Unione Europea" b-bbw6tq74cb="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if(Types != null && Data != null)
+    {
+        <div class="py-5">
+            <div class="container">
+                <h2 class="title-xxlarge pnrr-segment-title">@TextProvider.Get("FRONTEND_HOMEPAGE_PNRR_PROJECTS")</h2>
+                @foreach (var t in Types.Where(p => Data.Select(x => x.HOME_PNRR_Type_ID).Contains(p.ID)).OrderBy(p => p.SortOrder).ToList())
+                {
+                    <div class="row pt-5">
+                        <div class="col-lg-12 pb-3">
+                            <h3 class="pnrr-title">@t.Type</h3>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="pnrr-wrapper">
+                                @foreach(var p in Data.Where(p => p.HOME_PNRR_Type_ID == t.ID).OrderBy(p => p.SortOrder).ToList())
+                                {
+                                    <div class="pnrr-item-container">
+                                        <div class="pnrr-item-container-left">
+                                            <a class="text-decoration-none" href="/attuazione-misure-pnrr/@p.ID" @onclick="@(() => GoToUrl("/attuazione-misure-pnrr/" + p.ID))" data-focus-mouse="false">
+                                                <div class="pnrr-item-title">
+                                                    <div class="pnrr-item-text text-decoration-none">
+                                                        @p.Title
+                                                    </div>
+                                                    <div class="pnrr-item-icon">
+                                                        <svg class="icon icon-primary icon-sm" aria-hidden="true"><use xlink:href="css/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            @if (!StringHelper.MarkupStringIsNullOrWhiteSpace(p.DescriptionList))
+                                            {
+                                                <p class="text-paragraph mb-0">
+                                                    @((MarkupString)p.DescriptionList.Replace("<p>", "").Replace("</p>", ""))
+                                                </p>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
