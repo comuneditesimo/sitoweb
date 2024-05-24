@@ -9,19 +9,27 @@ categories:
 description:
   it:
     features:
-      - website
-      - online services
+      - PNRR
+      - PNRR/Beneficiari/Comuni
+      - PNRR/Misura/1.4.1
     genericName: website and online services
     longDescription: |
       Riprogettazione e sviluppo del sito web e i servizi online per il Comune
+
       di Tesimo attraverso il finanziamento PNRR 1.4.1. pacchetto cittadino
+
       informato e attivo NextGenerationEU. Si accede al sito attraverso SPID e
+
       CIE o registrazione verificata. 
 
 
+
       Il software da la possibilitá al comune di interagire con il cittadino
+
       attraverso semplici passaggi. Il cittadino ha la possibilitá  di accedere
+
       ai suoi dati, inviare richieste, verificare lo stato di essi, pagare tasse
+
       e bollo come anche i diritti di segreteria.
     shortDescription: Sito Web Comune di Tesimo
 developmentStatus: beta
@@ -43,6 +51,8 @@ it:
 landingURL: 'https://www.comune.tesimo.bz.it/'
 legal:
   license: CPL-1.0
+  mainCopyrightOwner: Innovation Consulting GmbH
+  repoOwner: Innovation Consulting GmbH
 localisation:
   availableLanguages:
     - it
