@@ -1,0 +1,58 @@
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
+applicationSuite: CMX
+categories:
+  - digital-citizenship
+description:
+  it:
+    features:
+      - website
+      - online services
+    genericName: website and online services
+    longDescription: |
+      Riprogettazione e sviluppo del sito web e i servizi online per il Comune
+      di Tesimo attraverso il finanziamento PNRR 1.4.1. pacchetto cittadino
+      informato e attivo NextGenerationEU. Si accede al sito attraverso SPID e
+      CIE o registrazione verificata. 
+
+
+      Il software da la possibilitá al comune di interagire con il cittadino
+      attraverso semplici passaggi. Il cittadino ha la possibilitá  di accedere
+      ai suoi dati, inviare richieste, verificare lo stato di essi, pagare tasse
+      e bollo come anche i diritti di segreteria.
+    shortDescription: Sito Web Comune di Tesimo
+developmentStatus: beta
+intendedAudience:
+  countries:
+    - it
+it:
+  conforme:
+    gdpr: true
+    lineeGuidaDesign: true
+    misureMinimeSicurezza: true
+    modelloInteroperabilita: true
+  countryExtensionVersion: '0.2'
+  piattaforme:
+    anpr: false
+    cie: true
+    pagopa: true
+    spid: true
+landingURL: 'https://www.comune.tesimo.bz.it/'
+legal:
+  license: CPL-1.0
+localisation:
+  availableLanguages:
+    - it
+    - de
+  localisationReady: true
+maintenance:
+  type: none
+name: Sito Web Comune di Tesimo
+platforms:
+  - web
+releaseDate: '2024-05-23'
+softwareType: standalone/web
+url: 'https://github.com/comuneditesimo/sitoweb'
